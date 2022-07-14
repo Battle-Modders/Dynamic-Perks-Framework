@@ -5,6 +5,13 @@
 
 ::mods_registerMod(::DPF.ID, ::DPF.Version, ::DPF.Name);
 ::mods_queue(::DPF.ID, "mod_msu", function() {
+
+	::MSU.EndQueue.add(function() {
+		::Const.Perks.Category.sort(function( _key1, _value1, _key2, _value2 ) {
+			return _value1.OrderOfAssignment <=> _value2.OrderOfAssignment;
+		});
+	})
+
 	// Testing
 
 	::Const.Perks.addCategory("Weapon");
@@ -41,5 +48,3 @@
 		}
 	});
 });
-
-

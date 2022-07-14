@@ -37,7 +37,7 @@ this.perk_tree <- {
 		this.m.LocalMap = {};
 		this.m.Traits = ::MSU.isNull(this.m.Player) ? null : this.m.Player.getSkills().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait);
 
-		foreach (categoryName in ::dpf.OrderOfAssignment)
+		foreach (categoryName, category in ::Const.Perks.Category)
 		{
 			this.m.LocalMap[categoryName] <- [];
 
@@ -65,10 +65,10 @@ this.perk_tree <- {
 					}
 
 					if (perkGroup == null) perkGroup = ::Const.Perks.PerkGroup.findById("perk_group.none");
-					else if (perkGroup.getID() == "perk_group.random") perkGroup = this.__getWeightedRandomGroupFromCategory(categoryName, exclude);					
+					else if (perkGroup.getID() == "DPF_RandomPerkGroup") perkGroup = this.__getWeightedRandomGroupFromCategory(categoryName, exclude);
 
 					this.m.LocalMap[categoryName].push(perkGroup);
-					if (perkGroup.getID() != "perk_group.none") exclude.push(perkGroup.getID());
+					if (perkGroup.getID() != "DPF_NonePerkGroup") exclude.push(perkGroup.getID());
 				}
 			}
 
@@ -137,7 +137,7 @@ this.perk_tree <- {
 
 			row = hasRow ? this.Math.max(0, this.Math.min(row, 6)) : object.Tier - 1;
 
-			this.m.Template[row].push(object.Perk);
+			this.m.Template[row].push(object.PerkID);
 		}
 
 		this.m.LocalMap = null;
@@ -157,9 +157,9 @@ this.perk_tree <- {
 		foreach (row in _template)
 		{
 			::MSU.requireArray(row);
-			foreach (perk in row)
+			foreach (perkID in row)
 			{
-				this.addPerk(perk);
+				this.addPerk(perkID);
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 this.special_perk <- ::inherit("scripts/config/legend_dummy_bb_class", {
 	m = {
-		Perk = null,
+		PerkID = null,
 		Chance = null,
 		ChanceFunction = null,
 		Tier = null,
@@ -10,11 +10,11 @@ this.special_perk <- ::inherit("scripts/config/legend_dummy_bb_class", {
 	{
 	}
 
-    function init( _chance, _tier, _perk, _flavorText, _chanceFunction = null )
+    function init( _chance, _tier, _perkID, _flavorText, _chanceFunction = null )
 	{
 		this.setChance(_chance);
 		this.setTier(_tier);
-		this.setPerk(_perk);
+		this.setPerkID(_perkID);
 		this.setFlavorText(_flavorText);
 		if (_chanceFunction == null) _chanceFunction = @() this.Chance;
 		else this.setChanceFunction(_chanceFunction);
@@ -46,15 +46,15 @@ this.special_perk <- ::inherit("scripts/config/legend_dummy_bb_class", {
 		this.m.Tier = _tier;
 	}
 
-	function getPerk()
+	function getPerkID()
 	{
-		return this.m.Perk;
+		return this.m.PerkID;
 	}
 
-	function setPerk( _perk )
+	function setPerkID( _perkID )
 	{
 		if (::Const.Perks.findById(_perk) == null) throw ::MSU.Exception.KeyNotFound(_perk);
-		this.m.Perk = _perk;
+		this.m.PerkID = _perkID;
 	}
 
 	function setChanceFunction( _function )
@@ -80,7 +80,7 @@ this.special_perk <- ::inherit("scripts/config/legend_dummy_bb_class", {
 
 		foreach (multiplier in _player.getBackground().m.SpecialPerkMultipliers)
 		{
-			if (multiplier[1] == this.m.Perk)
+			if (multiplier[1] == this.m.PerkID)
 			{
 				chance *= multiplier[0];
 				break;
@@ -95,7 +95,7 @@ this.special_perk <- ::inherit("scripts/config/legend_dummy_bb_class", {
 			{
 				foreach (multiplier in trait.m.SpecialPerkMultipliers)
 				{
-					if (multiplier[1] == this.m.Perk)
+					if (multiplier[1] == this.m.PerkID)
 					{
 						chance *= multiplier[0];
 						break;
@@ -114,7 +114,7 @@ this.special_perk <- ::inherit("scripts/config/legend_dummy_bb_class", {
 					{
 						foreach (multiplier in perkGroup.SpecialPerkMultipliers)
 						{
-							if (multiplier[1] == this.m.Perk)
+							if (multiplier[1] == this.m.PerkID)
 							{
 								chance *= multiplier[0];
 								break;
@@ -125,7 +125,7 @@ this.special_perk <- ::inherit("scripts/config/legend_dummy_bb_class", {
 			}
 		}
 
-		if (chance < 0 || ::Math.rand(1, 100) <= chance) return { Perk = this.m.Perk, Tier = this.m.Tier };
+		if (chance < 0 || ::Math.rand(1, 100) <= chance) return { PerkID = this.m.PerkID, Tier = this.m.Tier };
 
 		return null;
 	}
