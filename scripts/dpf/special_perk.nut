@@ -1,4 +1,4 @@
-this.special_perk <- ::inherit("scripts/config/legend_dummy_bb_class", {
+this.special_perk <- {
 	m = {
 		PerkID = null,
 		Chance = null,

@@ -4,12 +4,11 @@ this.perk_tree <- {
 		Template = null,
 		DynamicMap = null,
 		Player = null,
-		Mins = null,
 		LocalMap = null,
 		Traits = null
 	}
 
-	function init( _template = null, _background = null, _map = null, _mins = null )
+	function init( _template = null, _background = null, _map = null )
 	{
 		if (_template != null)
 		{
@@ -18,12 +17,37 @@ this.perk_tree <- {
 		}
 
 		if (!::MSU.isKindOf(_background, "character_background")) throw ::MSU.Exception.InvalidType(_background);
+		if (_background == null || _map == null)
+		{
+			::logError("Both \'_background\' and \'_map\' must be provided if \'_template\' is null");
+			throw ::MSU.Exception.InvalidValue(_background);
+		}
 
+		this.m.Player = ::MSU.asWeakTableRef(_background.getContainer().getActor());
 		this.m.DynamicMap = _map;
-		if (_mins == null) _mins = ::Const.Perks.DynamicPerkTreeMins;
-		else this.setMins(_mins);
 
 		return this;		
+	}
+
+	function getTooltip()
+	{
+		local ret = "";
+		foreach (category in ::Const.Perks.Category)
+		{
+			local text = category.getTooltipPrefix();
+			local has = false;
+			foreach (group in category.getList())
+			{
+				if (this.hasPerkGroup(group))
+				{
+					has = true;
+					text += ::MSU.Array.rand(group.getFlavorText()) + ", ";
+				}
+			}
+
+			if (has) ret += text.slice(0, -2) + ".\n";
+		}
+		return ret;
 	}
 
 	function build()
@@ -72,7 +96,7 @@ this.perk_tree <- {
 				}
 			}
 
-			if (categoryName in this.m.Mins)
+			if (category.getMin() > 0)
 			{
 				::Const.Perks.Category[categoryName].playerSpecificFunction(this.m.Player);
 
@@ -83,7 +107,7 @@ this.perk_tree <- {
 				}
 
 				local r = ::Math.rand(0, 100);
-				for (local i = this.m.LocalMap[categoryName].len(); i < this.m.Mins[categoryName]; i++)
+				for (local i = this.m.LocalMap[categoryName].len(); i < category.getMin(); i++)
 				{
 					local perkGroup = this.__getWeightedRandomGroupFromCategory(categoryName, exclude);
 					this.m.LocalMap[categoryName].push(perkGroup);
@@ -202,16 +226,6 @@ this.perk_tree <- {
 				}
 			}
 		}
-	}
-
-	function getMins()
-	{
-		return this.m.Mins;
-	}
-
-	function setMins( _mins )
-	{
-		this.m.Mins = _mins;
 	}
 
 	function merge( _other )
@@ -365,7 +379,7 @@ this.perk_tree <- {
 		{
 			foreach (perkGroup in category)
 			{
-				multipliers.extend(perkGroup.getMultipliers());
+				multipliers.extend(perkGroup.getPerkGroupMultipliers());
 			}
 		}
 
@@ -424,9 +438,9 @@ this.perk_tree <- {
 	{
 		local potentialGroups = ::MSU.Class.WeightedContainer();
 
-		foreach (group in ::Const.Perks.PerkGroupCollection[_categoryName].getList())
+		foreach (group in ::Const.Perks.Category[_categoryName].getList())
 		{
-			if (_exclude != null && _exclude.find(group.getID()) != null)	continue;
+			if (_exclude != null && _exclude.find(group.getID()) != null) continue;
 			potentialGroups.add(group, group.getSelfMultiplier());
 		}
 
@@ -436,6 +450,6 @@ this.perk_tree <- {
 		}
 
 		local group = potentialGroups.roll();
-		return group != null ? group : ::Const.Perks.PerkGroup.findById("perk_group.none");
+		return group != null ? group : ::Const.Perks.PerkGroup.findById("DPF_NonePerkGroup");
 	}
 }

@@ -1,8 +1,23 @@
 ::Const.Perks.Category <- ::MSU.Class.OrderedMap();
 ::Const.Perks.PerkDefs <- [];
-::Const.Perks.DynamicPerkTreeMins <- {};
-::Const.Perks.PerkGroup <- {};
-::Const.Perks.SpecialPerks <- {}; // TODO: Standardize plural and singular usage in variable names
+::Const.Perks.PerkGroup <- {
+	function findById( _id )
+	{
+		foreach (id, group in this)
+		{
+			if (id == _id) return group;
+		}
+	}
+};
+::Const.Perks.SpecialPerks <- { // TODO: Standardize plural and singular usage in variable names
+	function findById( _id )
+	{
+		foreach (id, group in this)
+		{
+			if (id == _id) return group;
+		}
+	}
+};
 
 foreach (i, row in ::Const.Perks.Perks)
 {
@@ -15,23 +30,27 @@ foreach (i, row in ::Const.Perks.Perks)
 }
 
 ::Const.Perks.DefaultPerkTree <- ::new("scripts/dpf/perk_tree").init(::Const.Perks.DefaultPerkTreeTemplate);
+::Const.Perks.DefaultPerkTree.build();
 
-::Const.Perks.addPerkGroup <- function ( _id, _name, _flavorText, _tree, _selfMultiplier = null, _multipliers = null )
+::Const.Perks.addPerkGroup <- function ( _id, _name, _flavorText, _tree, _multipliers = null )
 {
 	if (_id in ::Const.Perks.PerkGroup) throw ::MSU.Exception.DuplicateKey(_id);
-	::Const.Perks.PerkGroup[_id] <- ::new("scripts/dpf/perk_group").init(_id, _name, _flavorText, _tree, _selfMultiplier, _multipliers);
+	::Const.Perks.PerkGroup[_id] <- ::new("scripts/dpf/perk_group").init(_id, _name, _flavorText, _tree, _multipliers);
 }
 
 ::Const.Perks.addPerkGroup("DPF_RandomPerkGroup", "Random", "Random perk group", [ [], [], [], [], [], [], [], [], [], [], [] ]);
 ::Const.Perks.addPerkGroup("DPF_NonePerkGroup", "None", "None perk group", [ [], [], [], [], [], [], [], [], [], [], [] ]);
 
-::Const.Perks.addCategory <- function ( _id, _name, _min = 0, _groups = null )
+::Const.Perks.addCategory <- function ( _id, _name, _tooltipPrefix, _min = 1, _groups = null )
 {
-	if (::Const.Perks.Category.contains(_name)) throw ::MSU.Exception.DuplicateKey(_name);
+	if (::Const.Perks.Category.contains(_name)) ::logWarning(format("A category with id \'%s\' and name \'%s\' already exists.", _id, _name));
 
-	::Const.Perks.Category[_name] <- ::new("scripts/dpf/perk_group_collection").init(_id, _name, _groups);
-	::Const.Perks.Category[_name].OrderOfAssignment <- ::Const.Perks.Category.len() * 10;
-	::Const.Perks.DynamicPerkTreeMins[_name] <- _min;
+	local category = ::new("scripts/dpf/perk_group_collection").init(_id, _name, _groups);
+	category.setTooltipPrefix(_tooltipPrefix);
+	category.setMin(_min);
+	category.setOrderOfAssignment(::Const.Perks.Category.len() * 10);
+
+	::Const.Perks.Category[_name] <- category;
 }
 
 ::Const.Perks.addSpecialPerk <- function( _chance, _tier, _perkID, _flavorText, _chanceFunction = null )
@@ -53,7 +72,7 @@ foreach (i, row in ::Const.Perks.Perks)
 	}
 }
 
-::Const.Perks.updatePerkGroupTooltips <- function( _perkID = null, _groups = null )
+::Const.Perks.addPerkGroupToTooltips <- function( _perkID = null, _groups = null )
 {
 	local map = {};
 

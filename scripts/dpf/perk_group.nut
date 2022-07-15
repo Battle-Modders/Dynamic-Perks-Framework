@@ -1,9 +1,8 @@
-this.perk_group <- ::inherit("scripts/config/legend_dummy_bb_class", {
+this.perk_group <- {
 	m = {
 		ID = "not_initialized",
 		Name = "Not initialized Perk Group",
 		FlavorText = ["Not initialized perk group"], // TODO: Should it be named FlavorTexts ?
-		SelfMultiplier = 1.0,
 		Multipliers = [],
 		Tree = [ [], [], [], [], [], [], [], [], [], [], [] ] // length 11
 	},
@@ -11,7 +10,7 @@ this.perk_group <- ::inherit("scripts/config/legend_dummy_bb_class", {
 	{
 	}
 
-	function init( _id, _name, _flavorText, _tree, _selfMultiplier = null, _multipliers = null )
+	function init( _id, _name, _flavorText, _tree, _multipliers = null )
 	{
 		::MSU.requireString(_id);
 
@@ -79,17 +78,6 @@ this.perk_group <- ::inherit("scripts/config/legend_dummy_bb_class", {
 		}
 	}
 
-	function getSelfMultiplier()
-	{
-		return this.m.SelfMultiplier;
-	}
-
-	function setSelfMultiplier( _multiplier )
-	{
-		::MSU.requireOneFromTypes(["integer", "float"], _multiplier);
-		this.m.SelfMultiplier = _multiplier;
-	}
-
 	function getTree()
 	{
 		return this.m.Tree;
@@ -115,22 +103,19 @@ this.perk_group <- ::inherit("scripts/config/legend_dummy_bb_class", {
 		this.m.Tree = _tree;
 	}
 
+	function getSelfMultiplier()
+	{
+		foreach (multiplier in this.m.Multipliers)
+		{
+			if (multiplier[1] == this.getID()) return multiplier[0];
+		}
+
+		return 1.0;
+	}
+
 	function getMultipliers( _type = null )
 	{
-		switch (_type)
-		{
-			case "perk":
-				return this.m.Multipliers.filter(@(idx, multiplier) ::Const.Perks.SpecialPerk.findById(multiplier[1]) != null);
-
-			case "perk_group":
-				return this.m.Multipliers.filter(@(idx, multiplier) ::Const.Perks.PerkGroup.findById(multiplier[1]) != null);
-
-			case null:
-				return this.m.Multipliers;
-
-			default:
-				throw ::MSU.Exception.InvalidValue(_type);
-		}
+		return this.m.Multipliers;
 	}
 
 	function setMultipliers( _multipliers )
@@ -141,6 +126,16 @@ this.perk_group <- ::inherit("scripts/config/legend_dummy_bb_class", {
 			this.__validateMultiplier(multiplier);
 		}
 		this.m.Multipliers = _multipliers;
+	}
+
+	function getPerkGroupMultipliers()
+	{
+		return this.m.Multipliers.filter(@(idx, multiplier) ::Const.Perks.PerkGroup.findById(multiplier[1]) != null);
+	}
+
+	function getSpecialPerkMultipliers()
+	{
+		return this.m.Multipliers.filter(@(idx, multiplier) ::Const.Perks.SpecialPerk.findById(multiplier[1]) != null);
 	}
 
 	function addMultiplier( _multiplier )

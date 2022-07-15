@@ -1,4 +1,4 @@
-this.perk_group_collection <- ::inherit("scripts/config/legend_dummy_bb_class", {
+this.perk_group_collection <- {
 	m = {
 		ID = "perk_group_collection.uninitiatlized",
 		Name = "Uninitialized perk group collection"
@@ -26,6 +26,8 @@ this.perk_group_collection <- ::inherit("scripts/config/legend_dummy_bb_class", 
 			}
 			this.m.Groups = _groups;
 		}
+
+		return this;
 	}
 
 	function getName()

@@ -14,9 +14,7 @@
 
 	// Testing
 
-	::Const.Perks.addCategory("Weapon");
-	::Const.Perks.addCategory("MeleeWeapon");
-	::Const.Perks.addCategory("RangedWeapon");
+	::Const.Perks.addCategory("Weapon", "Weapon", "Has an aptitude for");
 	::Const.Perks.addCategory("Style");
 	::Const.Perks.Category.Style.setPlayerSpecificFunction( function (_player ) {
 		local hasRangedWeaponGroup = false;
