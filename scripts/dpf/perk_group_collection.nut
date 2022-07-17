@@ -95,4 +95,4 @@ this.perk_group_collection <- {
 		if (this.m.PlayerSpecificFunction == null) return;
 		this.m.PlayerSpecificFunction(_player);
 	}
-});
+};

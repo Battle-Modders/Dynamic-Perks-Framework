@@ -16,7 +16,7 @@ this.perk_group_category <- ::inherit("scripts/dpf/perk_group_collection", {
 
 	function setMin( _min )
 	{
-		::MSU.requireInteger(_min);
+		::MSU.requireInt(_min);
 		this.m.Min = _min;
 	}
 
@@ -38,7 +38,7 @@ this.perk_group_category <- ::inherit("scripts/dpf/perk_group_collection", {
 
 	function setOrderOfAssignment( _order )
 	{
-		::MSU.requireInteger(_order);
+		::MSU.requireInt(_order);
 		this.m.OrderOfAssignment = _order;
 	}
 });

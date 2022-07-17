@@ -1,6 +1,12 @@
-::mods_hookExactClass("scripts/skills/backgrounds/character_background", function (o) {
+::mods_hookExactClass("skills/backgrounds/character_background", function (o) {
 	o.m.PerkGroupMultipliers <- [];
 	o.m.SpecialPerkMultipliers <- [];
+	o.m.PerkTree <- ::Const.Perks.DefaultPerkTree;
+
+	o.getPerkTree <- function()
+	{
+		return this.m.PerkTree;
+	}
 
 	local onSerialize = o.onSerialize;
 	o.onSerialize = function( _out )

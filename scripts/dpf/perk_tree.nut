@@ -8,18 +8,22 @@ this.perk_tree <- {
 		Traits = null
 	}
 
+	function create()
+	{
+	}
+
 	function init( _template = null, _background = null, _map = null )
 	{
 		if (_template != null)
 		{
 			this.m.Template = _template;
-			return;
+			return this;
 		}
 
 		if (!::MSU.isKindOf(_background, "character_background")) throw ::MSU.Exception.InvalidType(_background);
 		if (_background == null || _map == null)
 		{
-			::logError("Both \'_background\' and \'_map\' must be provided if \'_template\' is null");
+			::logError("Both \'_background\' and \'_map\' must be provided if \'_template\' is null.");
 			throw ::MSU.Exception.InvalidValue(_background);
 		}
 
@@ -176,14 +180,15 @@ this.perk_tree <- {
 	{
 		::MSU.requireArray(_template);
 
-		this.clear():
+		this.clear();
 
-		foreach (row in _template)
+		foreach (i, row in _template)
 		{
 			::MSU.requireArray(row);
 			foreach (perkID in row)
 			{
-				this.addPerk(perkID);
+				//::lOginfo("Going to add perk " + perkID + " in row " + i + " which means tier " + (i+1));
+				this.addPerk(perkID, i + 1);
 			}
 		}
 	}
@@ -249,7 +254,7 @@ this.perk_tree <- {
 		this.m.Tree.clear();
 	}
 
-	function hasPerk( _id, _includeToBeAdded = false )
+	function hasPerk( _id )
 	{
 		foreach (row in this.m.Tree)
 		{
@@ -259,7 +264,7 @@ this.perk_tree <- {
 			}
 		}
 
-		if (_includeToBeAdded && this.m.LocalMap != null)
+		if (this.m.LocalMap != null)
 		{
 			foreach (category in this.m.LocalMap)
 			{
@@ -286,17 +291,28 @@ this.perk_tree <- {
 
 	function addPerk( _perk, _tier = 1, _isRefundable = true )
 	{
+		//::lOginfo("== addPerk ==");
 		if (this.hasPerk(_perk)) return;
 
 		local perkDef = clone ::Const.Perks.findById(_perk);
 		perkDef.Row <- _tier - 1;
 		perkDef.Unlocks <- _tier - 1;
 		perkDef.IsRefundable <- _isRefundable;
-		for (local i = this.m.Tree.len(); i < tier; i++)
+		//::lOginfo("Tree len is " + this.m.Tree.len() + " and _tier is " + _tier);
+		while (this.m.Tree.len() < _tier)
 		{
+			//::lOginfo("Tree is smaller than _tier so adding a row to tree");
 			this.m.Tree.push([]);
 		}
+		//::lOginfo("pushing the perkDef to index " + (_tier - 1));
 		this.m.Tree[_tier - 1].push(perkDef);
+		foreach (row in this.m.Tree)
+		{
+			foreach (perkdef in row)
+			{
+				//::lOginfo(perkdef.ID);
+			}
+		}
 	}
 
 	function removePerk( _perk )
@@ -310,13 +326,13 @@ this.perk_tree <- {
 		}
 	}
 
-	function hasPerkGroup( _perkGroup, _includeToBeAdded = false )
+	function hasPerkGroup( _perkGroup )
 	{
 		foreach (row in _perkGroup.getTree())
 		{
 			foreach (perk in row)
 			{
-				if (!this.hasPerk(perk, _includeToBeAdded)) return false;
+				if (!this.hasPerk(perk)) return false;
 			}
 		}
 
@@ -329,7 +345,7 @@ this.perk_tree <- {
 		{
 			foreach (perk in row)
 			{
-				this.addPerk(perk, row + 1, _isRefundable);
+				this.addPerk(perk, i + 1, _isRefundable);
 			}
 		}
 	}

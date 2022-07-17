@@ -19,8 +19,6 @@ this.special_perk <- {
 		if (_chanceFunction == null) _chanceFunction = @() this.Chance;
 		else this.setChanceFunction(_chanceFunction);
 
-		::Const.Perks.SpecialPerks.LookupMap[_perk] <- this;
-
 		return this;
 	}
 
@@ -31,7 +29,7 @@ this.special_perk <- {
 
 	function setChance( _chance )
 	{
-		::MSU.requireInteger(_chance);
+		::MSU.requireInt(_chance);
 		this.m.Chance = _chance;
 	}
 
@@ -42,7 +40,7 @@ this.special_perk <- {
 
 	function setTier( _tier )
 	{
-		::MSU.requireInteger(_tier);
+		::MSU.requireInt(_tier);
 		this.m.Tier = _tier;
 	}
 
@@ -129,4 +127,4 @@ this.special_perk <- {
 
 		return null;
 	}
-});
+};

@@ -1,28 +1,35 @@
-::DPF <- {};
-::DPF.Version = "0.1.0";
-::DPF.ID = "mod_dpf";
-::DPF.Name = "Dynamic Perks Framework (DPF)";
+::DPF <- {
+	Version = "0.1.0",
+	ID = "mod_dpf",
+	Name = "Dynamic Perks Framework (DPF)"
+};
 
 ::mods_registerMod(::DPF.ID, ::DPF.Version, ::DPF.Name);
 ::mods_queue(::DPF.ID, "mod_msu", function() {
 
+	::includeFiles(::IO.enumerateFiles("scripts/dpf"));
+
 	::MSU.EndQueue.add(function() {
 		::Const.Perks.Category.sort(function( _key1, _value1, _key2, _value2 ) {
-			return _value1.OrderOfAssignment <=> _value2.OrderOfAssignment;
+			return _value1.m.OrderOfAssignment <=> _value2.m.OrderOfAssignment;
 		});
 	})
 
 	// Testing
 
+	::mods_hookNewObject("skills/backgrounds/companion_1h_background", function(o) {
+		o.m.PerkTree.removePerk("perk.duelist");
+	});
+
 	::Const.Perks.addCategory("Weapon", "Weapon", "Has an aptitude for");
-	::Const.Perks.addCategory("Style");
+	::Const.Perks.addCategory("Style", "Style", "Likes using");
 	::Const.Perks.Category.Style.setPlayerSpecificFunction( function (_player ) {
 		local hasRangedWeaponGroup = false;
 		local hasMeleeWeaponGroup = false;
 
 		foreach (perkGroup in ::Const.Perks.PerkGroupCollection.RangedWeapon.getList())
 		{
-			if (_player.getBackground().getPerkTree().hasPerkGroup(perkGroup, true))
+			if (_player.getBackground().getPerkTree().hasPerkGroup(perkGroup))
 			{
 				hasRangedWeaponGroup = true;
 				break;
@@ -31,7 +38,7 @@
 
 		foreach (perkGroup in ::Const.Perks.PerkGroupCollection.MeleeWeapon.getList())
 		{
-			if (_player.getBackground().getPerkTree().hasPerkGroup(perkGroup, true))
+			if (_player.getBackground().getPerkTree().hasPerkGroup(perkGroup))
 			{
 				hasMeleeWeaponGroup = true;
 				break;

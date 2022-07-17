@@ -18,10 +18,7 @@ this.perk_group <- {
 		this.setName(_name);
 		this.setFlavorText(_flavorText);
 
-		if (_selfMultiplier != null) this.setSelfMultiplier(_selfMultiplier);
 		if (_multipliers != null) this.setMultipliers(_multipliers);
-
-		::Const.Perks.PerkGroup.LookupMap[_id] <- this;
 
 		return this;
 	}
@@ -205,7 +202,7 @@ this.perk_group <- {
 		local row = this.findPerk(_perk);
 		if (row != null)
 		{
-			::logWarning("Perk " + _perk + " already exists in perk group " + this.getID() + " at tier " + (row + 1);
+			::logWarning("Perk " + _perk + " already exists in perk group " + this.getID() + " at tier " + (row + 1));
 			return;
 		}
 
@@ -246,4 +243,4 @@ this.perk_group <- {
 
 		return ::MSU.Array.rand(perks);
 	}
-});
+};

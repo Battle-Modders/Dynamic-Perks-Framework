@@ -19,18 +19,32 @@
 	}
 };
 
+local defaultTemplate = array(::Const.Perks.Perks.len());
+
 foreach (i, row in ::Const.Perks.Perks)
 {
-	::Const.Perks.DefaultPerkTreeTemplate[i] = array(row.len());
+	defaultTemplate[i] = array(row.len());
 	foreach (j, perkDef in row)
 	{
-		::Const.Perks.DefaultPerkTreeTemplate[i][j] = perkDef.ID;
+		defaultTemplate[i][j] = perkDef.ID;
 		::Const.Perks.PerkDefs.push(perkDef);
 	}
 }
 
-::Const.Perks.DefaultPerkTree <- ::new("scripts/dpf/perk_tree").init(::Const.Perks.DefaultPerkTreeTemplate);
+::Const.Perks.DefaultPerkTree <- ::new("scripts/dpf/perk_tree").init(defaultTemplate);
 ::Const.Perks.DefaultPerkTree.build();
+
+// local tree = ::Const.Perks.DefaultPerkTree.getTree();
+// ::MSU.Log.printData(tree, 99);
+// foreach (i, row in tree)
+// {
+// 	::logInfo("ROW " + i + " type: " + typeof row);
+// 	foreach (perkDef in row)
+// 	{
+// 		::logInfo(typeof perkDef);
+// 		::MSU.Log.printData(perkDef);
+// 	}
+// }
 
 ::Const.Perks.addPerkGroup <- function ( _id, _name, _flavorText, _tree, _multipliers = null )
 {
@@ -38,14 +52,14 @@ foreach (i, row in ::Const.Perks.Perks)
 	::Const.Perks.PerkGroup[_id] <- ::new("scripts/dpf/perk_group").init(_id, _name, _flavorText, _tree, _multipliers);
 }
 
-::Const.Perks.addPerkGroup("DPF_RandomPerkGroup", "Random", "Random perk group", [ [], [], [], [], [], [], [], [], [], [], [] ]);
-::Const.Perks.addPerkGroup("DPF_NonePerkGroup", "None", "None perk group", [ [], [], [], [], [], [], [], [], [], [], [] ]);
+::Const.Perks.addPerkGroup("DPF_RandomPerkGroup", "Random", ["Random perk group"], [ [], [], [], [], [], [], [], [], [], [], [] ]);
+::Const.Perks.addPerkGroup("DPF_NonePerkGroup", "None", ["None perk group"], [ [], [], [], [], [], [], [], [], [], [], [] ]);
 
 ::Const.Perks.addCategory <- function ( _id, _name, _tooltipPrefix, _min = 1, _groups = null )
 {
 	if (::Const.Perks.Category.contains(_name)) ::logWarning(format("A category with id \'%s\' and name \'%s\' already exists.", _id, _name));
 
-	local category = ::new("scripts/dpf/perk_group_collection").init(_id, _name, _groups);
+	local category = ::new("scripts/dpf/perk_group_category").init(_id, _name, _groups);
 	category.setTooltipPrefix(_tooltipPrefix);
 	category.setMin(_min);
 	category.setOrderOfAssignment(::Const.Perks.Category.len() * 10);
@@ -91,6 +105,7 @@ foreach (i, row in ::Const.Perks.Perks)
 					map[perkID].push(group.getName());
 				}
 			}
+
 		}
 	}
 
