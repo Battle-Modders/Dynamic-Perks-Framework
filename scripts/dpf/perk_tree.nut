@@ -370,6 +370,7 @@ this.perk_tree <- {
 			foreach (perk in row)
 			{
 				_out.writeString(perk.ID);
+				_out.writeBool(perk.IsRefundable);
 			}
 		}
 	}
@@ -379,10 +380,11 @@ this.perk_tree <- {
 		this.m.Tree = array(_in.readU8());
 		for (local i = 0; i < this.m.Tree.len(); i++)
 		{
-			this.m.Tree[i] = array(_in.readU8());
-			for (local j = 0; j < this.m.Tree[i].len(); j++)
+			this.m.Tree[i] = [];
+			local len = _in.readU8();
+			for (local j = 0; j < len; j++)
 			{
-				this.m.Tree[i][j] = ::Const.Perks.findById(_in.readString());
+				this.addPerk(_in.readString(), i+1, _in.readBool());
 			}
 		}
 	}
