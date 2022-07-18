@@ -92,7 +92,7 @@ this.perk_tree <- {
 						perkGroup = ::Const.Perks.PerkGroup.findById(perkGroupContainer.roll());
 					}
 
-					if (perkGroup == null) perkGroup = ::Const.Perks.PerkGroup.findById("perk_group.none");
+					if (perkGroup == null) perkGroup = ::Const.Perks.PerkGroup.findById("DPF_NonePerkGroup");
 					else if (perkGroup.getID() == "DPF_RandomPerkGroup") perkGroup = this.__getWeightedRandomGroupFromCategory(categoryName, exclude);
 
 					this.m.LocalMap[categoryName].push(perkGroup);
@@ -199,9 +199,9 @@ this.perk_tree <- {
 		foreach (i, row in this.m.Tree)
 		{
 			ret[i] = array(row.len());
-			foreach (i, perkDef in row)
+			foreach (i, perk in row)
 			{
-				ret[i][j] = perkDef.ID;
+				ret[i][j] = perk.ID;
 			}
 		}
 		return ret;
@@ -241,7 +241,7 @@ this.perk_tree <- {
 		{
 			if (template.len() < i + 1) template[i] = [];
 
-			foreach (perkDef in row)
+			foreach (perk in row)
 			{
 				if (template[i].find(perk) == null) template[i].push(perk);
 			}
@@ -258,9 +258,9 @@ this.perk_tree <- {
 	{
 		foreach (row in this.m.Tree)
 		{
-			foreach (perkDef in row)
+			foreach (perk in row)
 			{
-				if (perkDef.ID == _id) return true;
+				if (perk.ID == _id) return true;
 			}
 		}
 
@@ -282,40 +282,40 @@ this.perk_tree <- {
 	{
 		foreach (row in this.m.Tree)
 		{
-			foreach (perkDef in row)
+			foreach (perk in row)
 			{
-				if (perkDef.ID == _id) return perkDef;
+				if (perk.ID == _id) return perk;
 			}
 		}
 	}
 
-	function addPerk( _perk, _tier = 1, _isRefundable = true )
+	function addPerk( _perkID, _tier = 1, _isRefundable = true )
 	{
 		//::lOginfo("== addPerk ==");
-		if (this.hasPerk(_perk)) return;
+		if (this.hasPerk(_perkID)) return;
 
-		local perkDef = clone ::Const.Perks.findById(_perk);
-		perkDef.Row <- _tier - 1;
-		perkDef.Unlocks <- _tier - 1;
-		perkDef.IsRefundable <- _isRefundable;
+		local perk = clone ::Const.Perks.findById(_perkID);
+		perk.Row <- _tier - 1;
+		perk.Unlocks <- _tier - 1;
+		perk.IsRefundable <- _isRefundable;
 		//::lOginfo("Tree len is " + this.m.Tree.len() + " and _tier is " + _tier);
 		while (this.m.Tree.len() < _tier)
 		{
 			//::lOginfo("Tree is smaller than _tier so adding a row to tree");
 			this.m.Tree.push([]);
 		}
-		//::lOginfo("pushing the perkDef to index " + (_tier - 1));
-		this.m.Tree[_tier - 1].push(perkDef);
+		//::lOginfo("pushing the perk to index " + (_tier - 1));
+		this.m.Tree[_tier - 1].push(perk);
 		foreach (row in this.m.Tree)
 		{
-			foreach (perkdef in row)
+			foreach (perk in row)
 			{
-				//::lOginfo(perkdef.ID);
+				//::lOginfo(perk.ID);
 			}
 		}
 	}
 
-	function removePerk( _perk )
+	function removePerk( _perkID )
 	{
 		foreach (row in this.m.Tree)
 		{

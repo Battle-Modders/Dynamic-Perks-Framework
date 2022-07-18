@@ -1,5 +1,4 @@
 ::Const.Perks.Category <- ::MSU.Class.OrderedMap();
-::Const.Perks.PerkDefs <- [];
 ::Const.Perks.PerkGroup <- {
 	function findById( _id )
 	{
@@ -24,10 +23,9 @@ local defaultTemplate = array(::Const.Perks.Perks.len());
 foreach (i, row in ::Const.Perks.Perks)
 {
 	defaultTemplate[i] = array(row.len());
-	foreach (j, perkDef in row)
+	foreach (j, perk in row)
 	{
-		defaultTemplate[i][j] = perkDef.ID;
-		::Const.Perks.PerkDefs.push(perkDef);
+		defaultTemplate[i][j] = perk.ID;
 	}
 }
 
@@ -39,10 +37,10 @@ foreach (i, row in ::Const.Perks.Perks)
 // foreach (i, row in tree)
 // {
 // 	::logInfo("ROW " + i + " type: " + typeof row);
-// 	foreach (perkDef in row)
+// 	foreach (perk in row)
 // 	{
-// 		::logInfo(typeof perkDef);
-// 		::MSU.Log.printData(perkDef);
+// 		::logInfo(typeof perk);
+// 		::MSU.Log.printData(perk);
 // 	}
 // }
 
@@ -73,16 +71,11 @@ foreach (i, row in ::Const.Perks.Perks)
 	::Const.Perks.SpecialPerks[_perkID] <- ::new("scripts/dpf/specialperk").init(_chance, _tier, _perkID, _flavorText, _chanceFunction);
 }
 
-::Const.Perks.addPerkDefs <- function( _perkDefs )
+::Const.Perks.addPerks <- function( _perks )
 {
-	local i = ::Const.Perks.PerkDefs.len();
-
-	::Const.Perks.PerkDefs.extend(_perkDefs);
-
-	foreach (perkDef in _perkDefs)
+	foreach (perk in _perks)
 	{
-		::Const.Perks.LookupMap[perkDef.ID] <- perkDef;
-		i++;
+		::Const.Perks.LookupMap[perk.ID] <- perk;
 	}
 }
 
@@ -117,8 +110,8 @@ foreach (i, row in ::Const.Perks.Perks)
 		local mid = "";
 		local ap = "perk group[/color]";
 
-		local perkDef = ::Const.Perks.findById(perkID);
-		local desc = perkDef.Tooltip;
+		local perk = ::Const.Perks.findById(perkID);
+		local desc = perk.Tooltip;
 
 		if (groups.len() == 1)
 		{
@@ -137,7 +130,7 @@ foreach (i, row in ::Const.Perks.Perks)
 
 		if (desc.find(pre) == null)
 		{
-			perkDef.Tooltip += "\n\n" + pre + mid + ap;
+			perk.Tooltip += "\n\n" + pre + mid + ap;
 		}
 		else
 		{
@@ -165,7 +158,7 @@ foreach (i, row in ::Const.Perks.Perks)
 				ret = ::MSU.String.replace(ret, pre, prefix + pre);
 			}
 
-			perkDef.Tooltip += text;
+			perk.Tooltip += text;
 		}
 	}
 }
