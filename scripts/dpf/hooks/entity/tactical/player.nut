@@ -12,7 +12,7 @@
 	}
 
 	local setStartValuesEx = o.setStartValuesEx;
-	o.setStartValuesEx = function( _backgrounds, _addTraits = true );
+	o.setStartValuesEx = function( _backgrounds, _addTraits = true )
 	{
 		setStartValuesEx(_backgrounds, _addTraits);
 		this.getBackground().getPerkTree().build();
