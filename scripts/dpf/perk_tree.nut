@@ -397,7 +397,11 @@ this.perk_tree <- {
 		{
 			foreach (perkGroup in category)
 			{
-				multipliers.extend(perkGroup.getPerkGroupMultipliers());
+				foreach (id, mult in perkGroup.getPerkGroupMultipliers())
+				{
+					if (id in multipliers) multipliers[id] = multipliers[id] * mult;
+					else multipliers[id] <- mult;
+				}
 			}
 		}
 
@@ -416,7 +420,7 @@ this.perk_tree <- {
 
 			if (perkGroups.len() > 0)
 			{
-				multipliers.push([[-1, ::MSU.Array.rand(perkGroups)]]);
+				multipliers[::MSU.Array.rand(perkGroups)] <- -1;
 			}
 		}
 
@@ -428,11 +432,9 @@ this.perk_tree <- {
 			{
 				if (talents[attribute] == 0) continue;
 
-				foreach (mult in ::Const.Perks.TalentMultipliers[attribute])
+				foreach (id, mult in ::Const.Perks.TalentMultipliers[attribute])
 				{
-					multipliers.push(
-						[mult[0] < 1 ? mult[0] / talents[attribute] : mult[0] * talents[attribute], mult[1]]
-					);
+					multipliers[id] <- mult < 1 ? mult / talents[attribute] : mult;
 				}
 			}
 		}
@@ -441,14 +443,17 @@ this.perk_tree <- {
 		{
 			foreach (trait in this.m.Traits)
 			{
-				multipliers.extend(trait.m.PerkGroupMultipliers);
+				foreach (id, mult in trait.m.PerkGroupMultipliers)
+				{
+					if (id in multipliers) multipliers[id] = multipliers[id] * mult;
+					else multipliers[id] <- mult;
+				}
 			}
 		}
 
-		foreach (multiplier in multipliers)
+		foreach (id, mult in multipliers)
 		{
-			local perkGroup = multiplier[1];
-			if (_perkGroupContainer.contains(perkGroup)) _perkGroupContainer.setWeight(perkGroup, _perkGroupContainer.getWeight(perkGroup) * multiplier[0]);
+			if (_perkGroupContainer.contains(id)) _perkGroupContainer.setWeight(id, _perkGroupContainer.getWeight(id) * mult);
 		}
 	}
 

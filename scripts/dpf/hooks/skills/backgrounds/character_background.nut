@@ -1,6 +1,5 @@
 ::mods_hookExactClass("skills/backgrounds/character_background", function (o) {
-	o.m.PerkGroupMultipliers <- [];
-	o.m.SpecialPerkMultipliers <- [];
+	o.m.Multipliers <- {};
 	o.m.PerkTree <- ::Const.Perks.DefaultPerkTree;
 
 	o.getPerkTree <- function()

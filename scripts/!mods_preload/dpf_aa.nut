@@ -45,11 +45,11 @@
 			}
 		}
 
-		if (!hasRangedWeaponGroup) _player.getBackground().m.PerkGroupMultipliers.push([0, ::Const.Perks.PerkGroup.RangedStyles]);
+		if (!hasRangedWeaponGroup) _player.getBackground().m.Multipliers["RangedStyle"] <- 0;
 		if (!hasMeleeWeaponGroup)
 		{
-			_player.getBackground().m.PerkGroupMultipliers.push([0, ::Const.Perks.OneHandedStyles]);
-			_player.getBackground().m.PerkGroupMultipliers.push([0, ::Const.Perks.TwoHandedStyles]);
+			_player.getBackground().m.Multipliers["OneHandedStyle"] <- 0;
+			_player.getBackground().m.Multipliers["TwoHandedStyle"] <- 0;
 		}
 	});
 });

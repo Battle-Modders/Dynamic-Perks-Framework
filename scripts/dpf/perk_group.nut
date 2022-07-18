@@ -3,7 +3,7 @@ this.perk_group <- {
 		ID = "not_initialized",
 		Name = "Not initialized Perk Group",
 		FlavorText = ["Not initialized perk group"], // TODO: Should it be named FlavorTexts ?
-		Multipliers = [],
+		Multipliers = {},
 		Tree = [ [], [], [], [], [], [], [], [], [], [], [] ] // length 11
 	},
 	function create()
@@ -102,85 +102,80 @@ this.perk_group <- {
 
 	function getSelfMultiplier()
 	{
-		foreach (multiplier in this.m.Multipliers)
-		{
-			if (multiplier[1] == this.getID()) return multiplier[0];
-		}
-
-		return 1.0;
+		return this.getID() in this.m.Multipliers ? this.m.Multipliers[this.getID()] : 1.0;
 	}
 
-	function getMultipliers( _type = null )
+	function getMultipliers()
 	{
 		return this.m.Multipliers;
 	}
 
 	function setMultipliers( _multipliers )
 	{
-		::MSU.requireArray(_multipliers);
-		foreach (multiplier in _multipliers)
+		::MSU.requireTable(_multipliers);
+		foreach (key, mult in _multipliers)
 		{
-			this.__validateMultiplier(multiplier);
+			this.__validateMultiplier(key, mult);
 		}
 		this.m.Multipliers = _multipliers;
 	}
 
 	function getPerkGroupMultipliers()
 	{
-		return this.m.Multipliers.filter(@(idx, multiplier) ::Const.Perks.PerkGroup.findById(multiplier[1]) != null);
+		local ret = {};
+		foreach (id, mult in this.m.Multipliers)
+		{
+			if (::Const.Perks.PerkGroup.findById(id) != null) ret[id] <- mult;
+		}
+
+		return ret;
 	}
 
 	function getSpecialPerkMultipliers()
 	{
-		return this.m.Multipliers.filter(@(idx, multiplier) ::Const.Perks.SpecialPerk.findById(multiplier[1]) != null);
+		local ret = {};
+		foreach (id, mult in this.m.Multipliers)
+		{
+			if (::Const.Perks.SpecialPerks.findById(id) != null) ret[id] <- mult;
+		}
+
+		return ret;
 	}
 
-	function addMultiplier( _multiplier )
+	function addMultiplier( _id, _mult )
 	{
-		this.__validateMultiplier(_multiplier);
-		foreach (multiplier in this.m.Multipliers)
+		this.__validateMultiplier(_id, _mult);
+		if (_id in this.m.Multipliers)
 		{
-			if (multiplier[1] == _multiplier[1])
-			{
-				::logError(format("The perk group %s already contains a multiplier of %s for %s", this.getID(), multiplier[0], multiplier[1]));
-				return;
-			}
+			::logWarning("The perk group " + this.getID() + " already contains a multiplier of " + this.m.Multipliers[_id] + " for " + _id + ". Overwriting it with " + _mult);
 		}
 
-		this.m.Multipliers.push(_multiplier);
+		this.m.Multipliers[_id] <- _mult;
 	}
 
-	function removeMultiplier( _item )
+	function removeMultiplier( _id )
 	{
-		if (::Const.Perks.findById(_item) == null || ::Const.Perks.PerkGroup.findById(_item) == null)
+		if (::Const.Perks.findById(_id) == null || ::Const.Perks.PerkGroup.findById(_id) == null)
 		{
-			::logError("_item must be a valid perk or perk group ID.");
-			throw ::MSU.Exception.InvalidValue(_multiplier);
+			::logError("_id must be a valid perk ID or perk group ID.");
+			throw ::MSU.Exception.InvalidValue(_id);
 		}
 
-		foreach (i, multiplier in this.m.Multipliers)
+		if (_id in this.m.Multipliers)
 		{
-			if (multiplier[1] == _item) return this.m.Multipliers.remove(i);
+			delete this.m.Multipliers[_id];
 		}
 	}
 
-	function __validateMultiplier( _multiplier )
+	function __validateMultiplier( _id, _mult )
 	{
-		::MSU.requireArray(_multiplier);
+		::MSU.requireString(_id);
+		::MSU.requireOneFromTypes(["integer", "float"], _mult);
 
-		if (_multiplier.len() != 2)
+		if (::Const.Perks.findById(_id) == null || ::Const.Perks.PerkGroup.findById(_id) == null)
 		{
-			::logError("Each multiplier must be a length 2 array.");
-			throw ::MSU.Exception.InvalidValue(_multiplier);
-		}
-
-		::MSU.requireOneFromTypes(["integer", "float"], _multiplier[0]);
-		::MSU.requireString(_multiplier[1]);
-
-		if (::Const.Perks.findById(_multiplier[1]) == null || ::Const.Perks.PerkGroup.findById(_multiplier[1]) == null)
-		{
-			::logError("The secomd element in a multiplier must be a valid perk or perk group ID.");
-			throw ::MSU.Exception.InvalidValue(_multiplier[1]);
+			::logError("The key in a multiplier must be a valid perk ID or perk group ID.");
+			throw ::MSU.Exception.InvalidValue(_id);
 		}
 	}
 

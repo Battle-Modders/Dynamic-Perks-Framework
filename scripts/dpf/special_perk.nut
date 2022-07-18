@@ -76,47 +76,35 @@ this.special_perk <- {
 	{
 		local chance = this.m.Chance;
 
-		foreach (multiplier in _player.getBackground().m.SpecialPerkMultipliers)
+		if (this.m.PerkID in _player.getBackground().m.Multipliers)
 		{
-			if (multiplier[1] == this.m.PerkID)
-			{
-				chance *= multiplier[0];
-				break;
-			}
+			chance *= _player.getBackground().m.Multipliers[this.m.PerkID];
 		}
 
-		chance *= this.m.ChanceFunction(_player);
-
-		if (_player.getBackground().getPerkTree().m.Traits != null)
+		if (chance > 0)
 		{
-			foreach (trait in _player.getBackground().getPerkTree().m.Traits)
+			chance *= this.m.ChanceFunction(_player);
+
+			if (_player.getBackground().getPerkTree().m.Traits != null)
 			{
-				foreach (multiplier in trait.m.SpecialPerkMultipliers)
+				foreach (trait in _player.getBackground().getPerkTree().m.Traits)
 				{
-					if (multiplier[1] == this.m.PerkID)
+					if (this.m.PerkID in trait.m.Multipliers)
 					{
-						chance *= multiplier[0];
-						break;
+						chance *= trait.m.Multipliers[this.m.PerkID];
 					}
 				}
 			}
-		}
 
-		if (_player.getBackground().getPerkTree().m.LocalMap != null)
-		{
-			foreach (category in _player.getBackground().getPerkTree().m.LocalMap)
+			if (_player.getBackground().getPerkTree().m.LocalMap != null)
 			{
-				foreach (perkGroup in category)
+				foreach (category in _player.getBackground().getPerkTree().m.LocalMap)
 				{
-					if ("SpecialPerkMultipliers" in perkGroup)
+					foreach (perkGroup in category)
 					{
-						foreach (multiplier in perkGroup.SpecialPerkMultipliers)
+						if (this.m.PerkID in perkGroup.m.Multipliers)
 						{
-							if (multiplier[1] == this.m.PerkID)
-							{
-								chance *= multiplier[0];
-								break;
-							}
+							chance *= perkGroup.m.Multipliers[this.m.PerkID];
 						}
 					}
 				}
