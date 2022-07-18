@@ -391,13 +391,13 @@ this.perk_tree <- {
 
 	function __applyMultipliers( _perkGroupContainer )
 	{
-		local multipliers = clone this.m.Player.getBackground().m.PerkGroupMultipliers;
+		local multipliers = clone this.m.Player.getBackground().m.Multipliers;
 
 		foreach (category in this.m.LocalMap)
 		{
 			foreach (perkGroup in category)
 			{
-				foreach (id, mult in perkGroup.getPerkGroupMultipliers())
+				foreach (id, mult in perkGroup.getMultipliers())
 				{
 					if (id in multipliers) multipliers[id] = multipliers[id] * mult;
 					else multipliers[id] <- mult;
@@ -443,7 +443,7 @@ this.perk_tree <- {
 		{
 			foreach (trait in this.m.Traits)
 			{
-				foreach (id, mult in trait.m.PerkGroupMultipliers)
+				foreach (id, mult in trait.m.Multipliers)
 				{
 					if (id in multipliers) multipliers[id] = multipliers[id] * mult;
 					else multipliers[id] <- mult;
