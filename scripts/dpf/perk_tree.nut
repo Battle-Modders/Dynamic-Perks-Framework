@@ -321,7 +321,7 @@ this.perk_tree <- {
 		{
 			foreach (i, perk in row)
 			{
-				if (perk.ID == _perk) return row.remove(i);
+				if (perk.ID == _perkID) return row.remove(i);
 			}
 		}
 	}
