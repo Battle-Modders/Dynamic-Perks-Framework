@@ -12,7 +12,7 @@ this.perk_tree <- {
 	{
 	}
 
-	function init( _template = null, _map = null )
+	function init( _template = null, _dynamicMap = null )
 	{
 		if (_template != null)
 		{
@@ -20,13 +20,13 @@ this.perk_tree <- {
 			return this;
 		}
 
-		if (_map == null)
+		if (_dynamicMap == null)
 		{
-			::logError("A \'_map\' must be provided if \'_template\' is null.");
-			throw ::MSU.Exception.InvalidValue(_map);
+			::logError("A \'_dynamicMap\' must be provided if \'_template\' is null.");
+			throw ::MSU.Exception.InvalidValue(_dynamicMap);
 		}
 
-		this.m.DynamicMap = _map;
+		this.m.DynamicMap = _dynamicMap;
 
 		return this;		
 	}
