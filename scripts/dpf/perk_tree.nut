@@ -104,7 +104,7 @@ this.perk_tree <- {
 					if (perkGroup.getID() == "DPF_RandomPerkGroup") perkGroup = this.__getWeightedRandomGroupFromCategory(categoryName, exclude);
 
 					this.m.LocalMap[categoryName].push(perkGroup);
-					if (perkGroup.getID() != "DPF_NonePerkGroup") exclude.push(perkGroup.getID());
+					if (perkGroup.getID() != "DPF_NoPerkGroup") exclude.push(perkGroup.getID());
 				}
 			}
 
@@ -485,6 +485,6 @@ this.perk_tree <- {
 		}
 
 		local group = potentialGroups.roll();
-		return group != null ? group : ::Const.Perks.PerkGroup.findById("DPF_NonePerkGroup");
+		return group != null ? group : ::Const.Perks.PerkGroup.findById("DPF_NoPerkGroup");
 	}
 }

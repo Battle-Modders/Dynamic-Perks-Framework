@@ -51,7 +51,7 @@ foreach (i, row in ::Const.Perks.Perks)
 }
 
 ::Const.Perks.addPerkGroup("DPF_RandomPerkGroup", "Random", ["Random perk group"], [ [], [], [], [], [], [], [], [], [], [], [] ]);
-::Const.Perks.addPerkGroup("DPF_NonePerkGroup", "None", ["None perk group"], [ [], [], [], [], [], [], [], [], [], [], [] ]);
+::Const.Perks.addPerkGroup("DPF_NoPerkGroup", "NoPerkGroup", ["No perk group"], [ [], [], [], [], [], [], [], [], [], [], [] ]);
 
 ::Const.Perks.addCategory <- function ( _id, _name, _tooltipPrefix, _min = 1, _groups = null )
 {
