@@ -49,6 +49,15 @@ this.perk_tree <- {
 
 			if (has) ret += text.slice(0, -2) + ".\n";
 		}
+
+		foreach (perk in ::Const.Perks.SpecialPerks)
+		{
+			if (this.hasPerk(perk.getPerkID()))
+			{
+				ret += "[color=" + this.Const.UI.Color.NegativeValue + "]" + perk.getFlavorText() ".[/color]\n";
+			}
+		}
+
 		return ret;
 	}
 
