@@ -100,11 +100,6 @@ this.perk_group <- {
 		this.m.Tree = _tree;
 	}
 
-	function getSelfMultiplier()
-	{
-		return this.getID() in this.m.Multipliers ? this.m.Multipliers[this.getID()] : 1.0;
-	}
-
 	function getMultipliers()
 	{
 		return this.m.Multipliers;
@@ -120,26 +115,9 @@ this.perk_group <- {
 		this.m.Multipliers = _multipliers;
 	}
 
-	function getPerkGroupMultipliers()
+	function getSelfMultiplier()
 	{
-		local ret = {};
-		foreach (id, mult in this.m.Multipliers)
-		{
-			if (::Const.Perks.PerkGroup.findById(id) != null) ret[id] <- mult;
-		}
-
-		return ret;
-	}
-
-	function getSpecialPerkMultipliers()
-	{
-		local ret = {};
-		foreach (id, mult in this.m.Multipliers)
-		{
-			if (::Const.Perks.SpecialPerks.findById(id) != null) ret[id] <- mult;
-		}
-
-		return ret;
+		return this.getID() in this.m.Multipliers ? this.m.Multipliers[this.getID()] : 1.0;
 	}
 
 	function addMultiplier( _id, _mult )
