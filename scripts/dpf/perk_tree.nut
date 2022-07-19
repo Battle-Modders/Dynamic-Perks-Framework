@@ -54,7 +54,7 @@ this.perk_tree <- {
 		{
 			if (this.hasPerk(perk.getPerkID()))
 			{
-				ret += "[color=" + this.Const.UI.Color.NegativeValue + "]" + perk.getFlavorText() ".[/color]\n";
+				ret += "[color=" + this.Const.UI.Color.NegativeValue + "]" + perk.getFlavorText() + ".[/color]\n";
 			}
 		}
 
