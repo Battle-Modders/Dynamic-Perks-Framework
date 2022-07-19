@@ -16,8 +16,7 @@ this.special_perk <- {
 		this.setTier(_tier);
 		this.setPerkID(_perkID);
 		this.setFlavorText(_flavorText);
-		if (_chanceFunction == null) _chanceFunction = @() this.Chance;
-		else this.setChanceFunction(_chanceFunction);
+		if (_chanceFunction != null) this.setChanceFunction(_chanceFunction);
 
 		return this;
 	}
@@ -83,7 +82,7 @@ this.special_perk <- {
 
 		if (chance > 0)
 		{
-			chance *= this.m.ChanceFunction(_player);
+			if (this.m.ChanceFunction != null) chance *= this.m.ChanceFunction(_player);
 
 			if (_player.getBackground().getPerkTree().m.Traits != null)
 			{
