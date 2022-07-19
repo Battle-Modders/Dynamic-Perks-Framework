@@ -188,7 +188,7 @@ this.perk_tree <- {
 			}
 		}
 
-		if (!::MSU.isNull(this.m.Background.getContainer())) this.m.Background.getContainer().getActor().getBackground().onBuildPerkTree();
+		if (!::MSU.isNull(this.m.Background) && !::MSU.isNull(this.m.Background.getContainer())) this.m.Background.getContainer().getActor().getBackground().onBuildPerkTree();
 	}
 
 	function toTemplate()
