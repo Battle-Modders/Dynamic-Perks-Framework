@@ -1,4 +1,8 @@
+// character_screen_identifier.js
+
 CharacterScreenIdentifier.Perk.Tree = 'perkTree';
+
+// character_screen_datasource.js
 
 CharacterScreenDatasource.prototype.queryPerkInformation = function(_perkId, _background, _callback)
 {
@@ -9,6 +13,8 @@ CharacterScreenDatasource.prototype.notifyBackendQueryPerkInformation = function
 {
 	SQ.call(this.mSQHandle, 'onQueryPerkInformation', [_perkId, _background], _callback);
 };
+
+// character_screen_perks_module.js
 
 CharacterScreenPerksModule.prototype.resetPerkTree = function(_perkTree)
 {
