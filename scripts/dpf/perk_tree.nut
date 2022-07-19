@@ -170,6 +170,7 @@ this.perk_tree <- {
 
 		this.m.LocalMap = null;
 		this.m.DynamicMap = null;
+		this.m.Template = null;
 	}
 
 	function buildFromTemplate( _template )
