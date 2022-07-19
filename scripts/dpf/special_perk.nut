@@ -29,7 +29,7 @@ this.special_perk <- {
 
 	function setChance( _chance )
 	{
-		::MSU.requireInt(_chance);
+		::MSU.requireInteger(_chance);
 		this.m.Chance = _chance;
 	}
 
@@ -40,7 +40,7 @@ this.special_perk <- {
 
 	function setTier( _tier )
 	{
-		::MSU.requireInt(_tier);
+		::MSU.requireInteger(_tier);
 		this.m.Tier = _tier;
 	}
 

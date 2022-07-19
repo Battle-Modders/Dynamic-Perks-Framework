@@ -1,6 +1,17 @@
 ::mods_hookExactClass("skills/backgrounds/character_background", function (o) {
 	o.m.Multipliers <- {};
-	o.m.PerkTree <- ::Const.Perks.DefaultPerkTree;
+	o.m.PerkTree <- ::new("scripts/dpf/perk_tree").init(::Const.Perks.DefaultPerkTreeTemplate);
+
+	o.onBuildPerkTree <- function()
+	{
+	}
+
+	local onAdded = o.onAdded;
+	o.onAdded = function()
+	{
+		onAdded();
+		this.m.PerkTree.setBackground(this);
+	}
 
 	o.getPerkTree <- function()
 	{
@@ -18,7 +29,8 @@
 	o.onDeserialize = function( _in )
 	{
 		onDeserialize(_in);
-		this.m.PerkTree = ::new("scripts/dpf/perk_tree").onDeserialize(_in);
-		this.m.PerkTree.build();
+		this.m.PerkTree = ::new("scripts/dpf/perk_tree");
+		this.m.PerkTree.setBackground(this);
+		this.m.PerkTree.onDeserialize(_in);
 	}
 });

@@ -1,4 +1,4 @@
-::mods_hookExactClass("scripts/entity/tactical/player", function (o) {
+::mods_hookExactClass("entity/tactical/player", function (o) {
 	local isPerkUnlockable = o.isPerkUnlockable;
 	o.isPerkUnlockable = function( _id )
 	{

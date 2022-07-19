@@ -8,6 +8,7 @@
 ::mods_queue(::DPF.ID, "mod_msu", function() {
 
 	::includeFiles(::IO.enumerateFiles("scripts/dpf"));
+	::mods_registerJS("dpf_mod_screens.js");
 
 	::MSU.EndQueue.add(function() {
 		::Const.Perks.Category.sort(function( _key1, _value1, _key2, _value2 ) {
@@ -18,7 +19,11 @@
 	// Testing
 
 	::mods_hookNewObject("skills/backgrounds/companion_1h_background", function(o) {
-		o.m.PerkTree.removePerk("perk.duelist");
+		o.onBuildPerkTree <- function()
+		{
+			::logInfo("removing Duelist");
+			this.getPerkTree().removePerk("perk.duelist");
+		}
 	});
 
 	::Const.Perks.addCategory("Weapon", "Weapon", "Has an aptitude for");

@@ -18,18 +18,18 @@
 	}
 };
 
-local defaultTemplate = array(::Const.Perks.Perks.len());
+::Const.Perks.DefaultPerkTreeTemplate <- array(::Const.Perks.Perks.len());
 
 foreach (i, row in ::Const.Perks.Perks)
 {
-	defaultTemplate[i] = array(row.len());
+	::Const.Perks.DefaultPerkTreeTemplate[i] = array(row.len());
 	foreach (j, perk in row)
 	{
-		defaultTemplate[i][j] = perk.ID;
+		::Const.Perks.DefaultPerkTreeTemplate[i][j] = perk.ID;
 	}
 }
 
-::Const.Perks.DefaultPerkTree <- ::new("scripts/dpf/perk_tree").init(defaultTemplate);
+::Const.Perks.DefaultPerkTree <- ::new("scripts/dpf/perk_tree").init(::Const.Perks.DefaultPerkTreeTemplate);
 ::Const.Perks.DefaultPerkTree.build();
 
 // local tree = ::Const.Perks.DefaultPerkTree.getTree();

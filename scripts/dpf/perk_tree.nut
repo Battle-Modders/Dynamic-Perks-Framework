@@ -3,7 +3,7 @@ this.perk_tree <- {
 		Tree = [],
 		Template = null,
 		DynamicMap = null,
-		Player = null,
+		Background = null,
 		LocalMap = null,
 		Traits = null
 	}
@@ -12,7 +12,7 @@ this.perk_tree <- {
 	{
 	}
 
-	function init( _template = null, _background = null, _map = null )
+	function init( _template = null, _map = null )
 	{
 		if (_template != null)
 		{
@@ -20,14 +20,12 @@ this.perk_tree <- {
 			return this;
 		}
 
-		if (!::MSU.isKindOf(_background, "character_background")) throw ::MSU.Exception.InvalidType(_background);
-		if (_background == null || _map == null)
+		if (_map == null)
 		{
-			::logError("Both \'_background\' and \'_map\' must be provided if \'_template\' is null.");
-			throw ::MSU.Exception.InvalidValue(_background);
+			::logError("A \'_map\' must be provided if \'_template\' is null.");
+			throw ::MSU.Exception.InvalidValue(_map);
 		}
 
-		this.m.Player = ::MSU.asWeakTableRef(_background.getContainer().getActor());
 		this.m.DynamicMap = _map;
 
 		return this;		
@@ -63,7 +61,7 @@ this.perk_tree <- {
 		}
 
 		this.m.LocalMap = {};
-		this.m.Traits = ::MSU.isNull(this.m.Player) ? null : this.m.Player.getSkills().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait);
+		this.m.Traits = this.m.Background.getContainer().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait);
 
 		foreach (categoryName, category in ::Const.Perks.Category)
 		{
@@ -102,7 +100,7 @@ this.perk_tree <- {
 
 			if (category.getMin() > 0)
 			{
-				::Const.Perks.Category[categoryName].playerSpecificFunction(this.m.Player);
+				::Const.Perks.Category[categoryName].playerSpecificFunction(this.m.Background.getContainer().getActor());
 
 				local exclude = array(this.m.LocalMap[categoryName].len());
 				foreach (i, perkGroup in this.m.LocalMap[categoryName])
@@ -139,7 +137,7 @@ this.perk_tree <- {
 
 		foreach (specialPerk in ::Const.Perks.SpecialPerks)
 		{
-			local object = specialPerk.roll(this.m.Player);
+			local object = specialPerk.roll(this.m.Background.getContainer().getActor());
 			if (object == null) continue;
 
 			local hasRow = false;
@@ -168,12 +166,10 @@ this.perk_tree <- {
 			this.m.Template[row].push(object.PerkID);
 		}
 
-		this.m.LocalMap = null;
-		this.m.Traits = null;
-		this.m.DynamicMap = null;
-		this.m.Player = null;
-
 		this.buildFromTemplate(this.m.Template);
+
+		this.m.LocalMap = null;
+		this.m.DynamicMap = null;
 	}
 
 	function buildFromTemplate( _template )
@@ -191,6 +187,8 @@ this.perk_tree <- {
 				this.addPerk(perkID, i + 1);
 			}
 		}
+
+		if (!::MSU.isNull(this.m.Background.getContainer())) this.m.Background.getContainer().getActor().getBackground().onBuildPerkTree();
 	}
 
 	function toTemplate()
@@ -210,6 +208,17 @@ this.perk_tree <- {
 	function getTree()
 	{
 		return this.m.Tree;
+	}
+
+	function getBackground()
+	{
+		return this.m.Background.getContainer().getActor();
+	}
+
+	function setBackground( _background )
+	{
+		if (!::MSU.isKindOf(_background, "character_background")) throw ::MSU.Exception.InvalidType(_background);
+		this.m.Background = ::MSU.asWeakTableRef(_background);
 	}
 
 	function getTemplate()
@@ -233,7 +242,7 @@ this.perk_tree <- {
 		}
 	}
 
-	function merge( _other )
+	function merge( _other, _rebuild = true )
 	{
 		_other = _other.toTemplate();
 		local template = this.toTemplate();
@@ -246,7 +255,8 @@ this.perk_tree <- {
 				if (template[i].find(perk) == null) template[i].push(perk);
 			}
 		}
-		this.buildFromTemplate(template);
+
+		if (_rebuild) this.buildFromTemplate(template);
 	}
 
 	function clear()
@@ -317,11 +327,22 @@ this.perk_tree <- {
 
 	function removePerk( _perkID )
 	{
+		::logInfo("== removePerk ==");
+		::logInfo(this.m.Tree.len());
 		foreach (row in this.m.Tree)
 		{
 			foreach (i, perk in row)
 			{
-				if (perk.ID == _perkID) return row.remove(i);
+				if (perk.ID == _perkID) row.remove(i);
+			}
+		}
+
+		foreach (i, row in this.m.Tree)
+		{
+			::logInfo("row " + i);
+			foreach (perk in row)
+			{
+				::logInfo(perk.ID);
 			}
 		}
 	}
@@ -381,6 +402,9 @@ this.perk_tree <- {
 		for (local i = 0; i < this.m.Tree.len(); i++)
 		{
 			this.m.Tree[i] = [];
+		}
+		for (local i = 0; i < this.m.Tree.len(); i++)
+		{
 			local len = _in.readU8();
 			for (local j = 0; j < len; j++)
 			{
@@ -391,7 +415,7 @@ this.perk_tree <- {
 
 	function __applyMultipliers( _perkGroupContainer )
 	{
-		local multipliers = clone this.m.Player.getBackground().m.Multipliers;
+		local multipliers = clone this.m.Background.m.Multipliers;
 
 		foreach (category in this.m.LocalMap)
 		{
@@ -405,7 +429,7 @@ this.perk_tree <- {
 			}
 		}
 
-		local weapon = this.m.Player.getMainhandItem();
+		local weapon = this.m.Background.getContainer().getActor().getMainhandItem();
 		if (weapon != null)
 		{
 			local perkGroups = [];
@@ -424,9 +448,9 @@ this.perk_tree <- {
 			}
 		}
 
-		if (this.m.Player.getTalents().len() > 0)
+		if (this.m.Background.getContainer().getActor().getTalents().len() > 0)
 		{
-			local talents = this.m.Player.getTalents();
+			local talents = this.m.Background.getContainer().getActor().getTalents();
 
 			for (local attribute = 0; attribute < this.Const.Attributes.COUNT; attribute++)
 			{
