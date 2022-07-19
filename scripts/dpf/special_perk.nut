@@ -71,7 +71,7 @@ this.special_perk <- {
 		this.m.FlavorText = _flavorText;
 	}
 
-	function roll( _player )
+	function calculateChance( _player )
 	{
 		local chance = this.m.Chance;
 
@@ -109,6 +109,13 @@ this.special_perk <- {
 				}
 			}
 		}
+
+		return chance;
+	}
+
+	function roll( _player )
+	{
+		local chance = this.calculateChance(_player);
 
 		if (chance < 0 || ::Math.rand(1, 100) <= chance) return { PerkID = this.m.PerkID, Tier = this.m.Tier };
 
