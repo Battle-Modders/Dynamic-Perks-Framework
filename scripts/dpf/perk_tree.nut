@@ -52,6 +52,20 @@ this.perk_tree <- {
 		return ret;
 	}
 
+	function getPerksTooltip()
+	{
+		local ret = "";
+		foreach (row in this.m.Tree)
+		{
+			foreach (perk in row)
+			{
+				ret += perk.ID + ", ";
+			}
+			ret = ret.slice(0, -2);
+		}
+		return ret;
+	}
+
 	function build()
 	{
 		if (this.m.Template != null)
