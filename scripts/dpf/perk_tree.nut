@@ -77,21 +77,31 @@ this.perk_tree <- {
 
 				foreach (perkGroupContainer in this.m.DynamicMap[categoryName])
 				{
-					local perkGroup;
+					local id;
 
-					if (typeof perkGroupContainer == "string")
+					switch (typeof perkGroupContainer)
 					{
-						perkGroup = ::Const.Perks.PerkGroup.findById(perkGroupContainer);
-						if (perkGroup == null) ::logError(format("No perk group with id \'%s\'", perkGroupContainer));
-					}
-					else
-					{
-						this.__applyMultipliers(perkGroupContainer);
-						perkGroup = ::Const.Perks.PerkGroup.findById(perkGroupContainer.roll());
+						case "string":
+							id = perkGroupContainer;
+							break;
+
+						case "instance":
+							this.__applyMultipliers(perkGroupContainer);
+							id = perkGroupContainer.roll();
+							break;
+
+						default:
+							throw ::MSU.Exception.InvalidType("perkGroupContainer");
 					}
 
-					if (perkGroup == null) perkGroup = ::Const.Perks.PerkGroup.findById("DPF_NonePerkGroup");
-					else if (perkGroup.getID() == "DPF_RandomPerkGroup") perkGroup = this.__getWeightedRandomGroupFromCategory(categoryName, exclude);
+					local perkGroup = ::Const.Perks.PerkGroup.findById(id);
+					if (perkGroup == null)
+					{
+						::logError("No perk group with id \'" + id + "\'");
+						continue;
+					}
+
+					if (perkGroup.getID() == "DPF_RandomPerkGroup") perkGroup = this.__getWeightedRandomGroupFromCategory(categoryName, exclude);
 
 					this.m.LocalMap[categoryName].push(perkGroup);
 					if (perkGroup.getID() != "DPF_NonePerkGroup") exclude.push(perkGroup.getID());
