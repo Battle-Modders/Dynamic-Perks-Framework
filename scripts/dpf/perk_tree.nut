@@ -183,7 +183,6 @@ this.perk_tree <- {
 			::MSU.requireArray(row);
 			foreach (perkID in row)
 			{
-				//::lOginfo("Going to add perk " + perkID + " in row " + i + " which means tier " + (i+1));
 				this.addPerk(perkID, i + 1);
 			}
 		}
@@ -301,48 +300,26 @@ this.perk_tree <- {
 
 	function addPerk( _perkID, _tier = 1, _isRefundable = true )
 	{
-		//::lOginfo("== addPerk ==");
 		if (this.hasPerk(_perkID)) return;
 
 		local perk = clone ::Const.Perks.findById(_perkID);
 		perk.Row <- _tier - 1;
 		perk.Unlocks <- _tier - 1;
 		perk.IsRefundable <- _isRefundable;
-		//::lOginfo("Tree len is " + this.m.Tree.len() + " and _tier is " + _tier);
 		while (this.m.Tree.len() < _tier)
 		{
-			//::lOginfo("Tree is smaller than _tier so adding a row to tree");
 			this.m.Tree.push([]);
 		}
-		//::lOginfo("pushing the perk to index " + (_tier - 1));
 		this.m.Tree[_tier - 1].push(perk);
-		foreach (row in this.m.Tree)
-		{
-			foreach (perk in row)
-			{
-				//::lOginfo(perk.ID);
-			}
-		}
 	}
 
 	function removePerk( _perkID )
 	{
-		::logInfo("== removePerk ==");
-		::logInfo(this.m.Tree.len());
 		foreach (row in this.m.Tree)
 		{
 			foreach (i, perk in row)
 			{
 				if (perk.ID == _perkID) row.remove(i);
-			}
-		}
-
-		foreach (i, row in this.m.Tree)
-		{
-			::logInfo("row " + i);
-			foreach (perk in row)
-			{
-				::logInfo(perk.ID);
 			}
 		}
 	}
