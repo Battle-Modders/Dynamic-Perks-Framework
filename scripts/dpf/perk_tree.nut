@@ -114,6 +114,7 @@ this.perk_tree <- {
 							break;
 
 						default:
+							::logError("perkGroupContainer must either be a valid perk group id or an instance of the MSU WeightedContainer class");
 							throw ::MSU.Exception.InvalidType("perkGroupContainer");
 					}
 
