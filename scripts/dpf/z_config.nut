@@ -37,7 +37,7 @@ local findById = ::Const.Perks.findById;
 
 	function add( _id, _name, _tooltipPrefix, _min = 1, _groups = null )
 	{
-		if (this.findById(_id) != null) ::logWarning(format("A category with id \'%s\' and name \'%s\' already exists.", _id, _name));
+		if (this.findById(_id) != null) throw ::MSU.Exception.DuplicateKey(_id);
 
 		local category = ::new("scripts/dpf/perk_group_category").init(_id, _name, _groups);
 		category.setTooltipPrefix(_tooltipPrefix);
