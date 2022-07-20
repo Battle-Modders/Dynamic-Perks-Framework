@@ -335,14 +335,13 @@ this.perk_tree <- {
 		}
 	}
 
-	function addPerk( _perkID, _tier = 1, _isRefundable = true )
+	function addPerk( _perkID, _tier = 1 )
 	{
 		if (this.hasPerk(_perkID)) return;
 
 		local perk = clone ::Const.Perks.findById(_perkID);
 		perk.Row <- _tier - 1;
 		perk.Unlocks <- _tier - 1;
-		perk.IsRefundable <- _isRefundable;
 		while (this.m.Tree.len() < _tier)
 		{
 			this.m.Tree.push([]);
@@ -374,13 +373,13 @@ this.perk_tree <- {
 		return true;
 	}
 
-	function addPerkGroup( _perkGroup, _isRefundable = true )
+	function addPerkGroup( _perkGroup )
 	{
 		foreach (i, row in _perkGroup.getTree())
 		{
 			foreach (perk in row)
 			{
-				this.addPerk(perk, i + 1, _isRefundable);
+				this.addPerk(perk, i + 1);
 			}
 		}
 	}
@@ -405,7 +404,6 @@ this.perk_tree <- {
 			foreach (perk in row)
 			{
 				_out.writeString(perk.ID);
-				_out.writeBool(perk.IsRefundable);
 			}
 		}
 	}
@@ -422,7 +420,7 @@ this.perk_tree <- {
 			local len = _in.readU8();
 			for (local j = 0; j < len; j++)
 			{
-				this.addPerk(_in.readString(), i+1, _in.readBool());
+				this.addPerk(_in.readString(), i+1);
 			}
 		}
 	}
