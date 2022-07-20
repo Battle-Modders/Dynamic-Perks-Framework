@@ -11,6 +11,12 @@
 		if (_id in this) return this[_id];
 	}
 };
+::Const.Perks.TalentMultipliers <- {};
+foreach (attribute in ::Const.Attributes)
+{
+	::Const.Perks.TalentMultipliers[attribute] <- {};
+}
+delete ::Const.Perks.TalentMultipliers[::Const.Attributes.COUNT];
 
 ::DPF.PerkTooltipEntityID <- null;
 local findById = ::Const.Perks.findById;
