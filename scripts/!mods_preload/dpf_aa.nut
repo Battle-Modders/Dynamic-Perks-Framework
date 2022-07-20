@@ -18,11 +18,19 @@
 
 	// Testing
 
+	::Const.Perks.LookupMap["perk.test"] <- {
+		ID = "perk.test",
+		Script = "scripts/skills/perks/perk_fast_adaption",
+		Name = "Test Perk",
+		Tooltip = "Let\'s test this perk",
+		Icon = "ui/perks/perk_33.png",
+		IconDisabled = "ui/perks/perk_33_sw.png"
+	};
+
 	::mods_hookNewObject("skills/backgrounds/companion_1h_background", function(o) {
 		o.onBuildPerkTree <- function()
 		{
-			::logInfo("removing Duelist");
-			this.getPerkTree().removePerk("perk.duelist");
+			this.getPerkTree().addPerk("perk.test", 5);
 		}
 	});
 
