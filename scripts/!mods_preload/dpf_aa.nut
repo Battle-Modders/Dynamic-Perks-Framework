@@ -11,9 +11,7 @@
 	::mods_registerJS("dpf_mod_screens.js");
 
 	::MSU.EndQueue.add(function() {
-		::Const.Perks.Category.sort(function( _key1, _value1, _key2, _value2 ) {
-			return _value1.m.OrderOfAssignment <=> _value2.m.OrderOfAssignment;
-		});
+		::Const.Perks.Categories.sort();
 	})
 
 	// Testing
@@ -39,15 +37,15 @@
 	};
 
 	::Const.Perks.addCategory("Weapon", "Weapon", "Has an aptitude for", 1, [
-		::Const.Perks.PerkGroup.TestPerkGroup
+		"TestPerkGroup"
 	]);
 
 	::Const.Perks.addCategory("Style", "Style", "Likes using");
-	// ::Const.Perks.Category.Style.setPlayerSpecificFunction( function (_player ) {
+	// ::Const.Perks.Categories.findById("Style").setPlayerSpecificFunction( function (_player ) {
 	// 	local hasRangedWeaponGroup = false;
 	// 	local hasMeleeWeaponGroup = false;
 
-	// 	foreach (perkGroup in ::Const.Perks.PerkGroupCollection.RangedWeapon.getList())
+	// 	foreach (perkGroup in ::Const.Perks.PerkGroupsCollection.RangedWeapon.getList())
 	// 	{
 	// 		if (_player.getBackground().getPerkTree().hasPerkGroup(perkGroup))
 	// 		{
@@ -56,7 +54,7 @@
 	// 		}
 	// 	}
 
-	// 	foreach (perkGroup in ::Const.Perks.PerkGroupCollection.MeleeWeapon.getList())
+	// 	foreach (perkGroup in ::Const.Perks.PerkGroupsCollection.MeleeWeapon.getList())
 	// 	{
 	// 		if (_player.getBackground().getPerkTree().hasPerkGroup(perkGroup))
 	// 		{
@@ -74,10 +72,30 @@
 	// });
 
 	::mods_hookNewObject("skills/backgrounds/companion_1h_background", function(o) {
-		o.m.PerkTree = ::new("scripts/dpf/perk_tree").init(null, dynamicMap);
+		o.m.PerkTree = ::new("scripts/dpf/perk_tree").init(null, {});
 		o.onBuildPerkTree <- function()
 		{
 			this.getPerkTree().addPerk("perk.test", 5);
+		}
+
+		local getTooltip = o.getTooltip;
+		o.getTooltip <- function()
+		{
+			local ret = getTooltip();
+			ret.push({
+				id = 7,
+				type = "text",
+				icon = "ui/icons/special.png",
+				text = this.getPerkTree().getTooltip()
+			});
+			ret.push({
+				id = 7,
+				type = "text",
+				icon = "ui/icons/special.png",
+				text = this.getPerkTree().getPerksTooltip()
+			});
+
+			return ret;
 		}
 	});
 });

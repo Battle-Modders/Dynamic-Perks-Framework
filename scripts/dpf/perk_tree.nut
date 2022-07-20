@@ -47,23 +47,23 @@ this.perk_tree <- {
 	function getTooltip()
 	{
 		local ret = "";
-		foreach (category in ::Const.Perks.Category)
+		foreach (category in ::Const.Perks.Categories.getAll())
 		{
-			local text = category.getTooltipPrefix();
+			local text = category.getTooltipPrefix() + " ";
 			local has = false;
-			foreach (group in category.getList())
+			foreach (groupID in category.getList())
 			{
-				if (this.hasPerkGroup(group))
+				if (this.hasPerkGroup(groupID))
 				{
 					has = true;
-					text += ::MSU.Array.rand(group.getFlavorText()) + ", ";
+					text += ::MSU.Array.rand(::Const.Perks.PerkGroups.findById(groupID).getFlavorText()) + ", ";
 				}
 			}
 
 			if (has) ret += text.slice(0, -2) + ".\n";
 		}
 
-		foreach (perk in ::Const.Perks.SpecialPerks)
+		foreach (perk in ::Const.Perks.SpecialPerks.getAll())
 		{
 			if (this.hasPerk(perk.getPerkID()))
 			{
@@ -81,9 +81,9 @@ this.perk_tree <- {
 		{
 			foreach (perk in row)
 			{
-				ret += perk.ID + ", ";
+				ret += perk.Name + ", ";
 			}
-			ret = ret.slice(0, -2);
+			ret = ret.slice(0, -2) + "\n";
 		}
 		return ret;
 	}
@@ -91,7 +91,7 @@ this.perk_tree <- {
 	function setupLocalMap()
 	{
 		this.m.LocalMap = {};
-		foreach (categoryName, category in ::Const.Perks.Category)
+		foreach (categoryName, category in ::Const.Perks.Categories.getAll())
 		{
 			this.m.LocalMap[categoryName] <- [];
 		}
@@ -99,7 +99,7 @@ this.perk_tree <- {
 
 	function addFromDynamicMap()
 	{
-		foreach (categoryName, category in ::Const.Perks.Category)
+		foreach (categoryName, category in ::Const.Perks.Categories.getAll())
 		{
 			if (categoryName in this.m.DynamicMap)
 			{
@@ -129,7 +129,7 @@ this.perk_tree <- {
 							throw ::MSU.Exception.InvalidType("perkGroupContainer");
 					}
 
-					local perkGroup = ::Const.Perks.PerkGroup.findById(id);
+					local perkGroup = ::Const.Perks.PerkGroups.findById(id);
 					if (perkGroup == null)
 					{
 						::logError("No perk group with id \'" + id + "\'");
@@ -147,11 +147,11 @@ this.perk_tree <- {
 
 	function addMins()
 	{
-		foreach (categoryName, category in ::Const.Perks.Category)
+		foreach (categoryName, category in ::Const.Perks.Categories.getAll())
 		{
 			if (category.getMin() > 0)
 			{
-				::Const.Perks.Category[categoryName].playerSpecificFunction(this.m.Background.getContainer().getActor());
+				::Const.Perks.Categories.findById(categoryName).playerSpecificFunction(this.m.Background.getContainer().getActor());
 
 				local exclude = array(this.m.LocalMap[categoryName].len());
 				foreach (i, perkGroup in this.m.LocalMap[categoryName])
@@ -196,10 +196,8 @@ this.perk_tree <- {
 
 	function addSpecialPerksToTemplate()
 	{
-		foreach (specialPerk in ::Const.Perks.SpecialPerks)
+		foreach (specialPerk in ::Const.Perks.SpecialPerks.getAll())
 		{
-			if (!::MSU.isKindOf(specialPerk, "special_perk")) continue;
-
 			local object = specialPerk.roll(this.m.Background.getContainer().getActor());
 			if (object == null) continue;
 
@@ -408,9 +406,9 @@ this.perk_tree <- {
 		}
 	}
 
-	function hasPerkGroup( _perkGroup )
+	function hasPerkGroup( _perkGroupID )
 	{
-		foreach (row in _perkGroup.getTree())
+		foreach (row in ::Const.Perks.PerkGroups.findById(_perkGroupID).getTree())
 		{
 			foreach (perk in row)
 			{
@@ -421,9 +419,9 @@ this.perk_tree <- {
 		return true;
 	}
 
-	function addPerkGroup( _perkGroup )
+	function addPerkGroup( _perkGroupID )
 	{
-		foreach (i, row in _perkGroup.getTree())
+		foreach (i, row in ::Const.Perks.PerkGroups.findById(_perkGroupID).getTree())
 		{
 			foreach (perk in row)
 			{
@@ -432,9 +430,9 @@ this.perk_tree <- {
 		}
 	}
 
-	function removePerkGroup( _perkGroup )
+	function removePerkGroup( _perkGroupID )
 	{
-		foreach (row in _perkGroup.getTree())
+		foreach (row in ::Const.Perks.PerkGroups.findById(_perkGroupID).getTree())
 		{
 			foreach (perk in row)
 			{
@@ -506,9 +504,9 @@ this.perk_tree <- {
 
 			foreach (weaponTypeName, weaponType in ::Const.Items.WeaponType)
 			{
-				if (weapon.isWeaponType(weaponType) && (weaponTypeName in ::Const.Perks.PerkGroup))
+				if (weapon.isWeaponType(weaponType) && (weaponTypeName in ::Const.Perks.PerkGroups.getAll()))
 				{
-					perkGroups.push(::Const.Perks.PerkGroup[weaponTypeName]);
+					perkGroups.push(::Const.Perks.PerkGroups[weaponTypeName]);
 				}
 			}
 
@@ -573,9 +571,10 @@ this.perk_tree <- {
 	{
 		local potentialGroups = ::MSU.Class.WeightedContainer();
 
-		foreach (group in ::Const.Perks.Category[_categoryName].getList())
+		foreach (groupID in ::Const.Perks.Categories.findById(_categoryName).getList())
 		{
-			if (_exclude != null && _exclude.find(group.getID()) != null) continue;
+			if (_exclude != null && _exclude.find(groupID) != null) continue;
+			local group = ::Const.Perks.PerkGroups.findById(groupID);
 			potentialGroups.add(group, group.getSelfMultiplier());
 		}
 
@@ -585,6 +584,6 @@ this.perk_tree <- {
 		}
 
 		local group = potentialGroups.roll();
-		return group != null ? group : ::Const.Perks.PerkGroup.findById("DPF_NoPerkGroup");
+		return group != null ? group : ::Const.Perks.PerkGroups.findById("DPF_NoPerkGroup");
 	}
 }

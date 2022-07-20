@@ -16,12 +16,12 @@ this.perk_group_collection <- {
 		if (_groups != null)
 		{
 			::MSU.requireArray(_groups);
-			foreach (group in _groups)
+			foreach (groupID in _groups)
 			{
-				if (!::MSU.isKindOf(group, "perk_group"))
+				if (::Const.Perks.PerkGroups.findById(groupID) == null)
 				{
-					::logError("Each element in _groups must be a perk_group object.");
-					throw ::MSU.Exception.InvalidType(group);
+					::logError(groupID + " is not a valid perk_group ID");
+					throw ::MSU.Exception.InvalidType(groupID);
 				}
 			}
 			this.m.Groups = _groups;
@@ -73,10 +73,10 @@ this.perk_group_collection <- {
 		if (_exclude != null)
 		{
 			::MSU.requireArray(_exclude);
-			return ::MSU.Groups.rand(this.Groups.filter(@(idx, group) _exclude.find(group.getID()) == null));
+			return ::Const.Perks.PerkGroups.findById(::MSU.Array.rand(this.m.Groups.filter(@(idx, groupID) _exclude.find(groupID) == null)));
 		}
 
-		return ::MSU.Groups.rand(this.Groups);
+		return ::Const.Perks.PerkGroups.findById(::MSU.Array.rand(this.m.Groups));
 	}
 
 	function getRandomPerk( _exclude = null )
