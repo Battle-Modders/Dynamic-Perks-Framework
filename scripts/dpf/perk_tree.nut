@@ -420,6 +420,66 @@ this.perk_tree <- {
 		return true;
 	}
 
+	function hasPerkGroupsFromCollection( _perkGroupCollectionID, _minCount = 1, _exclude = null )
+	{
+		local collection = ::Const.Perks.PerkGroupCollections.findById(_perkGroupCollectionID);
+		if (collection == null) collection = ::Const.Perks.PerkGroupCategories.findById(_perkGroupCollectionID);
+
+		if (collection == null)
+		{
+			::logError(_perkGroupCollectionID + " must be a valid perk_group_collection or perk_group_category ID");
+			throw :MSU.Exception.InvalidValue(_perkGroupCollectionID);
+		}
+
+		local count = 0;
+
+		foreach (perkGroupID in collection.getList())
+		{
+			if (_exclude != null && _exclude.find(perkGroupID)) continue;
+
+			if (this.hasPerkGroup(perkGroupID))
+			{
+				count++;
+				if (count >= _minCount) return true;
+			}
+		}
+
+		return false;
+	}
+
+	function hasPerksFromCollection( _perkGroupCollectionID, _minCount = 1, _exclude = null )
+	{
+		local collection = ::Const.Perks.PerkGroupCollections.findById(_perkGroupCollectionID);
+		if (collection == null) collection = ::Const.Perks.PerkGroupCategories.findById(_perkGroupCollectionID);
+
+		if (collection == null)
+		{
+			::logError(_perkGroupCollectionID + " must be a valid perk_group_collection or perk_group_category ID");
+			throw :MSU.Exception.InvalidValue(_perkGroupCollectionID);
+		}
+
+		local count = 0;
+
+		foreach (perkGroupID in collection.getList())
+		{
+			foreach (row in ::Const.Perks.PerkGroups.findById(perkGroupID))
+			{
+				foreach (perkID in row)
+				{
+					if (_exclude != null && _exclude.find(perkID)) continue;
+
+					if (this.hasPerkGroup(perkGroupID))
+					{
+						count++;
+						if (count >= _minCount) return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
 	function addPerkGroup( _perkGroupID )
 	{
 		foreach (i, row in ::Const.Perks.PerkGroups.findById(_perkGroupID).getTree())
