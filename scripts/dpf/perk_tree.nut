@@ -547,7 +547,7 @@ this.perk_tree <- {
 
 	function __applyMultipliers( _perkGroupContainer )
 	{
-		local multipliers {};
+		local multipliers = {};
 
 		foreach (func in this.m.MultiplierFunctions)
 		{
