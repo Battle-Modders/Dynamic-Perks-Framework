@@ -18,6 +18,10 @@
 		return this.m.PerkTree;
 	}
 
+	o.getCategoryMin <- function( _categoryID )
+	{
+	}
+
 	local onSerialize = o.onSerialize;
 	o.onSerialize = function( _out )
 	{
