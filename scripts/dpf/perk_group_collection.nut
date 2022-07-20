@@ -18,7 +18,7 @@ this.perk_group_collection <- {
 			::MSU.requireArray(_groups);
 			foreach (group in _groups)
 			{
-				if (!::MSU.isKindOf("perk_group", group))
+				if (!::MSU.isKindOf(group, "perk_group"))
 				{
 					::logError("Each element in _groups must be a perk_group object.");
 					throw ::MSU.Exception.InvalidType(group);
