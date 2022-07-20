@@ -20,15 +20,22 @@ local findById = ::Const.Perks.findById;
 
 ::Const.Perks.Categories <- {
 	LookupMap = ::MSU.Class.OrderedMap(),
+	GenericCollections = {},
 
 	function getAll()
 	{
 		return this.LookupMap;
 	}
 
+	function getGenericCollections()
+	{
+		return this.GenericCollections;
+	}
+
 	function findById( _id )
 	{
 		if (this.LookupMap.contains(_id)) return this.LookupMap[_id];
+		if (_id in this.GenericCollections) return this.GenericCollections[_id];
 	}
 
 	function sort()
@@ -46,6 +53,12 @@ local findById = ::Const.Perks.findById;
 		category.setOrderOfAssignment(this.getAll().len() * 10);
 
 		this.LookupMap[_id] <- category;
+	}
+
+	function addGenericCollection( _id, _name, _groups = null )
+	{
+		if (_id in this.GenericCollections) throw ::MSU.Exception.DuplicateKey(_id);
+		this.GenericCollections[_id] <- ::new("scripts/dpf/perk_group_collection").init(_id, _name, _groups);
 	}
 };
 
@@ -68,26 +81,6 @@ local findById = ::Const.Perks.findById;
 		this.LookupMap[_id] <- ::new("scripts/dpf/perk_group").init(_id, _name, _flavorText, _tree, _multipliers);
 	}
 };
-
-::Const.Perks.PerkGroupCollections <- {
-	LookupMap = {},
-
-	function getAll()
-	{
-		return this.LookupMap;
-	}
-
-	function findById( _id )
-	{
-		if (_id in this.LookupMap) return this.LookupMap[_id];
-	}
-
-	function add( _id, _name, _groups = null )
-	{
-		if (_id in this.LookupMap) throw ::MSU.Exception.DuplicateKey(_id);
-		this.LookupMap[_id] <- ::new("scripts/dpf/perk_group_collection").init(_id, _name, _groups);
-	}
-}
 
 ::Const.Perks.SpecialPerks <- {
 	LookupMap = {},
