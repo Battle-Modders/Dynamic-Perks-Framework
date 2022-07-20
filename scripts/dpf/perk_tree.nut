@@ -267,7 +267,6 @@ this.perk_tree <- {
 			::MSU.requireArray(row);
 			foreach (perkID in row)
 			{
-				::logInfo("adding perk " + perkID + " to row " + 0);
 				this.addPerk(perkID, i + 1);
 			}
 		}
@@ -391,8 +390,6 @@ this.perk_tree <- {
 		// which causes the perks to never be added during dynamic build
 		// as it thinks that it already has the perk.
 		if (this.getPerk(_perkID) != null) return;
-
-		::logInfo("Yes can add perk " + _perkID + " to tier " + _tier);
 
 		local perk = clone ::Const.Perks.findById(_perkID);
 		perk.Row <- _tier - 1;
