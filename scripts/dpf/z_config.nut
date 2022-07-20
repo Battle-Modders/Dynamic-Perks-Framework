@@ -2,19 +2,13 @@
 ::Const.Perks.PerkGroup <- {
 	function findById( _id )
 	{
-		foreach (id, group in this)
-		{
-			if (id == _id) return group;
-		}
+		if (_id in this) return this[_id];
 	}
 };
 ::Const.Perks.SpecialPerks <- { // TODO: Standardize plural and singular usage in variable names
 	function findById( _id )
 	{
-		foreach (id, group in this)
-		{
-			if (id == _id) return group;
-		}
+		if (_id in this) return this[_id];
 	}
 };
 
