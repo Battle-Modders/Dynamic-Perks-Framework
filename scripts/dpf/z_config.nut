@@ -18,6 +18,18 @@
 	}
 };
 
+::DPF.PerkTooltipEntityID <- null;
+local findById = ::Const.Perks.findById;
+::Const.Perks.findById = function( _id )
+{
+	if (::DPF.PerkTooltipEntityID != null)
+	{
+		return ::Tactical.getEntityByID(::DPF.PerkTooltipEntityID).getBackground().getPerkTree().getPerk(_id);
+	}
+
+	return findById(_id);
+}
+
 ::Const.Perks.DefaultPerkTreeTemplate <- array(::Const.Perks.Perks.len());
 
 foreach (i, row in ::Const.Perks.Perks)
