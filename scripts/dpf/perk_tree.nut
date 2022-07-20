@@ -420,44 +420,24 @@ this.perk_tree <- {
 		return true;
 	}
 
-	function hasPerkGroupsFromCollection( _perkGroupCollectionID, _minCount = 1, _exclude = null )
+	function numPerkGroupsFromCategory( _perkGroupCollectionID, _exclude = null )
 	{
-		local collection = ::Const.Perks.PerkGroupCollections.findById(_perkGroupCollectionID);
-		if (collection == null) collection = ::Const.Perks.PerkGroupCategories.findById(_perkGroupCollectionID);
-
-		if (collection == null)
-		{
-			::logError(_perkGroupCollectionID + " must be a valid perk_group_collection or perk_group_category ID");
-			throw :MSU.Exception.InvalidValue(_perkGroupCollectionID);
-		}
+		local collection = ::Const.Perks.Categories.findById(_perkGroupCollectionID);
 
 		local count = 0;
 
 		foreach (perkGroupID in collection.getList())
 		{
-			if (_exclude != null && _exclude.find(perkGroupID)) continue;
-
-			if (this.hasPerkGroup(perkGroupID))
-			{
-				count++;
-				if (count >= _minCount) return true;
-			}
+			if (_exclude != null && _exclude.find(perkGroupID) != null) continue;
+			if (this.hasPerkGroup(perkGroupID)) count++;
 		}
 
-		return false;
+		return count;
 	}
 
-	function hasPerksFromCollection( _perkGroupCollectionID, _minCount = 1, _exclude = null )
+	function numPerksFromCategory( _perkGroupCollectionID, _exclude = null )
 	{
-		local collection = ::Const.Perks.PerkGroupCollections.findById(_perkGroupCollectionID);
-		if (collection == null) collection = ::Const.Perks.PerkGroupCategories.findById(_perkGroupCollectionID);
-
-		if (collection == null)
-		{
-			::logError(_perkGroupCollectionID + " must be a valid perk_group_collection or perk_group_category ID");
-			throw :MSU.Exception.InvalidValue(_perkGroupCollectionID);
-		}
-
+		local collection = ::Const.Perks.Categories.findById(_perkGroupCollectionID);
 		local count = 0;
 
 		foreach (perkGroupID in collection.getList())
@@ -466,18 +446,13 @@ this.perk_tree <- {
 			{
 				foreach (perkID in row)
 				{
-					if (_exclude != null && _exclude.find(perkID)) continue;
-
-					if (this.hasPerkGroup(perkGroupID))
-					{
-						count++;
-						if (count >= _minCount) return true;
-					}
+					if (_exclude != null && _exclude.find(perkID) != null) continue;
+					if (this.hasPerk(perkID)) count++;
 				}
 			}
 		}
 
-		return false;
+		return count;
 	}
 
 	function addPerkGroup( _perkGroupID )
