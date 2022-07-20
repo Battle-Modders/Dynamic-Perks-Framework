@@ -25,7 +25,7 @@
 		IconDisabled = "ui/perks/perk_33_sw.png"
 	};
 
-	::Const.Perks.addPerkGroup("TestPerkGroup", "TestPerkGroup", ["test perk group"], [
+	::Const.Perks.PerkGroups.add("TestPerkGroup", "TestPerkGroup", ["test perk group"], [
 		["perk.test"],
 		["perk.duelist"]
 	])
@@ -36,11 +36,11 @@
 		]
 	};
 
-	::Const.Perks.addCategory("Weapon", "Weapon", "Has an aptitude for", 1, [
+	::Const.Perks.Categories.add("Weapon", "Weapon", "Has an aptitude for", 1, [
 		"TestPerkGroup"
 	]);
 
-	::Const.Perks.addCategory("Style", "Style", "Likes using");
+	::Const.Perks.Categories.add("Style", "Style", "Likes using");
 	// ::Const.Perks.Categories.findById("Style").setPlayerSpecificFunction( function (_player ) {
 	// 	local hasRangedWeaponGroup = false;
 	// 	local hasMeleeWeaponGroup = false;
