@@ -98,14 +98,14 @@ foreach (i, row in ::Const.Perks.Perks)
 
 ::Const.Perks.addCategory <- function ( _id, _name, _tooltipPrefix, _min = 1, _groups = null )
 {
-	if (::Const.Perks.Categories.findById(_name)) ::logWarning(format("A category with id \'%s\' and name \'%s\' already exists.", _id, _name));
+	if (::Const.Perks.Categories.findById(_id)) ::logWarning(format("A category with id \'%s\' and name \'%s\' already exists.", _id, _name));
 
 	local category = ::new("scripts/dpf/perk_group_category").init(_id, _name, _groups);
 	category.setTooltipPrefix(_tooltipPrefix);
 	category.setMin(_min);
 	category.setOrderOfAssignment(::Const.Perks.Categories.getAll().len() * 10);
 
-	::Const.Perks.Categories.LookupMap[_name] <- category;
+	::Const.Perks.Categories.LookupMap[_id] <- category;
 }
 
 ::Const.Perks.addSpecialPerk <- function( _chance, _tier, _perkID, _flavorText, _chanceFunction = null )

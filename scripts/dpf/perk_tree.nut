@@ -91,25 +91,25 @@ this.perk_tree <- {
 	function setupLocalMap()
 	{
 		this.m.LocalMap = {};
-		foreach (categoryName, category in ::Const.Perks.Categories.getAll())
+		foreach (category in ::Const.Perks.Categories.getAll())
 		{
-			this.m.LocalMap[categoryName] <- [];
+			this.m.LocalMap[category.getID()] <- [];
 		}
 	}
 
 	function addFromDynamicMap()
 	{
-		foreach (categoryName, category in ::Const.Perks.Categories.getAll())
+		foreach (category in ::Const.Perks.Categories.getAll())
 		{
-			if (categoryName in this.m.DynamicMap)
+			if (category.getID() in this.m.DynamicMap)
 			{
-				local exclude = array(this.m.LocalMap[categoryName].len());
-				foreach (i, perkGroup in this.m.LocalMap[categoryName])
+				local exclude = array(this.m.LocalMap[category.getID()].len());
+				foreach (i, perkGroup in this.m.LocalMap[category.getID()])
 				{
 					exclude[i] = perkGroup.getID();
 				}
 
-				foreach (perkGroupContainer in this.m.DynamicMap[categoryName])
+				foreach (perkGroupContainer in this.m.DynamicMap[category.getID()])
 				{
 					local id;
 
@@ -138,7 +138,7 @@ this.perk_tree <- {
 
 					if (perkGroup.getID() == "DPF_RandomPerkGroup") perkGroup = this.__getWeightedRandomGroupFromCategory(categoryName, exclude);
 
-					this.m.LocalMap[categoryName].push(perkGroup);
+					this.m.LocalMap[category.getID()].push(perkGroup);
 					if (perkGroup.getID() != "DPF_NoPerkGroup") exclude.push(perkGroup.getID());
 				}
 			}
@@ -147,23 +147,23 @@ this.perk_tree <- {
 
 	function addMins()
 	{
-		foreach (categoryName, category in ::Const.Perks.Categories.getAll())
+		foreach (category in ::Const.Perks.Categories.getAll())
 		{
 			if (category.getMin() > 0)
 			{
-				::Const.Perks.Categories.findById(categoryName).playerSpecificFunction(this.m.Background.getContainer().getActor());
+				category.playerSpecificFunction(this.m.Background.getContainer().getActor());
 
-				local exclude = array(this.m.LocalMap[categoryName].len());
-				foreach (i, perkGroup in this.m.LocalMap[categoryName])
+				local exclude = array(this.m.LocalMap[category.getID()].len());
+				foreach (i, perkGroup in this.m.LocalMap[category.getID()])
 				{
 					exclude[i] = perkGroup.getID();
 				}
 
 				local r = ::Math.rand(0, 100);
-				for (local i = this.m.LocalMap[categoryName].len(); i < category.getMin(); i++)
+				for (local i = this.m.LocalMap[category.getID()].len(); i < category.getMin(); i++)
 				{
-					local perkGroup = this.__getWeightedRandomGroupFromCategory(categoryName, exclude);
-					this.m.LocalMap[categoryName].push(perkGroup);
+					local perkGroup = this.__getWeightedRandomGroupFromCategory(category.getID(), exclude);
+					this.m.LocalMap[category.getID()].push(perkGroup);
 					exclude.push(perkGroup.getID());
 				}
 			}
@@ -174,7 +174,7 @@ this.perk_tree <- {
 	{
 		this.m.Template = [ [], [], [], [], [], [], [] ]; // Length 7
 
-		foreach (name, category in this.m.LocalMap)
+		foreach (category in this.m.LocalMap)
 		{
 			foreach (perkGroup in category)
 			{
@@ -567,11 +567,11 @@ this.perk_tree <- {
 		}
 	}
 
-	function __getWeightedRandomGroupFromCategory ( _categoryName, _exclude = null )
+	function __getWeightedRandomGroupFromCategory ( _categoryID, _exclude = null )
 	{
 		local potentialGroups = ::MSU.Class.WeightedContainer();
 
-		foreach (groupID in ::Const.Perks.Categories.findById(_categoryName).getList())
+		foreach (groupID in ::Const.Perks.Categories.findById(_categoryID).getList())
 		{
 			if (_exclude != null && _exclude.find(groupID) != null) continue;
 			local group = ::Const.Perks.PerkGroups.findById(groupID);
