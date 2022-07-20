@@ -13,8 +13,7 @@ this.perk_tree <- {
 			"setupTemplate",
 			"addSpecialPerksToTemplate"
 		]
-	}
-
+	},
 	function create()
 	{
 	}
