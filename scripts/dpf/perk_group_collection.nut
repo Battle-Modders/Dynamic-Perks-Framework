@@ -2,8 +2,7 @@ this.perk_group_collection <- {
 	m = {
 		ID = "perk_group_collection.uninitiatlized",
 		Name = "Uninitialized perk group collection"
-		Groups = [],
-		PlayerSpecificFunction = null, // TODO: Need better name for the variable and associated functions
+		Groups = []
 	},
 	function create()
 	{
@@ -82,16 +81,5 @@ this.perk_group_collection <- {
 	function getRandomPerk( _exclude = null )
 	{
 		return this.getRandomGroup().getRandomPerk(null, _exclude);
-	}
-
-	function setPlayerSpecificFunction( _function )
-	{
-		::MSU.requireFunction(_function);
-		this.m.PlayerSpecificFunction = _function;
-	}
-
-	function playerSpecificFunction( _player )
-	{
-		if (this.m.PlayerSpecificFunction != null) return this.m.PlayerSpecificFunction(_player);
 	}
 };

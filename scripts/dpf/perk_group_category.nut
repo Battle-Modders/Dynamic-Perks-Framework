@@ -41,4 +41,9 @@ this.perk_group_category <- ::inherit("scripts/dpf/perk_group_collection", {
 		::MSU.requireInt(_order);
 		this.m.OrderOfAssignment = _order;
 	}
+
+	function getSpecialMultipliers( _perkTree )
+	{
+		return {};
+	}
 });
