@@ -4,7 +4,7 @@ this.perk_group <- {
 		Name = "Not initialized Perk Group",
 		FlavorText = ["Not initialized perk group"], // TODO: Should it be named FlavorTexts ?
 		Multipliers = {},
-		Tree = [ [], [], [], [], [], [], [], [], [], [], [] ] // length 11
+		Tree = []
 	},
 	function create()
 	{
@@ -17,6 +17,7 @@ this.perk_group <- {
 		this.m.ID = _id;
 		this.setName(_name);
 		this.setFlavorText(_flavorText);
+		this.setTree(_tree);
 
 		if (_multipliers != null) this.setMultipliers(_multipliers);
 
@@ -83,11 +84,6 @@ this.perk_group <- {
 	function setTree( _tree )
 	{
 		::MSU.requireArray(_tree);
-		if (_tree.len() < 7)
-		{
-			::logError("The length of _tree must be 7");
-			::MSU.Exception.InvalidValue(_tree);
-		}
 		foreach (row in _tree)
 		{
 			::MSU.requireArray(row);

@@ -172,22 +172,28 @@ this.perk_tree <- {
 
 	function setupTemplate()
 	{
-		this.m.Template = array(11);
+		this.m.Template = [ [], [], [], [], [], [], [] ]; // Length 7
 
-		foreach (category in this.m.LocalMap)
+		foreach (name, category in this.m.LocalMap)
 		{
 			foreach (perkGroup in category)
 			{
 				foreach (rowNumber, perkIDs in perkGroup.getTree())
 				{
-					this.m.Template[rowNumber] = array(perkIDs.len());
-					foreach (i, perkID in perkIDs)
+					while (this.m.Template.len() < rowNumber + 1)
 					{
-						this.m.Template[rowNumber][i] = perkID;
+						this.m.Template.push([]);
+					}
+
+					foreach (perkID in perkIDs)
+					{
+						this.m.Template[rowNumber].push(perkID);
 					}
 				}
 			}
 		}
+
+		::MSU.Log.printData(this.m.Template, 5);
 	}
 
 	function addSpecialPerksToTemplate()
@@ -241,6 +247,8 @@ this.perk_tree <- {
 			this[func]();
 		}
 
+		::MSU.Log.printData(this.m.Template, 5);
+
 		this.buildFromTemplate(this.m.Template);
 
 		this.m.LocalMap = null;
@@ -259,6 +267,7 @@ this.perk_tree <- {
 			::MSU.requireArray(row);
 			foreach (perkID in row)
 			{
+				::logInfo("adding perk " + perkID + " to row " + 0);
 				this.addPerk(perkID, i + 1);
 			}
 		}
@@ -378,7 +387,12 @@ this.perk_tree <- {
 
 	function addPerk( _perkID, _tier = 1 )
 	{
-		if (this.hasPerk(_perkID)) return;
+		// Don't use hasPerk because that also considers perks in the LocalMap
+		// which causes the perks to never be added during dynamic build
+		// as it thinks that it already has the perk.
+		if (this.getPerk(_perkID) != null) return;
+
+		::logInfo("Yes can add perk " + _perkID + " to tier " + _tier);
 
 		local perk = clone ::Const.Perks.findById(_perkID);
 		perk.Row <- _tier - 1;
