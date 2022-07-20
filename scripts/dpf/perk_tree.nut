@@ -5,7 +5,14 @@ this.perk_tree <- {
 		DynamicMap = null,
 		Background = null,
 		LocalMap = null,
-		Traits = null
+		Traits = null,
+		PrepareBuildFunctions = [
+			"setupLocalMap",
+			"addFromDynamicMap",
+			"addMins",
+			"setupTemplate",
+			"addSpecialPerksToTemplate"
+		]
 	}
 
 	function create()
@@ -75,21 +82,19 @@ this.perk_tree <- {
 		return ret;
 	}
 
-	function build()
+	function setupLocalMap()
 	{
-		if (this.m.Template != null)
-		{
-			this.buildFromTemplate(this.m.Template);
-			return;
-		}
-
 		this.m.LocalMap = {};
-		this.m.Traits = this.m.Background.getContainer().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait);
-
 		foreach (categoryName, category in ::Const.Perks.Category)
 		{
 			this.m.LocalMap[categoryName] <- [];
+		}
+	}
 
+	function addFromDynamicMap()
+	{
+		foreach (categoryName, category in ::Const.Perks.Category)
+		{
 			if (categoryName in this.m.DynamicMap)
 			{
 				local exclude = array(this.m.LocalMap[categoryName].len());
@@ -131,7 +136,13 @@ this.perk_tree <- {
 					if (perkGroup.getID() != "DPF_NoPerkGroup") exclude.push(perkGroup.getID());
 				}
 			}
+		}
+	}
 
+	function addMins()
+	{
+		foreach (categoryName, category in ::Const.Perks.Category)
+		{
 			if (category.getMin() > 0)
 			{
 				::Const.Perks.Category[categoryName].playerSpecificFunction(this.m.Background.getContainer().getActor());
@@ -151,7 +162,10 @@ this.perk_tree <- {
 				}
 			}
 		}
+	}
 
+	function setupTemplate()
+	{
 		this.m.Template = array(11);
 
 		foreach (category in this.m.LocalMap)
@@ -168,7 +182,10 @@ this.perk_tree <- {
 				}
 			}
 		}
+	}
 
+	function addSpecialPerksToTemplate()
+	{
 		foreach (specialPerk in ::Const.Perks.SpecialPerks)
 		{
 			local object = specialPerk.roll(this.m.Background.getContainer().getActor());
@@ -198,6 +215,22 @@ this.perk_tree <- {
 			row = hasRow ? this.Math.max(0, this.Math.min(row, 6)) : object.Tier - 1;
 
 			this.m.Template[row].push(object.PerkID);
+		}
+	}
+
+	function build()
+	{
+		if (this.m.Template != null)
+		{
+			this.buildFromTemplate(this.m.Template);
+			return;
+		}
+
+		this.m.Traits = this.m.Background.getContainer().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait);
+
+		foreach (func in this.m.PrepareBuildFunctions)
+		{
+			this[func]();
 		}
 
 		this.buildFromTemplate(this.m.Template);
