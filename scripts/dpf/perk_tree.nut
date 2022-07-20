@@ -290,7 +290,7 @@ this.perk_tree <- {
 
 	function getBackground()
 	{
-		return this.m.Background.getContainer().getActor();
+		return this.m.Background;
 	}
 
 	function setBackground( _background )
