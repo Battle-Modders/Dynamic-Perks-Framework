@@ -16,7 +16,7 @@ this.perk_tree <- {
 	{
 		if (_template != null)
 		{
-			this.m.Template = _template;
+			this.setTemplate(_template);
 			return this;
 		}
 
