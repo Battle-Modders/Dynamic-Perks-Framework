@@ -12,6 +12,13 @@ this.perk_tree <- {
 			"addMins",
 			"setupTemplate",
 			"addSpecialPerksToTemplate"
+		],
+		MultiplierFunctions = [
+			"addBackgroundMultipliers",
+			"addLocalMapMultipliers",
+			"addWeaponMultipliers",
+			"addTalentMultipliers",
+			"addTraitMultipliers"
 		]
 	},
 	function create()
@@ -457,22 +464,32 @@ this.perk_tree <- {
 		}
 	}
 
-	function __applyMultipliers( _perkGroupContainer )
+	function addBackgroundMultipliers( _multipliers )
 	{
-		local multipliers = clone this.m.Background.m.Multipliers;
+		foreach (id, mult in this.m.Background.m.Multipliers)
+		{
+			if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
+			else _multipliers[id] <- mult;
+		}
+	}
 
+	function addLocalMapMultipliers( _multipliers )
+	{
 		foreach (category in this.m.LocalMap)
 		{
 			foreach (perkGroup in category)
 			{
 				foreach (id, mult in perkGroup.getMultipliers())
 				{
-					if (id in multipliers) multipliers[id] = multipliers[id] * mult;
-					else multipliers[id] <- mult;
+					if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
+					else _multipliers[id] <- mult;
 				}
 			}
 		}
+	}
 
+	function addWeaponMultipliers( _multipliers )
+	{
 		local weapon = this.m.Background.getContainer().getActor().getMainhandItem();
 		if (weapon != null)
 		{
@@ -488,10 +505,13 @@ this.perk_tree <- {
 
 			if (perkGroups.len() > 0)
 			{
-				multipliers[::MSU.Array.rand(perkGroups)] <- -1;
+				_multipliers[::MSU.Array.rand(perkGroups)] <- -1;
 			}
 		}
+	}
 
+	function addTalentMultipliers( _multipliers )
+	{
 		if (this.m.Background.getContainer().getActor().getTalents().len() > 0)
 		{
 			local talents = this.m.Background.getContainer().getActor().getTalents();
@@ -502,21 +522,36 @@ this.perk_tree <- {
 
 				foreach (id, mult in ::Const.Perks.TalentMultipliers[attribute])
 				{
-					multipliers[id] <- mult < 1 ? mult / talents[attribute] : mult;
+					mult = mult < 1 ? mult / talents[attribute] : mult;
+					if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
+					else _multipliers[id] <- mult;
 				}
 			}
 		}
+	}
 
+	function addTraitMultipliers( _multipliers )
+	{
 		if (this.m.Traits != null)
 		{
 			foreach (trait in this.m.Traits)
 			{
 				foreach (id, mult in trait.m.Multipliers)
 				{
-					if (id in multipliers) multipliers[id] = multipliers[id] * mult;
-					else multipliers[id] <- mult;
+					if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
+					else _multipliers[id] <- mult;
 				}
 			}
+		}
+	}
+
+	function __applyMultipliers( _perkGroupContainer )
+	{
+		local multipliers {};
+
+		foreach (func in this.m.MultiplierFunctions)
+		{
+			this[func](multipliers);
 		}
 
 		foreach (id, mult in multipliers)
