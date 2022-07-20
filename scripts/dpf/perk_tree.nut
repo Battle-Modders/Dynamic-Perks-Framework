@@ -194,6 +194,8 @@ this.perk_tree <- {
 	{
 		foreach (specialPerk in ::Const.Perks.SpecialPerks)
 		{
+			if (!::MSU.isKindOf(specialPerk, "special_perk")) continue;
+
 			local object = specialPerk.roll(this.m.Background.getContainer().getActor());
 			if (object == null) continue;
 
