@@ -21,7 +21,8 @@ local findById = ::Const.Perks.findById;
 ::Const.Perks.Categories <- {
 	LookupMap = ::MSU.Class.OrderedMap(),
 
-	function getAll() {
+	function getAll()
+	{
 		return this.LookupMap;
 	}
 
@@ -51,7 +52,8 @@ local findById = ::Const.Perks.findById;
 ::Const.Perks.PerkGroups <- {
 	LookupMap = {},
 
-	function getAll() {
+	function getAll()
+	{
 		return this.LookupMap;
 	}
 
@@ -67,10 +69,31 @@ local findById = ::Const.Perks.findById;
 	}
 };
 
+::Const.Perks.PerkGroupCollections <- {
+	LookupMap = {},
+
+	function getAll()
+	{
+		return this.LookupMap;
+	}
+
+	function findById( _id )
+	{
+		if (_id in this.LookupMap) return this.LookupMap[_id];
+	}
+
+	function add( _id, _name, _groups = null )
+	{
+		if (_id in this.LookupMap) throw ::MSU.Exception.DuplicateKey(_id);
+		this.LookupMap[_id] <- ::new("scripts/dpf/perk_group_collection").init(_id, _name, _groups);
+	}
+}
+
 ::Const.Perks.SpecialPerks <- {
 	LookupMap = {},
 
-	function getAll() {
+	function getAll()
+	{
 		return this.LookupMap;
 	}
 
