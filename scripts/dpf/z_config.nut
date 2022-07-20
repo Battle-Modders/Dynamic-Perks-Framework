@@ -1,3 +1,23 @@
+::Const.Perks.add <- function( _perks )
+{
+	foreach (perk in _perks)
+	{
+		::Const.Perks.LookupMap[perk.ID] <- perk;
+	}
+}
+
+::DPF.PerkTooltipEntityID <- null;
+local findById = ::Const.Perks.findById;
+::Const.Perks.findById = function( _id )
+{
+	if (::DPF.PerkTooltipEntityID != null)
+	{
+		return ::Tactical.getEntityByID(::DPF.PerkTooltipEntityID).getBackground().getPerkTree().getPerk(_id);
+	}
+
+	return findById(_id);
+}
+
 ::Const.Perks.Categories <- {
 	LookupMap = ::MSU.Class.OrderedMap(),
 
@@ -14,6 +34,18 @@
 	{
 		this.LookupMap.sort(@( key1, value1, key2, value2 ) value1.m.OrderOfAssignment <=> value2.m.OrderOfAssignment);
 	}
+
+	function add( _id, _name, _tooltipPrefix, _min = 1, _groups = null )
+	{
+		if (this.findById(_id) != null) ::logWarning(format("A category with id \'%s\' and name \'%s\' already exists.", _id, _name));
+
+		local category = ::new("scripts/dpf/perk_group_category").init(_id, _name, _groups);
+		category.setTooltipPrefix(_tooltipPrefix);
+		category.setMin(_min);
+		category.setOrderOfAssignment(this.getAll().len() * 10);
+
+		this.LookupMap[_id] <- category;
+	}
 };
 
 ::Const.Perks.PerkGroups <- {
@@ -26,6 +58,12 @@
 	function findById( _id )
 	{
 		if (_id in this.LookupMap) return this.LookupMap[_id];
+	}
+
+	function add( _id, _name, _flavorText, _tree, _multipliers = null )
+	{
+		if (_id in this.LookupMap) throw ::MSU.Exception.DuplicateKey(_id);
+		this.LookupMap[_id] <- ::new("scripts/dpf/perk_group").init(_id, _name, _flavorText, _tree, _multipliers);
 	}
 };
 
@@ -40,6 +78,12 @@
 	{
 		if (_id in this.LookupMap) return this.LookupMap[_id];
 	}
+
+	function add( _chance, _tier, _perkID, _flavorText, _chanceFunction = null )
+	{
+		if (_perkID in this.LookupMap) throw ::MSU.Exception.DuplicateKey(_perkID);
+		this.LookupMap[_perkID] <- ::new("scripts/dpf/specialperk").init(_chance, _tier, _perkID, _flavorText, _chanceFunction);
+	}
 };
 
 ::Const.Perks.TalentMultipliers <- {};
@@ -48,18 +92,6 @@ foreach (attribute in ::Const.Attributes)
 	::Const.Perks.TalentMultipliers[attribute] <- {};
 }
 delete ::Const.Perks.TalentMultipliers[::Const.Attributes.COUNT];
-
-::DPF.PerkTooltipEntityID <- null;
-local findById = ::Const.Perks.findById;
-::Const.Perks.findById = function( _id )
-{
-	if (::DPF.PerkTooltipEntityID != null)
-	{
-		return ::Tactical.getEntityByID(::DPF.PerkTooltipEntityID).getBackground().getPerkTree().getPerk(_id);
-	}
-
-	return findById(_id);
-}
 
 ::Const.Perks.DefaultPerkTreeTemplate <- array(::Const.Perks.Perks.len());
 
@@ -75,52 +107,8 @@ foreach (i, row in ::Const.Perks.Perks)
 ::Const.Perks.DefaultPerkTree <- ::new("scripts/dpf/perk_tree").init(::Const.Perks.DefaultPerkTreeTemplate);
 ::Const.Perks.DefaultPerkTree.build();
 
-// local tree = ::Const.Perks.DefaultPerkTree.getTree();
-// ::MSU.Log.printData(tree, 99);
-// foreach (i, row in tree)
-// {
-// 	::logInfo("ROW " + i + " type: " + typeof row);
-// 	foreach (perk in row)
-// 	{
-// 		::logInfo(typeof perk);
-// 		::MSU.Log.printData(perk);
-// 	}
-// }
-
-::Const.Perks.addPerkGroup <- function ( _id, _name, _flavorText, _tree, _multipliers = null )
-{
-	if (_id in ::Const.Perks.PerkGroups.LookupMap) throw ::MSU.Exception.DuplicateKey(_id);
-	::Const.Perks.PerkGroups.LookupMap[_id] <- ::new("scripts/dpf/perk_group").init(_id, _name, _flavorText, _tree, _multipliers);
-}
-
-::Const.Perks.addPerkGroup("DPF_RandomPerkGroup", "Random", ["Random perk group"], []);
-::Const.Perks.addPerkGroup("DPF_NoPerkGroup", "NoPerkGroup", ["No perk group"], []);
-
-::Const.Perks.addCategory <- function ( _id, _name, _tooltipPrefix, _min = 1, _groups = null )
-{
-	if (::Const.Perks.Categories.findById(_id)) ::logWarning(format("A category with id \'%s\' and name \'%s\' already exists.", _id, _name));
-
-	local category = ::new("scripts/dpf/perk_group_category").init(_id, _name, _groups);
-	category.setTooltipPrefix(_tooltipPrefix);
-	category.setMin(_min);
-	category.setOrderOfAssignment(::Const.Perks.Categories.getAll().len() * 10);
-
-	::Const.Perks.Categories.LookupMap[_id] <- category;
-}
-
-::Const.Perks.addSpecialPerk <- function( _chance, _tier, _perkID, _flavorText, _chanceFunction = null )
-{
-	if (_perkID in ::Const.Perks.SpecialPerks.LookupMap) throw ::MSU.Exception.DuplicateKey(_perkID);
-	::Const.Perks.SpecialPerks.LookupMap[_perkID] <- ::new("scripts/dpf/specialperk").init(_chance, _tier, _perkID, _flavorText, _chanceFunction);
-}
-
-::Const.Perks.addPerks <- function( _perks )
-{
-	foreach (perk in _perks)
-	{
-		::Const.Perks.LookupMap[perk.ID] <- perk;
-	}
-}
+::Const.Perks.PerkGroups.add("DPF_RandomPerkGroup", "Random", ["Random perk group"], []);
+::Const.Perks.PerkGroups.add("DPF_NoPerkGroup", "NoPerkGroup", ["No perk group"], []);
 
 ::Const.Perks.addPerkGroupToTooltips <- function( _perkID = null, _groups = null )
 {
