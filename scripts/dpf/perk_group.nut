@@ -157,38 +157,43 @@ this.perk_group <- {
 		}
 	}
 
-	function findPerk( _perk )
+	function hasPerk( _id )
+	{
+		return this.findPerk(_id) != null;
+	}
+
+	function findPerk( _id )
 	{
 		foreach (row in this.m.Tree)
 		{
 			foreach (perk in row)
 			{
-				if (perk == _perk) return row;
+				if (perk == _id) return row;
 			}
 		}
 	}
 
-	function addPerk( _perk, _tier )
+	function addPerk( _id, _tier )
 	{
-		if (::Const.Perks.findById(_perk) == null) throw ::MSU.Exception.InvalidValue(_perk);
+		if (::Const.Perks.findById(_id) == null) throw ::MSU.Exception.InvalidValue(_id);
 
-		local row = this.findPerk(_perk);
+		local row = this.findPerk(_id);
 		if (row != null)
 		{
-			::logWarning("Perk " + _perk + " already exists in perk group " + this.getID() + " at tier " + (row + 1));
+			::logWarning("Perk " + _id + " already exists in perk group " + this.getID() + " at tier " + (row + 1));
 			return;
 		}
 
-		this.m.Tree[_tier-1].push(_perk);
+		this.m.Tree[_tier-1].push(_id);
 	}
 
-	function removePerk( _perk )
+	function removePerk( _id )
 	{
 		foreach (row in this.m.Tree)
 		{
 			foreach (i, perk in row)
 			{
-				if (perk == _perk) return row.remove(i);
+				if (perk == _id) return row.remove(i);
 			}
 		}
 	}
