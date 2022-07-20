@@ -274,6 +274,8 @@ this.perk_tree <- {
 				}
 			}
 		}
+
+		this.m.Template = _template;
 	}
 
 	function merge( _other, _rebuild = true )
