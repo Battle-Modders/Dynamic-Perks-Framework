@@ -192,8 +192,6 @@ this.perk_tree <- {
 				}
 			}
 		}
-
-		::MSU.Log.printData(this.m.Template, 5);
 	}
 
 	function addSpecialPerksToTemplate()
@@ -246,8 +244,6 @@ this.perk_tree <- {
 		{
 			this[func]();
 		}
-
-		::MSU.Log.printData(this.m.Template, 5);
 
 		this.buildFromTemplate(this.m.Template);
 
