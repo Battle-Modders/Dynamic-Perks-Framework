@@ -27,42 +27,57 @@
 		IconDisabled = "ui/perks/perk_33_sw.png"
 	};
 
+	::Const.Perks.addPerkGroup("TestPerkGroup", "TestPerkGroup", ["test perk group"], [
+		["perk.test"],
+		["perk.duelist"]
+	])
+
+	local dynamicMap = {
+		Weapon = [
+			"TestPerkGroup"
+		]
+	};
+
+	::Const.Perks.addCategory("Weapon", "Weapon", "Has an aptitude for", 1, [
+		::Const.Perks.PerkGroup.TestPerkGroup
+	]);
+
+	::Const.Perks.addCategory("Style", "Style", "Likes using");
+	// ::Const.Perks.Category.Style.setPlayerSpecificFunction( function (_player ) {
+	// 	local hasRangedWeaponGroup = false;
+	// 	local hasMeleeWeaponGroup = false;
+
+	// 	foreach (perkGroup in ::Const.Perks.PerkGroupCollection.RangedWeapon.getList())
+	// 	{
+	// 		if (_player.getBackground().getPerkTree().hasPerkGroup(perkGroup))
+	// 		{
+	// 			hasRangedWeaponGroup = true;
+	// 			break;
+	// 		}
+	// 	}
+
+	// 	foreach (perkGroup in ::Const.Perks.PerkGroupCollection.MeleeWeapon.getList())
+	// 	{
+	// 		if (_player.getBackground().getPerkTree().hasPerkGroup(perkGroup))
+	// 		{
+	// 			hasMeleeWeaponGroup = true;
+	// 			break;
+	// 		}
+	// 	}
+
+	// 	if (!hasRangedWeaponGroup) _player.getBackground().m.Multipliers["RangedStyle"] <- 0;
+	// 	if (!hasMeleeWeaponGroup)
+	// 	{
+	// 		_player.getBackground().m.Multipliers["OneHandedStyle"] <- 0;
+	// 		_player.getBackground().m.Multipliers["TwoHandedStyle"] <- 0;
+	// 	}
+	// });
+
 	::mods_hookNewObject("skills/backgrounds/companion_1h_background", function(o) {
+		o.m.PerkTree = ::new("scripts/dpf/perk_tree").init(null, dynamicMap);
 		o.onBuildPerkTree <- function()
 		{
 			this.getPerkTree().addPerk("perk.test", 5);
-		}
-	});
-
-	::Const.Perks.addCategory("Weapon", "Weapon", "Has an aptitude for");
-	::Const.Perks.addCategory("Style", "Style", "Likes using");
-	::Const.Perks.Category.Style.setPlayerSpecificFunction( function (_player ) {
-		local hasRangedWeaponGroup = false;
-		local hasMeleeWeaponGroup = false;
-
-		foreach (perkGroup in ::Const.Perks.PerkGroupCollection.RangedWeapon.getList())
-		{
-			if (_player.getBackground().getPerkTree().hasPerkGroup(perkGroup))
-			{
-				hasRangedWeaponGroup = true;
-				break;
-			}
-		}
-
-		foreach (perkGroup in ::Const.Perks.PerkGroupCollection.MeleeWeapon.getList())
-		{
-			if (_player.getBackground().getPerkTree().hasPerkGroup(perkGroup))
-			{
-				hasMeleeWeaponGroup = true;
-				break;
-			}
-		}
-
-		if (!hasRangedWeaponGroup) _player.getBackground().m.Multipliers["RangedStyle"] <- 0;
-		if (!hasMeleeWeaponGroup)
-		{
-			_player.getBackground().m.Multipliers["OneHandedStyle"] <- 0;
-			_player.getBackground().m.Multipliers["TwoHandedStyle"] <- 0;
 		}
 	});
 });
