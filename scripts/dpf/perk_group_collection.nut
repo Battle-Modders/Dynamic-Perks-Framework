@@ -11,10 +11,10 @@ this.perk_group_collection <- {
 	{
 	}
 
-	function init( _id, _name, _tooltipPrefix = null, _min = null, _groups = null )
+	function init( _id, _name = null, _tooltipPrefix = null, _min = null, _groups = null )
 	{
 		this.setID(_id);
-		this.setName(_name);
+		this.setName(_name != null ? _name : _id);
 		if (_tooltipPrefix != null) this.setTooltipPrefix(_tooltipPrefix);
 		if (_min != null) this.setMin(_min);
 		if (_groups != null) this.setGroups(_groups);
@@ -127,6 +127,4 @@ this.perk_group_collection <- {
 	{
 		return this.getRandomGroup().getRandomPerk(null, _exclude);
 	}
-
-
 };

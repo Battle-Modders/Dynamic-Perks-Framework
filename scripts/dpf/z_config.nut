@@ -18,8 +18,8 @@ local findById = ::Const.Perks.findById;
 	return findById(_id);
 }
 
-::Const.Perks.PerkGroupCollections <- {
-	UsedForPerkTree = [],
+::Const.Perks.PerkGroupCategories <- {
+	Ordered = [],
 	LookupMap = {},
 
 	// returns a table
@@ -29,9 +29,9 @@ local findById = ::Const.Perks.findById;
 	}
 
 	// returns an array
-	function getUsedForPerkTree( _used = true )
+	function getOrdered()
 	{
-		return _used ? this.UsedForPerkTree : ::MSU.Table.getValues(this.LookupMap).filter(@(idx, collection) this.UsedForPerkTree.find(collection) == null);
+		return this.Ordered;
 	}
 
 	function findById( _id )
@@ -41,68 +41,41 @@ local findById = ::Const.Perks.findById;
 
 	function sort()
 	{
-		this.UsedForPerkTree.sort(@(collection1, collection2) collection1.m.OrderOfAssignment <=> collection2.m.OrderOfAssignment);
+		this.Ordered.sort(@(collection1, collection2) collection1.m.OrderOfAssignment <=> collection2.m.OrderOfAssignment);
 	}
 
 	function printOrderToLog()
 	{
 		local text = "";
-		foreach (collection in this.UsedForPerkTree) text += collection.getID() + ", ";
+		foreach (collection in this.Ordered) text += collection.getID() + ", ";
 		::logInfo(text.slice(0, -2));
 	}
 
-	function add( _id, _name, _tooltipPrefix = null, _min = 1, _groups = null )
+	function add( _collection )
 	{
-		if (this.findById(_id) != null) throw ::MSU.Exception.DuplicateKey(_id);
-		local collection = ::new("scripts/dpf/perk_group_collection").init(_id, _name, _tooltipPrefix, _min, _groups);
-		this.LookupMap[_id] <- collection;
-		return collection;
+		if (this.findById(_collection.getID()) != null) throw ::MSU.Exception.DuplicateKey(_collection.getID());
+
+		this.LookupMap[_collection.getID()] <- _collection;
+		this.Ordered.push(_collection);
+		this.sort();
 	}
 
 	function remove( _id )
 	{
-		local collection = this.findById(_id);
-
-		if (collection == null)
+		if (this.findById(_id) == null)
 		{
-			::logWarning("::Const.Perks.PerkGroupCollections.remove -- no collection with ID \'" + _id + "\'");
+			::logWarning("::Const.Perks.PerkGroupCategories.remove -- no collection with ID \'" + _id + "\'");
 			return null;
 		}
 
 		delete this.LookupMap[_id];
-		if (collection.isUsedForPerkTree()) this.UsedForPerkTree.remove(this.UsedForPerkTree.find(_id));
-
-		return collection;
+		return this.Ordered.remove(this.Ordered.find(_id));
 	}
 
 	function removeAll()
 	{
 		this.LookupMap.clear();
-		this.UsedForPerkTree.clear();
-	}
-
-	function setUsedForPerkTree( _id, _used = true )
-	{
-		if (this.findById(_id) == null) throw ::MSU.Exception.KeyNotFound(_id);
-
-		local collection = this.findById(_id);
-
-		if (_used)
-		{
-			if (this.UsedForPerkTree.find(collection) != null) return;
-			this.UsedForPerkTree.push(collection);
-			this.sort();
-		}
-		else if (this.UsedForPerkTree.find(collection) != null)
-		{
-			this.UsedForPerkTree.remove(this.UsedForPerkTree.find(collection));
-		}
-	}
-
-	function isUsedForPerkTree( _id )
-	{
-		if (this.findById(_id) == null) throw ::MSU.Exception.KeyNotFound(_id);
-		return  this.UsedForPerkTree.find(collection) != null;
+		this.Ordered.clear();
 	}
 }
 
@@ -119,11 +92,10 @@ local findById = ::Const.Perks.findById;
 		if (_id in this.LookupMap) return this.LookupMap[_id];
 	}
 
-	function add( _id, _name, _flavorText, _tree, _multipliers = null )
+	function add( _perkGroup )
 	{
-		if (_id in this.LookupMap) throw ::MSU.Exception.DuplicateKey(_id);
-		this.LookupMap[_id] <- ::new("scripts/dpf/perk_group").init(_id, _name, _flavorText, _tree, _multipliers);
-		return this.LookupMap[_id];
+		if (_perkGroup.getID() in this.LookupMap) throw ::MSU.Exception.DuplicateKey(_perkGroup.getID());
+		this.LookupMap[_perkGroup.getID()] <- _perkGroup;
 	}
 
 	function remove( _id )
@@ -150,12 +122,10 @@ local findById = ::Const.Perks.findById;
 		if (_id in this.LookupMap) return this.LookupMap[_id];
 	}
 
-	function add( _chance, _tier, _perkID, _flavorText, _chanceFunction = null )
+	function add( _specialPerk )
 	{
-		if (_perkID in this.LookupMap) throw ::MSU.Exception.DuplicateKey(_perkID);
-		this.LookupMap[_perkID] <- ::new("scripts/dpf/specialperk").init(_chance, _tier, _perkID, _flavorText, _chanceFunction);
-
-		return this.LookupMap[_perkID];
+		if (_specialPerk.getPerkID() in this.LookupMap) throw ::MSU.Exception.DuplicateKey(_specialPerk.getPerkID());
+		this.LookupMap[_specialPerk.getID()] <- _specialPerk;
 	}
 
 	function remove( _id )
@@ -168,7 +138,6 @@ local findById = ::Const.Perks.findById;
 		this.LookupMap.clear();
 	}
 };
-
 
 ::Const.Perks.TalentMultipliers <- {
 	Multipliers = {},
@@ -224,8 +193,8 @@ foreach (i, row in ::Const.Perks.Perks)
 ::Const.Perks.DefaultPerkTree <- ::new("scripts/dpf/perk_tree").init(::Const.Perks.DefaultPerkTreeTemplate);
 ::Const.Perks.DefaultPerkTree.build();
 
-::Const.Perks.PerkGroups.add("DPF_RandomPerkGroup", "Random", ["Random perk group"], []);
-::Const.Perks.PerkGroups.add("DPF_NoPerkGroup", "NoPerkGroup", ["No perk group"], []);
+::Const.Perks.PerkGroups.add(::new("scripts/dpf/perk_group").init("DPF_RandomPerkGroup", "Random", ["Random perk group"], []));
+::Const.Perks.PerkGroups.add(::new("scripts/dpf/perk_group").init("DPF_NoPerkGroup", "NoPerkGroup", ["No perk group"], []));
 
 ::Const.Perks.addPerkGroupToTooltips <- function( _perkID = null, _groups = null )
 {

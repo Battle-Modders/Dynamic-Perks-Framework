@@ -47,7 +47,7 @@ this.perk_tree <- {
 	function getTooltip()
 	{
 		local ret = "";
-		foreach (collection in ::Const.Perks.PerkGroupCollections.getUsedForPerkTree())
+		foreach (collection in ::Const.Perks.PerkGroupCategories.getOrdered())
 		{
 			local text = collection.getTooltipPrefix() + " ";
 			local has = false;
@@ -91,7 +91,7 @@ this.perk_tree <- {
 	function setupLocalMap()
 	{
 		this.m.LocalMap = {};
-		foreach (collection in ::Const.Perks.PerkGroupCollections.getUsedForPerkTree())
+		foreach (collection in ::Const.Perks.PerkGroupCategories.getOrdered())
 		{
 			this.m.LocalMap[collection.getID()] <- [];
 		}
@@ -99,7 +99,7 @@ this.perk_tree <- {
 
 	function addFromDynamicMap()
 	{
-		foreach (collection in ::Const.Perks.PerkGroupCollections.getUsedForPerkTree())
+		foreach (collection in ::Const.Perks.PerkGroupCategories.getOrdered())
 		{
 			if (collection.getID() in this.m.DynamicMap)
 			{
@@ -147,7 +147,7 @@ this.perk_tree <- {
 
 	function addMins()
 	{
-		foreach (collection in ::Const.Perks.PerkGroupCollections.getUsedForPerkTree())
+		foreach (collection in ::Const.Perks.PerkGroupCategories.getOrdered())
 		{
 			local min = this.m.Background.getCollectionMin(collection.getID());
 			if (min == null) min = collection.getMin();
@@ -592,7 +592,7 @@ this.perk_tree <- {
 	function __getWeightedRandomGroupFromCollection( _collectionID, _exclude = null )
 	{
 		local potentialGroups = ::MSU.Class.WeightedContainer();
-		local collection = ::Const.Perks.PerkGroupCollections.findById(_collectionID)
+		local collection = ::Const.Perks.PerkGroupCategories.findById(_collectionID)
 
 		foreach (groupID in collection.getGroups())
 		{
