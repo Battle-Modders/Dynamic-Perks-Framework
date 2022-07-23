@@ -1,4 +1,6 @@
-::mods_hookExactClass("skills/traits/character_trait", function (o) {
+::mods_hookBaseClass("items/item", function (o) {
+	o = o[o.SuperName];
+
 	o.m.PerkTreeMultipliers <- {};
 
 	o.getPerkTreeMultipliers <- function()

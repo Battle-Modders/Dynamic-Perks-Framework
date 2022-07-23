@@ -16,7 +16,7 @@ this.perk_tree <- {
 		MultiplierFunctions = [
 			"addBackgroundMultipliers",
 			"addLocalMapMultipliers",
-			"addWeaponMultipliers",
+			"addItemMultipliers",
 			"addTalentMultipliers",
 			"addTraitMultipliers"
 		]
@@ -47,11 +47,11 @@ this.perk_tree <- {
 	function getTooltip()
 	{
 		local ret = "";
-		foreach (category in ::Const.Perks.Categories.getAll())
+		foreach (collection in ::Const.Perks.PerkGroupCollections.getUsedForPerkTree())
 		{
-			local text = category.getTooltipPrefix() + " ";
+			local text = collection.getTooltipPrefix() + " ";
 			local has = false;
-			foreach (groupID in category.getList())
+			foreach (groupID in collection.getGroups())
 			{
 				if (this.hasPerkGroup(groupID))
 				{
@@ -91,25 +91,25 @@ this.perk_tree <- {
 	function setupLocalMap()
 	{
 		this.m.LocalMap = {};
-		foreach (category in ::Const.Perks.Categories.getAll())
+		foreach (collection in ::Const.Perks.PerkGroupCollections.getUsedForPerkTree())
 		{
-			this.m.LocalMap[category.getID()] <- [];
+			this.m.LocalMap[collection.getID()] <- [];
 		}
 	}
 
 	function addFromDynamicMap()
 	{
-		foreach (category in ::Const.Perks.Categories.getAll())
+		foreach (collection in ::Const.Perks.PerkGroupCollections.getUsedForPerkTree())
 		{
-			if (category.getID() in this.m.DynamicMap)
+			if (collection.getID() in this.m.DynamicMap)
 			{
-				local exclude = array(this.m.LocalMap[category.getID()].len());
-				foreach (i, perkGroup in this.m.LocalMap[category.getID()])
+				local exclude = array(this.m.LocalMap[collection.getID()].len());
+				foreach (i, perkGroup in this.m.LocalMap[collection.getID()])
 				{
 					exclude[i] = perkGroup.getID();
 				}
 
-				foreach (perkGroupContainer in this.m.DynamicMap[category.getID()])
+				foreach (perkGroupContainer in this.m.DynamicMap[collection.getID()])
 				{
 					local id;
 
@@ -136,9 +136,9 @@ this.perk_tree <- {
 						continue;
 					}
 
-					if (perkGroup.getID() == "DPF_RandomPerkGroup") perkGroup = this.__getWeightedRandomGroupFromCategory(categoryName, exclude);
+					if (perkGroup.getID() == "DPF_RandomPerkGroup") perkGroup = this.__getWeightedRandomGroupFromCollection(categoryName, exclude);
 
-					this.m.LocalMap[category.getID()].push(perkGroup);
+					this.m.LocalMap[collection.getID()].push(perkGroup);
 					if (perkGroup.getID() != "DPF_NoPerkGroup") exclude.push(perkGroup.getID());
 				}
 			}
@@ -147,24 +147,24 @@ this.perk_tree <- {
 
 	function addMins()
 	{
-		foreach (category in ::Const.Perks.Categories.getAll())
+		foreach (collection in ::Const.Perks.PerkGroupCollections.getUsedForPerkTree())
 		{
-			local min = this.m.Background.getCategoryMin(category.getID());
-			if (min == null) min = category.getMin();
+			local min = this.m.Background.getCollectionMin(collection.getID());
+			if (min == null) min = collection.getMin();
 
 			if (min > 0)
 			{
-				local exclude = array(this.m.LocalMap[category.getID()].len());
-				foreach (i, perkGroup in this.m.LocalMap[category.getID()])
+				local exclude = array(this.m.LocalMap[collection.getID()].len());
+				foreach (i, perkGroup in this.m.LocalMap[collection.getID()])
 				{
 					exclude[i] = perkGroup.getID();
 				}
 
 				local r = ::Math.rand(0, 100);
-				for (local i = this.m.LocalMap[category.getID()].len(); i < min; i++)
+				for (local i = this.m.LocalMap[collection.getID()].len(); i < min; i++)
 				{
-					local perkGroup = this.__getWeightedRandomGroupFromCategory(category.getID(), exclude);
-					this.m.LocalMap[category.getID()].push(perkGroup);
+					local perkGroup = this.__getWeightedRandomGroupFromCollection(collection.getID(), exclude);
+					this.m.LocalMap[collection.getID()].push(perkGroup);
 					exclude.push(perkGroup.getID());
 				}
 			}
@@ -420,13 +420,10 @@ this.perk_tree <- {
 		return true;
 	}
 
-	function numPerkGroupsFromCategory( _perkGroupCollectionID, _exclude = null )
+	function numPerkGroupsFromCollection( _perkGroupCollection, _exclude = null )
 	{
-		local collection = ::Const.Perks.Categories.findById(_perkGroupCollectionID);
-
 		local count = 0;
-
-		foreach (perkGroupID in collection.getList())
+		foreach (perkGroupID in _perkGroupCollection.getGroups())
 		{
 			if (_exclude != null && _exclude.find(perkGroupID) != null) continue;
 			if (this.hasPerkGroup(perkGroupID)) count++;
@@ -435,12 +432,10 @@ this.perk_tree <- {
 		return count;
 	}
 
-	function numPerksFromCategory( _perkGroupCollectionID, _exclude = null )
+	function numPerksFromCollection( _perkGroupCollection, _exclude = null )
 	{
-		local collection = ::Const.Perks.Categories.findById(_perkGroupCollectionID);
 		local count = 0;
-
-		foreach (perkGroupID in collection.getList())
+		foreach (perkGroupID in _perkGroupCollection.getGroups())
 		{
 			foreach (row in ::Const.Perks.PerkGroups.findById(perkGroupID))
 			{
@@ -509,7 +504,7 @@ this.perk_tree <- {
 
 	function addBackgroundMultipliers( _multipliers )
 	{
-		foreach (id, mult in this.m.Background.m.Multipliers)
+		foreach (id, mult in this.m.Background.getPerkTreeMultipliers())
 		{
 			if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
 			else _multipliers[id] <- mult;
@@ -522,7 +517,7 @@ this.perk_tree <- {
 		{
 			foreach (perkGroup in category)
 			{
-				foreach (id, mult in perkGroup.getMultipliers())
+				foreach (id, mult in perkGroup.getPerkTreeMultipliers())
 				{
 					if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
 					else _multipliers[id] <- mult;
@@ -531,24 +526,15 @@ this.perk_tree <- {
 		}
 	}
 
-	function addWeaponMultipliers( _multipliers )
+	function addItemMultipliers( _multipliers )
 	{
-		local weapon = this.m.Background.getContainer().getActor().getMainhandItem();
-		if (weapon != null)
+		local items = this.m.Background.getContainer().getActor().getItems().getAllItems();
+		foreach (item in items)
 		{
-			local perkGroups = [];
-
-			foreach (weaponTypeName, weaponType in ::Const.Items.WeaponType)
+			foreach (id, mult in item.getPerkTreeMultipliers())
 			{
-				if (weapon.isWeaponType(weaponType) && (weaponTypeName in ::Const.Perks.PerkGroups.getAll()))
-				{
-					perkGroups.push(::Const.Perks.PerkGroups[weaponTypeName]);
-				}
-			}
-
-			if (perkGroups.len() > 0)
-			{
-				_multipliers[::MSU.Array.rand(perkGroups)] <- -1;
+				if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
+				else _multipliers[id] <- mult;
 			}
 		}
 	}
@@ -563,7 +549,7 @@ this.perk_tree <- {
 			{
 				if (talents[attribute] == 0) continue;
 
-				foreach (id, mult in ::Const.Perks.TalentMultipliers[attribute])
+				foreach (id, mult in ::Const.Perks.TalentMultipliers.findByAttribute(attribute))
 				{
 					mult = mult < 1 ? mult / talents[attribute] : mult;
 					if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
@@ -579,7 +565,7 @@ this.perk_tree <- {
 		{
 			foreach (trait in this.m.Traits)
 			{
-				foreach (id, mult in trait.m.Multipliers)
+				foreach (id, mult in trait.getPerkTreeMultipliers())
 				{
 					if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
 					else _multipliers[id] <- mult;
@@ -603,12 +589,12 @@ this.perk_tree <- {
 		}
 	}
 
-	function __getWeightedRandomGroupFromCategory( _categoryID, _exclude = null )
+	function __getWeightedRandomGroupFromCollection( _collectionID, _exclude = null )
 	{
 		local potentialGroups = ::MSU.Class.WeightedContainer();
-		local category = ::Const.Perks.Categories.findById(_categoryID)
+		local collection = ::Const.Perks.PerkGroupCollections.findById(_collectionID)
 
-		foreach (groupID in category.getList())
+		foreach (groupID in collection.getGroups())
 		{
 			if (_exclude != null && _exclude.find(groupID) != null) continue;
 			local group = ::Const.Perks.PerkGroups.findById(groupID);
@@ -617,7 +603,7 @@ this.perk_tree <- {
 
 		if (potentialGroups.len() != 0)
 		{
-			foreach (id, mult in category.getSpecialMultipliers(this))
+			foreach (id, mult in collection.getSpecialMultipliers(this))
 			{
 				if (potentialGroups.contains(id)) potentialGroups.setWeight(id, potentialGroups.getWeight(id) * mult);
 			}

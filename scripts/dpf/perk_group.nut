@@ -3,7 +3,7 @@ this.perk_group <- {
 		ID = "not_initialized",
 		Name = "Not initialized Perk Group",
 		FlavorText = ["Not initialized perk group"], // TODO: Should it be named FlavorTexts ?
-		Multipliers = {},
+		PerkTreeMultipliers = {},
 		Tree = []
 	},
 	function create()
@@ -96,9 +96,9 @@ this.perk_group <- {
 		this.m.Tree = _tree;
 	}
 
-	function getMultipliers()
+	function getPerkTreeMultipliers()
 	{
-		return this.m.Multipliers;
+		return this.m.PerkTreeMultipliers;
 	}
 
 	function setMultipliers( _multipliers )
@@ -108,23 +108,23 @@ this.perk_group <- {
 		{
 			this.__validateMultiplier(key, mult);
 		}
-		this.m.Multipliers = _multipliers;
+		this.m.PerkTreeMultipliers = _multipliers;
 	}
 
 	function getSelfMultiplier()
 	{
-		return this.getID() in this.m.Multipliers ? this.m.Multipliers[this.getID()] : 1.0;
+		return this.getID() in this.m.PerkTreeMultipliers ? this.m.PerkTreeMultipliers[this.getID()] : 1.0;
 	}
 
 	function addMultiplier( _id, _mult )
 	{
 		this.__validateMultiplier(_id, _mult);
-		if (_id in this.m.Multipliers)
+		if (_id in this.m.PerkTreeMultipliers)
 		{
-			::logWarning("The perk group " + this.getID() + " already contains a multiplier of " + this.m.Multipliers[_id] + " for " + _id + ". Overwriting it with " + _mult);
+			::logWarning("The perk group " + this.getID() + " already contains a multiplier of " + this.m.PerkTreeMultipliers[_id] + " for " + _id + ". Overwriting it with " + _mult);
 		}
 
-		this.m.Multipliers[_id] <- _mult;
+		this.m.PerkTreeMultipliers[_id] <- _mult;
 	}
 
 	function removeMultiplier( _id )
@@ -135,9 +135,9 @@ this.perk_group <- {
 			throw ::MSU.Exception.InvalidValue(_id);
 		}
 
-		if (_id in this.m.Multipliers)
+		if (_id in this.m.PerkTreeMultipliers)
 		{
-			delete this.m.Multipliers[_id];
+			delete this.m.PerkTreeMultipliers[_id];
 		}
 	}
 

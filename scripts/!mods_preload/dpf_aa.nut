@@ -7,11 +7,13 @@
 ::mods_registerMod(::DPF.ID, ::DPF.Version, ::DPF.Name);
 ::mods_queue(::DPF.ID, "mod_msu", function() {
 
+	::DPF.Mod <- ::MSU.Class.Mod(::DPF.ID, ::DPF.Version, ::DPF.Name);
+
 	::includeFiles(::IO.enumerateFiles("scripts/dpf"));
 	::mods_registerJS("dpf_mod_screens.js");
 
 	::MSU.EndQueue.add(function() {
-		::Const.Perks.Categories.sort();
+		::Const.Perks.PerkGroupCollections.sort();
 	})
 
 	// Testing
@@ -26,7 +28,7 @@
 	};
 
 	::Const.Perks.PerkGroups.add("TestPerkGroup", "TestPerkGroup", ["test perk group"], [
-		["perk.test"],
+		["perk.reach_advantage"],
 		["perk.duelist"]
 	])
 
@@ -36,40 +38,33 @@
 		]
 	};
 
-	::Const.Perks.Categories.add("Weapon", "Weapon", "Has an aptitude for", 1, [
+	::Const.Perks.PerkGroupCollections.add("Weapon", "Weapon", "Has an aptitude for", 1, [
 		"TestPerkGroup"
 	]);
+	::Const.Perks.PerkGroupCollections.setUsedForPerkTree("Weapon");
 
-	::Const.Perks.Categories.add("Style", "Style", "Likes using");
-	// ::Const.Perks.Categories.findById("Style").setPlayerSpecificFunction( function (_player ) {
-	// 	local hasRangedWeaponGroup = false;
-	// 	local hasMeleeWeaponGroup = false;
+	::Const.Perks.PerkGroupCollections.add("Style", "Style", "Likes using");
+	::Const.Perks.PerkGroupCollections.setUsedForPerkTree("Style");
 
-	// 	foreach (perkGroup in ::Const.Perks.PerkGroupsCollection.RangedWeapon.getList())
-	// 	{
-	// 		if (_player.getBackground().getPerkTree().hasPerkGroup(perkGroup))
-	// 		{
-	// 			hasRangedWeaponGroup = true;
-	// 			break;
-	// 		}
-	// 	}
+	::Const.Perks.PerkGroupCollections.add("RangedWeapon", "RangedWeapon");
+	::Const.Perks.PerkGroupCollections.add("MeleeWeapon", "MeleeWeapon");
 
-	// 	foreach (perkGroup in ::Const.Perks.PerkGroupsCollection.MeleeWeapon.getList())
-	// 	{
-	// 		if (_player.getBackground().getPerkTree().hasPerkGroup(perkGroup))
-	// 		{
-	// 			hasMeleeWeaponGroup = true;
-	// 			break;
-	// 		}
-	// 	}
+	::Const.Perks.PerkGroupCollections.findById("Style").getSpecialMultipliers = function( _perkTree ) {
+		local multipliers = {};
 
-	// 	if (!hasRangedWeaponGroup) _player.getBackground().m.Multipliers["RangedStyle"] <- 0;
-	// 	if (!hasMeleeWeaponGroup)
-	// 	{
-	// 		_player.getBackground().m.Multipliers["OneHandedStyle"] <- 0;
-	// 		_player.getBackground().m.Multipliers["TwoHandedStyle"] <- 0;
-	// 	}
-	// });
+		if (_perkTree.numPerkGroupsFromCollection(::Const.Perks.PerkGroupCollections.findById("RangedWeapon")) == 0)
+		{
+			multipliers["RangedStyle"] <- 0;
+		}
+
+		if (_perkTree.numPerkGroupsFromCollection(::Const.Perks.PerkGroupCollections.findById("MeleeWeapon")) == 0)
+		{
+			multipliers["OneHandedStyle"] <- 0;
+			multipliers["OneHandedStyle"] <- 0;
+		}
+
+		return multipliers;
+	};
 
 	::mods_hookNewObject("skills/backgrounds/companion_1h_background", function(o) {
 		o.m.PerkTree = ::new("scripts/dpf/perk_tree").init(null, {});

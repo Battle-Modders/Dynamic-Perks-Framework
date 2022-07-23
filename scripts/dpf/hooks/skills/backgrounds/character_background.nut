@@ -1,5 +1,5 @@
 ::mods_hookExactClass("skills/backgrounds/character_background", function (o) {
-	o.m.Multipliers <- {};
+	o.m.PerkTreeMultipliers <- {};
 	o.m.PerkTree <- ::new("scripts/dpf/perk_tree").init(::Const.Perks.DefaultPerkTreeTemplate);
 
 	o.onBuildPerkTree <- function()
@@ -18,8 +18,13 @@
 		return this.m.PerkTree;
 	}
 
-	o.getCategoryMin <- function( _categoryID )
+	o.getCollectionMin <- function( _collectionID )
 	{
+	}
+
+	o.getPerkTreeMultipliers <- function()
+	{
+		return this.m.PerkTreeMultipliers;
 	}
 
 	local onSerialize = o.onSerialize;

@@ -75,36 +75,46 @@ this.special_perk <- {
 	{
 		local chance = this.m.Chance;
 
-		if (this.m.PerkID in _player.getBackground().m.Multipliers)
+		if (this.m.PerkID in _player.getBackground().m.PerkTreeMultipliers)
 		{
-			chance *= _player.getBackground().m.Multipliers[this.m.PerkID];
+			chance *= _player.getBackground().m.PerkTreeMultipliers[this.m.PerkID];
 		}
 
-		if (chance > 0)
-		{
-			if (this.m.ChanceFunction != null) chance *= this.m.ChanceFunction(_player);
+		if (this.m.ChanceFunction != null) chance *= this.m.ChanceFunction(_player);
 
-			if (_player.getBackground().getPerkTree().m.Traits != null)
+		if (_player.getBackground().getPerkTree().m.Traits != null)
+		{
+			foreach (trait in _player.getBackground().getPerkTree().m.Traits)
 			{
-				foreach (trait in _player.getBackground().getPerkTree().m.Traits)
+				if (this.m.PerkID in trait.m.PerkTreeMultipliers)
 				{
-					if (this.m.PerkID in trait.m.Multipliers)
-					{
-						chance *= trait.m.Multipliers[this.m.PerkID];
-					}
+					chance *= trait.m.PerkTreeMultipliers[this.m.PerkID];
 				}
 			}
+		}
 
-			if (_player.getBackground().getPerkTree().m.LocalMap != null)
+		if (_player.getTalents().len() > 0)
+		{
+			for (local attribute = 0; attribute < this.Const.Attributes.COUNT; attribute++)
 			{
-				foreach (category in _player.getBackground().getPerkTree().m.LocalMap)
+				if (_player.getTalents()[attribute] == 0) continue;
+
+				foreach (id, mult in ::Const.Perks.TalentMultipliers.findByAttribute(attribute))
 				{
-					foreach (perkGroup in category)
+					chance *= mult * _player.getTalents()[attribute];
+				}
+			}
+		}
+
+		if (_player.getBackground().getPerkTree().m.LocalMap != null)
+		{
+			foreach (category in _player.getBackground().getPerkTree().m.LocalMap)
+			{
+				foreach (perkGroup in category)
+				{
+					if (this.m.PerkID in perkGroup.m.PerkTreeMultipliers)
 					{
-						if (this.m.PerkID in perkGroup.m.Multipliers)
-						{
-							chance *= perkGroup.m.Multipliers[this.m.PerkID];
-						}
+						chance *= perkGroup.m.PerkTreeMultipliers[this.m.PerkID];
 					}
 				}
 			}
