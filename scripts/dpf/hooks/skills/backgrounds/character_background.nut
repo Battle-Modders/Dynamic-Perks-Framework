@@ -1,6 +1,6 @@
 ::mods_hookExactClass("skills/backgrounds/character_background", function (o) {
 	o.m.PerkTreeMultipliers <- {};
-	o.m.PerkTree <- ::new("scripts/dpf/perk_tree").init(::Const.Perks.DefaultPerkTreeTemplate);
+	o.m.PerkTree <- ::new("scripts/dpf/perk_tree").init(::DPF.Perks.DefaultPerkTreeTemplate);
 
 	o.onBuildPerkTree <- function()
 	{

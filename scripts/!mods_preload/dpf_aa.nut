@@ -12,10 +12,6 @@
 	::includeFiles(::IO.enumerateFiles("scripts/dpf"));
 	::mods_registerJS("dpf_mod_screens.js");
 
-	::MSU.EndQueue.add(function() {
-		::Const.Perks.PerkGroupCategories.sort();
-	})
-
 	// Testing
 
 	::Const.Perks.LookupMap["perk.test"] <- {
@@ -27,7 +23,7 @@
 		IconDisabled = "ui/perks/perk_33_sw.png"
 	};
 
-	::Const.Perks.PerkGroups.add(::new("scripts/dpf/perk_group").init("TestPerkGroup", "TestPerkGroup", ["test perk group"], [
+	::DPF.Perks.PerkGroups.add(::new("scripts/dpf/perk_group").init("TestPerkGroup", "TestPerkGroup", ["test perk group"], [
 		["perk.reach_advantage"],
 		["perk.duelist"]
 	]));
@@ -38,17 +34,17 @@
 		]
 	};
 
-	::Const.Perks.PerkGroupCategories.add(::new("scripts/dpf/perk_group_collection").init("Weapon", "Weapon", "Has an aptitude for", 1, [
+	::DPF.Perks.PerkGroupCategories.add(::new("scripts/dpf/perk_group_collection").init("Weapon", "Weapon", "Has an aptitude for", 1, [
 		"TestPerkGroup"
 	]));
 
-	::Const.Perks.PerkGroupCategories.add(::new("scripts/dpf/perk_group_collection").init("Style", "Style", "Likes using"));
+	::DPF.Perks.PerkGroupCategories.add(::new("scripts/dpf/perk_group_collection").init("Style", "Style", "Likes using"));
 
 	::DPF.MyPerkGroupCollections <- {};
-	::Const.Perks.PerkGroupCategories["RangedWeapon"] <- ::new("scripts/dpf/perk_group_collection").init("RangedWeapon", "RangedWeapon");
-	::Const.Perks.PerkGroupCategories["MeleeWeapon"] <- ::new("scripts/dpf/perk_group_collection").init("MeleeWeapon", "MeleeWeapon");
+	::DPF.Perks.PerkGroupCategories["RangedWeapon"] <- ::new("scripts/dpf/perk_group_collection").init("RangedWeapon", "RangedWeapon");
+	::DPF.Perks.PerkGroupCategories["MeleeWeapon"] <- ::new("scripts/dpf/perk_group_collection").init("MeleeWeapon", "MeleeWeapon");
 
-	::Const.Perks.PerkGroupCategories.findById("Style").getSpecialMultipliers = function( _perkTree ) {
+	::DPF.Perks.PerkGroupCategories.findById("Style").getSpecialMultipliers = function( _perkTree ) {
 		local multipliers = {};
 
 		if (_perkTree.numPerkGroupsFromCollection(::DPF.MyPerkGroupCollections.RangedWeapon) == 0)

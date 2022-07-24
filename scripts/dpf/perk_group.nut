@@ -129,7 +129,7 @@ this.perk_group <- {
 
 	function removeMultiplier( _id )
 	{
-		if (::Const.Perks.findById(_id) == null || ::Const.Perks.PerkGroups.findById(_id) == null)
+		if (::Const.Perks.findById(_id) == null || ::DPF.Perks.PerkGroups.findById(_id) == null)
 		{
 			::logError("_id must be a valid perk ID or perk group ID.");
 			throw ::MSU.Exception.InvalidValue(_id);
@@ -146,7 +146,7 @@ this.perk_group <- {
 		::MSU.requireString(_id);
 		::MSU.requireOneFromTypes(["integer", "float"], _mult);
 
-		if (::Const.Perks.findById(_id) == null || ::Const.Perks.PerkGroups.findById(_id) == null)
+		if (::Const.Perks.findById(_id) == null || ::DPF.Perks.PerkGroups.findById(_id) == null)
 		{
 			::logError("The key in a multiplier must be a valid perk ID or perk group ID.");
 			throw ::MSU.Exception.InvalidValue(_id);

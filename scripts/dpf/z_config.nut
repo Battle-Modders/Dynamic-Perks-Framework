@@ -1,4 +1,6 @@
-::Const.Perks.add <- function( _perks )
+::DPF.Perks <- {};
+
+::DPF.Perks.addPerks <- function( _perks )
 {
 	foreach (perk in _perks)
 	{
@@ -18,7 +20,7 @@ local findById = ::Const.Perks.findById;
 	return findById(_id);
 }
 
-::Const.Perks.PerkGroupCategories <- {
+::DPF.Perks.PerkGroupCategories <- {
 	Ordered = [],
 	LookupMap = {},
 
@@ -31,6 +33,7 @@ local findById = ::Const.Perks.findById;
 	// returns an array
 	function getOrdered()
 	{
+		this.sort();
 		return this.Ordered;
 	}
 
@@ -57,14 +60,13 @@ local findById = ::Const.Perks.findById;
 
 		this.LookupMap[_collection.getID()] <- _collection;
 		this.Ordered.push(_collection);
-		this.sort();
 	}
 
 	function remove( _id )
 	{
 		if (this.findById(_id) == null)
 		{
-			::logWarning("::Const.Perks.PerkGroupCategories.remove -- no collection with ID \'" + _id + "\'");
+			::logError("::DPF.Perks.PerkGroupCategories.remove -- no collection with ID \'" + _id + "\'");
 			return null;
 		}
 
@@ -79,7 +81,7 @@ local findById = ::Const.Perks.findById;
 	}
 }
 
-::Const.Perks.PerkGroups <- {
+::DPF.Perks.PerkGroups <- {
 	LookupMap = {},
 
 	function getAll()
@@ -109,7 +111,7 @@ local findById = ::Const.Perks.findById;
 	}
 };
 
-::Const.Perks.SpecialPerks <- {
+::DPF.Perks.SpecialPerks <- {
 	LookupMap = {},
 
 	function getAll()
@@ -139,7 +141,7 @@ local findById = ::Const.Perks.findById;
 	}
 };
 
-::Const.Perks.TalentMultipliers <- {
+::DPF.Perks.TalentMultipliers <- {
 	Multipliers = {},
 
 	function getAll()
@@ -176,31 +178,31 @@ local findById = ::Const.Perks.findById;
 
 foreach (attribute in ::Const.Attributes)
 {
-	if (attribute != ::Const.Attributes.COUNT) ::Const.Perks.TalentMultipliers.Multipliers[attribute] <- {};
+	if (attribute != ::Const.Attributes.COUNT) ::DPF.Perks.TalentMultipliers.Multipliers[attribute] <- {};
 }
 
-::Const.Perks.DefaultPerkTreeTemplate <- array(::Const.Perks.Perks.len());
+::DPF.Perks.DefaultPerkTreeTemplate <- array(::Const.Perks.Perks.len());
 
 foreach (i, row in ::Const.Perks.Perks)
 {
-	::Const.Perks.DefaultPerkTreeTemplate[i] = array(row.len());
+	::DPF.Perks.DefaultPerkTreeTemplate[i] = array(row.len());
 	foreach (j, perk in row)
 	{
-		::Const.Perks.DefaultPerkTreeTemplate[i][j] = perk.ID;
+		::DPF.Perks.DefaultPerkTreeTemplate[i][j] = perk.ID;
 	}
 }
 
-::Const.Perks.DefaultPerkTree <- ::new("scripts/dpf/perk_tree").init(::Const.Perks.DefaultPerkTreeTemplate);
-::Const.Perks.DefaultPerkTree.build();
+::DPF.Perks.DefaultPerkTree <- ::new("scripts/dpf/perk_tree").init(::DPF.Perks.DefaultPerkTreeTemplate);
+::DPF.Perks.DefaultPerkTree.build();
 
-::Const.Perks.PerkGroups.add(::new("scripts/dpf/perk_group").init("DPF_RandomPerkGroup", "Random", ["Random perk group"], []));
-::Const.Perks.PerkGroups.add(::new("scripts/dpf/perk_group").init("DPF_NoPerkGroup", "NoPerkGroup", ["No perk group"], []));
+::DPF.Perks.PerkGroups.add(::new("scripts/dpf/perk_group").init("DPF_RandomPerkGroup", "Random", ["Random perk group"], []));
+::DPF.Perks.PerkGroups.add(::new("scripts/dpf/perk_group").init("DPF_NoPerkGroup", "NoPerkGroup", ["No perk group"], []));
 
-::Const.Perks.addPerkGroupToTooltips <- function( _perkID = null, _groups = null )
+::DPF.Perks.addPerkGroupToTooltips <- function( _perkID = null, _groups = null )
 {
 	local map = {};
 
-	foreach (group in ::Const.Perks.PerkGroups.getAll())
+	foreach (group in ::DPF.Perks.PerkGroups.getAll())
 	{
 		foreach (row in group.getTree())
 		{

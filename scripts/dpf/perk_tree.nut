@@ -47,7 +47,7 @@ this.perk_tree <- {
 	function getTooltip()
 	{
 		local ret = "";
-		foreach (collection in ::Const.Perks.PerkGroupCategories.getOrdered())
+		foreach (collection in ::DPF.Perks.PerkGroupCategories.getOrdered())
 		{
 			local text = collection.getTooltipPrefix() + " ";
 			local has = false;
@@ -56,14 +56,14 @@ this.perk_tree <- {
 				if (this.hasPerkGroup(groupID))
 				{
 					has = true;
-					text += ::MSU.Array.rand(::Const.Perks.PerkGroups.findById(groupID).getFlavorText()) + ", ";
+					text += ::MSU.Array.rand(::DPF.Perks.PerkGroups.findById(groupID).getFlavorText()) + ", ";
 				}
 			}
 
 			if (has) ret += text.slice(0, -2) + ".\n";
 		}
 
-		foreach (perk in ::Const.Perks.SpecialPerks.getAll())
+		foreach (perk in ::DPF.Perks.SpecialPerks.getAll())
 		{
 			if (this.hasPerk(perk.getPerkID()))
 			{
@@ -91,7 +91,7 @@ this.perk_tree <- {
 	function setupLocalMap()
 	{
 		this.m.LocalMap = {};
-		foreach (collection in ::Const.Perks.PerkGroupCategories.getOrdered())
+		foreach (collection in ::DPF.Perks.PerkGroupCategories.getOrdered())
 		{
 			this.m.LocalMap[collection.getID()] <- [];
 		}
@@ -99,7 +99,7 @@ this.perk_tree <- {
 
 	function addFromDynamicMap()
 	{
-		foreach (collection in ::Const.Perks.PerkGroupCategories.getOrdered())
+		foreach (collection in ::DPF.Perks.PerkGroupCategories.getOrdered())
 		{
 			if (collection.getID() in this.m.DynamicMap)
 			{
@@ -129,7 +129,7 @@ this.perk_tree <- {
 							throw ::MSU.Exception.InvalidType("perkGroupContainer");
 					}
 
-					local perkGroup = ::Const.Perks.PerkGroups.findById(id);
+					local perkGroup = ::DPF.Perks.PerkGroups.findById(id);
 					if (perkGroup == null)
 					{
 						::logError("No perk group with id \'" + id + "\'");
@@ -147,7 +147,7 @@ this.perk_tree <- {
 
 	function addMins()
 	{
-		foreach (collection in ::Const.Perks.PerkGroupCategories.getOrdered())
+		foreach (collection in ::DPF.Perks.PerkGroupCategories.getOrdered())
 		{
 			local min = this.m.Background.getCollectionMin(collection.getID());
 			if (min == null) min = collection.getMin();
@@ -197,7 +197,7 @@ this.perk_tree <- {
 
 	function addSpecialPerksToTemplate()
 	{
-		foreach (specialPerk in ::Const.Perks.SpecialPerks.getAll())
+		foreach (specialPerk in ::DPF.Perks.SpecialPerks.getAll())
 		{
 			local object = specialPerk.roll(this.m.Background.getContainer().getActor());
 			if (object == null) continue;
@@ -409,7 +409,7 @@ this.perk_tree <- {
 
 	function hasPerkGroup( _perkGroupID )
 	{
-		foreach (row in ::Const.Perks.PerkGroups.findById(_perkGroupID).getTree())
+		foreach (row in ::DPF.Perks.PerkGroups.findById(_perkGroupID).getTree())
 		{
 			foreach (perk in row)
 			{
@@ -437,7 +437,7 @@ this.perk_tree <- {
 		local count = 0;
 		foreach (perkGroupID in _perkGroupCollection.getGroups())
 		{
-			foreach (row in ::Const.Perks.PerkGroups.findById(perkGroupID))
+			foreach (row in ::DPF.Perks.PerkGroups.findById(perkGroupID))
 			{
 				foreach (perkID in row)
 				{
@@ -452,7 +452,7 @@ this.perk_tree <- {
 
 	function addPerkGroup( _perkGroupID )
 	{
-		foreach (i, row in ::Const.Perks.PerkGroups.findById(_perkGroupID).getTree())
+		foreach (i, row in ::DPF.Perks.PerkGroups.findById(_perkGroupID).getTree())
 		{
 			foreach (perk in row)
 			{
@@ -463,7 +463,7 @@ this.perk_tree <- {
 
 	function removePerkGroup( _perkGroupID )
 	{
-		foreach (row in ::Const.Perks.PerkGroups.findById(_perkGroupID).getTree())
+		foreach (row in ::DPF.Perks.PerkGroups.findById(_perkGroupID).getTree())
 		{
 			foreach (perk in row)
 			{
@@ -549,7 +549,7 @@ this.perk_tree <- {
 			{
 				if (talents[attribute] == 0) continue;
 
-				foreach (id, mult in ::Const.Perks.TalentMultipliers.findByAttribute(attribute))
+				foreach (id, mult in ::DPF.Perks.TalentMultipliers.findByAttribute(attribute))
 				{
 					mult = mult < 1 ? mult / talents[attribute] : mult;
 					if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
@@ -592,12 +592,12 @@ this.perk_tree <- {
 	function __getWeightedRandomGroupFromCollection( _collectionID, _exclude = null )
 	{
 		local potentialGroups = ::MSU.Class.WeightedContainer();
-		local collection = ::Const.Perks.PerkGroupCategories.findById(_collectionID)
+		local collection = ::DPF.Perks.PerkGroupCategories.findById(_collectionID)
 
 		foreach (groupID in collection.getGroups())
 		{
 			if (_exclude != null && _exclude.find(groupID) != null) continue;
-			local group = ::Const.Perks.PerkGroups.findById(groupID);
+			local group = ::DPF.Perks.PerkGroups.findById(groupID);
 			potentialGroups.add(group, group.getSelfMultiplier());
 		}
 
@@ -611,6 +611,6 @@ this.perk_tree <- {
 		}
 
 		local group = potentialGroups.roll();
-		return group != null ? group : ::Const.Perks.PerkGroups.findById("DPF_NoPerkGroup");
+		return group != null ? group : ::DPF.Perks.PerkGroups.findById("DPF_NoPerkGroup");
 	}
 }

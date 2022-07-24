@@ -54,7 +54,7 @@ this.perk_group_collection <- {
 	::MSU.requireArray(_groups);
 		foreach (groupID in _groups)
 		{
-			if (::Const.Perks.PerkGroups.findById(groupID) == null)
+			if (::DPF.Perks.PerkGroups.findById(groupID) == null)
 			{
 				::logError(groupID + " is not a valid perk_group ID");
 				throw ::MSU.Exception.InvalidType(groupID);
@@ -117,10 +117,10 @@ this.perk_group_collection <- {
 		if (_exclude != null)
 		{
 			::MSU.requireArray(_exclude);
-			return ::Const.Perks.PerkGroups.findById(::MSU.Array.rand(this.m.Groups.filter(@(idx, groupID) _exclude.find(groupID) == null)));
+			return ::DPF.Perks.PerkGroups.findById(::MSU.Array.rand(this.m.Groups.filter(@(idx, groupID) _exclude.find(groupID) == null)));
 		}
 
-		return ::Const.Perks.PerkGroups.findById(::MSU.Array.rand(this.m.Groups));
+		return ::DPF.Perks.PerkGroups.findById(::MSU.Array.rand(this.m.Groups));
 	}
 
 	function getRandomPerk( _exclude = null )

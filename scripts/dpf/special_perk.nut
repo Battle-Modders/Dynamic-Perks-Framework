@@ -99,7 +99,7 @@ this.special_perk <- {
 			{
 				if (_player.getTalents()[attribute] == 0) continue;
 
-				foreach (id, mult in ::Const.Perks.TalentMultipliers.findByAttribute(attribute))
+				foreach (id, mult in ::DPF.Perks.TalentMultipliers.findByAttribute(attribute))
 				{
 					chance *= mult * _player.getTalents()[attribute];
 				}
