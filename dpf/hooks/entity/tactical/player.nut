@@ -4,8 +4,7 @@
 	{
 		if (isPerkUnlockable(_id))
 		{
-			local perk = this.getBackground().getPerkTree().getPerk(_id);
-			if (perk != null && this.m.PerkPointsSpent >= perk.Unlocks) return true;
+			return this.getBackground().getPerkTree().isPerkUnlockable(_id);
 		}
 
 		return false;

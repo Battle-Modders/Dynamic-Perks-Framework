@@ -391,6 +391,43 @@ this.perk_tree <- {
 		}
 	}
 
+	function isPerkUnlockable( _id )
+	{
+		local unlocks;
+		foreach (i, row in this.m.Tree)
+		{
+			foreach (perk in row)
+			{
+				if (perk.ID == _id)
+				{
+					unlocks = i;
+					break;
+				}
+			}
+		}
+
+		if (unlocks < this.m.Background.getContainer().getActor().getPerkPointsSpent()) return true;
+
+		return false;
+	}
+
+	function getPerkRequirementsTooltip( _id )
+	{
+		local tooltip = [];
+
+		// then based on all requirements:
+		tooltip.push({
+			id = 3,
+			type = "hint",
+			icon = "ui/icons/icon_locked.png",
+			text = "Locked until " + (player.getBackground().getPerkTree().m.PerkUnlocks[_perkId] - player.getPerkPointsSpent()) + " more perk points are spent"
+		});
+
+		// at the end add the custom requirement tooltip added by modder for _requiresFunction
+
+		return tooltip;
+	}
+
 	function addPerk( _perkID, _tier = 1 )
 	{
 		// Don't use hasPerk because that also considers perks in the LocalMap
@@ -398,14 +435,11 @@ this.perk_tree <- {
 		// as it thinks that it already has the perk.
 		if (this.getPerk(_perkID) != null) return;
 
-		local perk = clone ::Const.Perks.findById(_perkID);
-		perk.Row <- _tier - 1;
-		perk.Unlocks <- _tier - 1;
 		while (this.m.Tree.len() < _tier)
 		{
 			this.m.Tree.push([]);
 		}
-		this.m.Tree[_tier - 1].push(perk);
+		this.m.Tree[_tier - 1].push(::Const.Perks.findById(_perkID));
 	}
 
 	function removePerk( _perkID )
