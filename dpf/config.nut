@@ -1,3 +1,10 @@
+::DPF.Class <- {
+	PerkGroup = "dpf/classes/perk_group",
+	PerkGroupCollection = "dpf/classes/perk_group_collection",
+	PerkTree = "dpf/classes/perk_tree",
+	SpecialPerk = "dpf/classes/special_perk"
+};
+
 ::DPF.Perks <- {};
 
 ::DPF.Perks.addPerks <- function( _perks )
@@ -192,11 +199,11 @@ foreach (i, row in ::Const.Perks.Perks)
 	}
 }
 
-::DPF.Perks.DefaultPerkTree <- ::new("scripts/dpf/perk_tree").init(::DPF.Perks.DefaultPerkTreeTemplate);
+::DPF.Perks.DefaultPerkTree <- ::new(::DPF.Class.PerkTree).init(::DPF.Perks.DefaultPerkTreeTemplate);
 ::DPF.Perks.DefaultPerkTree.build();
 
-::DPF.Perks.PerkGroups.add(::new("scripts/dpf/perk_group").init("DPF_RandomPerkGroup", "Random", ["Random perk group"], []));
-::DPF.Perks.PerkGroups.add(::new("scripts/dpf/perk_group").init("DPF_NoPerkGroup", "NoPerkGroup", ["No perk group"], []));
+::DPF.Perks.PerkGroups.add(::new(::DPF.Class.PerkGroup).init("DPF_RandomPerkGroup", "Random", ["Random perk group"], []));
+::DPF.Perks.PerkGroups.add(::new(::DPF.Class.PerkGroup).init("DPF_NoPerkGroup", "NoPerkGroup", ["No perk group"], []));
 
 ::DPF.Perks.addPerkGroupToTooltips <- function( _perkID = null, _groups = null )
 {

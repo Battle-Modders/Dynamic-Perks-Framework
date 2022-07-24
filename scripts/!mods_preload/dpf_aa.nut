@@ -1,7 +1,7 @@
 ::DPF <- {
 	Version = "0.1.0",
 	ID = "mod_dpf",
-	Name = "Dynamic Perks Framework (DPF)"
+	Name = "Dynamic Perks Framework (DPF)",
 };
 
 ::mods_registerMod(::DPF.ID, ::DPF.Version, ::DPF.Name);
@@ -9,7 +9,8 @@
 
 	::DPF.Mod <- ::MSU.Class.Mod(::DPF.ID, ::DPF.Version, ::DPF.Name);
 
-	::includeFiles(::IO.enumerateFiles("scripts/dpf"));
+	// ::includeFiles(::IO.enumerateFiles("dpf"));
+	::include("dpf/load.nut");
 	::mods_registerJS("dpf_mod_screens.js");
 
 	// Testing
@@ -23,7 +24,7 @@
 		IconDisabled = "ui/perks/perk_33_sw.png"
 	};
 
-	::DPF.Perks.PerkGroups.add(::new("scripts/dpf/perk_group").init("TestPerkGroup", "TestPerkGroup", ["test perk group"], [
+	::DPF.Perks.PerkGroups.add(::new(::DPF.Class.PerkGroup).init("TestPerkGroup", "TestPerkGroup", ["test perk group"], [
 		["perk.reach_advantage"],
 		["perk.test"]
 	]));
@@ -34,15 +35,15 @@
 		]
 	};
 
-	::DPF.Perks.PerkGroupCategories.add(::new("scripts/dpf/perk_group_collection").init("Weapon", "Weapon", "Has an aptitude for", 1, [
+	::DPF.Perks.PerkGroupCategories.add(::new(::DPF.Class.PerkGroupCollection).init("Weapon", "Weapon", "Has an aptitude for", 1, [
 		"TestPerkGroup"
 	]));
 
-	::DPF.Perks.PerkGroupCategories.add(::new("scripts/dpf/perk_group_collection").init("Style", "Style", "Likes using"));
+	::DPF.Perks.PerkGroupCategories.add(::new(::DPF.Class.PerkGroupCollection).init("Style", "Style", "Likes using"));
 
 	::DPF.MyPerkGroupCollections <- {};
-	::DPF.Perks.PerkGroupCategories["RangedWeapon"] <- ::new("scripts/dpf/perk_group_collection").init("RangedWeapon", "RangedWeapon");
-	::DPF.Perks.PerkGroupCategories["MeleeWeapon"] <- ::new("scripts/dpf/perk_group_collection").init("MeleeWeapon", "MeleeWeapon");
+	::DPF.Perks.PerkGroupCategories["RangedWeapon"] <- ::new(::DPF.Class.PerkGroupCollection).init("RangedWeapon", "RangedWeapon");
+	::DPF.Perks.PerkGroupCategories["MeleeWeapon"] <- ::new(::DPF.Class.PerkGroupCollection).init("MeleeWeapon", "MeleeWeapon");
 
 	::DPF.Perks.PerkGroupCategories.findById("Style").getSpecialMultipliers = function( _perkTree ) {
 		local multipliers = {};
@@ -62,7 +63,7 @@
 	};
 
 	::mods_hookNewObject("skills/backgrounds/companion_1h_background", function(o) {
-		o.m.PerkTree = ::new("scripts/dpf/perk_tree").init(null, {});
+		o.m.PerkTree = ::new(::DPF.Class.PerkTree).init(null, {});
 		o.onBuildPerkTree <- function()
 		{
 			this.getPerkTree().addPerk("perk.duelist", 5);
