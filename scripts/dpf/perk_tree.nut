@@ -39,34 +39,50 @@ this.perk_tree <- {
 		return this;		
 	}
 
-	function getTooltip()
+	function getTooltip( _flavored = true )
+	{
+		local ret = this.getPerkGroupsTooltip(_flavored);
+		if (ret != "") ret += "\n";
+		ret += this.getSpecialPerksTooltip(_flavored);
+		return ret;
+	}
+
+	function getPerkGroupsTooltip( _flavored = true )
 	{
 		local ret = "";
 		foreach (collection in ::DPF.Perks.PerkGroupCategories.getOrdered())
 		{
-			local text = collection.getTooltipPrefix() + " ";
+			local text = _flavored ? collection.getTooltipPrefix() + " " : "";
 			local has = false;
 			foreach (groupID in collection.getGroups())
 			{
 				if (this.hasPerkGroup(groupID))
 				{
 					has = true;
-					text += ::MSU.Array.rand(::DPF.Perks.PerkGroups.findById(groupID).getFlavorText()) + ", ";
+					if (_flavored) text += ::MSU.Array.rand(::DPF.Perks.PerkGroups.findById(groupID).getFlavorText()) + ", ";
+					else text += ::DPF.Perks.PerkGroups.findById(groupID).getName() + ", ";
 				}
 			}
 
 			if (has) ret += text.slice(0, -2) + ".\n";
 		}
 
+		return ret.len() < 2 ? ret : ret.slice(0, -2);
+	}
+
+	function getSpecialPerksTooltip( _flavored = true )
+	{
+		local ret = "";
 		foreach (perk in ::DPF.Perks.SpecialPerks.getAll())
 		{
 			if (this.hasPerk(perk.getPerkID()))
 			{
-				ret += "[color=" + this.Const.UI.Color.NegativeValue + "]" + perk.getFlavorText() + ".[/color]\n";
+				if (_flavored) ret += "[color=" + this.Const.UI.Color.NegativeValue + "]" + perk.getFlavorText() + ".[/color]\n";
+				else ret += ::Const.Perks.findById(perk.getPerkID()).Name + "\n";
 			}
 		}
 
-		return ret;
+		return ret.len() < 2 ? ret : ret.slice(0, -2);
 	}
 
 	function getPerksTooltip()
@@ -80,7 +96,8 @@ this.perk_tree <- {
 			}
 			ret = ret.slice(0, -2) + "\n";
 		}
-		return ret;
+
+		return ret.len() < 2 ? ret : ret.slice(0, -2);
 	}
 
 	function setupLocalMap()
