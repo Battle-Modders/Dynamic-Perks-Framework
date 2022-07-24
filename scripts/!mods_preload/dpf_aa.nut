@@ -25,7 +25,7 @@
 
 	::DPF.Perks.PerkGroups.add(::new("scripts/dpf/perk_group").init("TestPerkGroup", "TestPerkGroup", ["test perk group"], [
 		["perk.reach_advantage"],
-		["perk.duelist"]
+		["perk.test"]
 	]));
 
 	local dynamicMap = {
@@ -65,7 +65,7 @@
 		o.m.PerkTree = ::new("scripts/dpf/perk_tree").init(null, {});
 		o.onBuildPerkTree <- function()
 		{
-			this.getPerkTree().addPerk("perk.test", 5);
+			this.getPerkTree().addPerk("perk.duelist", 5);
 		}
 
 		local getTooltip = o.getTooltip;
