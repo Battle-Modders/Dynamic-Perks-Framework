@@ -33,13 +33,8 @@ this.perk_tree <- {
 			return this;
 		}
 
-		if (_dynamicMap == null)
-		{
-			::logError("A \'_dynamicMap\' must be provided if \'_template\' is null.");
-			throw ::MSU.Exception.InvalidValue(_dynamicMap);
-		}
-
-		this.m.DynamicMap = _dynamicMap;
+		if (_dynamicMap != null) this.m.DynamicMap = _dynamicMap;
+		else _dynamicMap = {};
 
 		return this;		
 	}
