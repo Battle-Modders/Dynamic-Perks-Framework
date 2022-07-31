@@ -113,7 +113,17 @@ this.perk_group <- {
 
 	function getSelfMultiplier()
 	{
-		return this.getID() in this.m.PerkTreeMultipliers ? this.m.PerkTreeMultipliers[this.getID()] : 1.0;
+		if ("self" in this.m.PerkTreeMultipliers)
+		{
+			return this.m.PerkTreeMultipliers["self"];
+		}
+
+		if (this.getID() in this.m.PerkTreeMultipliers)
+		{
+			return this.m.PerkTreeMultipliers[this.getID()];
+		}
+
+		return  1.0;
 	}
 
 	function addMultiplier( _id, _mult )
