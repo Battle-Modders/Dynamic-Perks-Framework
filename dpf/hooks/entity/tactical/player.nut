@@ -2,12 +2,7 @@
 	local isPerkUnlockable = o.isPerkUnlockable;
 	o.isPerkUnlockable = function( _id )
 	{
-		if (isPerkUnlockable(_id))
-		{
-			return this.getBackground().getPerkTree().isPerkUnlockable(_id);
-		}
-
-		return false;
+		return this.getBackground().getPerkTree().isPerkUnlockable(_id);
 	}
 
 	local setStartValuesEx = o.setStartValuesEx;

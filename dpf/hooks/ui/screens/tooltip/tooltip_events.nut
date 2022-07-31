@@ -1,17 +1,8 @@
 ::mods_hookNewObject("ui/screens/tooltip/tooltip_events", function (o) {
-	// local general_queryUIPerkTooltipData = o.general_queryUIPerkTooltipData;
-	// o.general_queryUIPerkTooltipData = function( _entityId, _perkId )
-	// {
-	// 	::DPF.PerkTooltipEntityID = _entityId;
-	// 	local ret = general_queryUIPerkTooltipData(_entityId, _perkId);
-	// 	::DPF.PerkTooltipEntityID = null;
-	// 	return ret;
-	// }
-
 	o.general_queryUIPerkTooltipData = function( _entityId, _perkId )
 	{
 		local player = ::Tactical.getEntityByID(_entityId);
-		local perk = player.getBackground().getPerkTree().getPerk(_perkId);
+		local perk = ::Const.Perks.findById(_perkId);
 
 		if (perk != null)
 		{

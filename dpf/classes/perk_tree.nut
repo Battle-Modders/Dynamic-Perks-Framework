@@ -1,6 +1,7 @@
 this.perk_tree <- {
 	m = {
 		Tree = [],
+		LookupMap = {},
 		Template = null,
 		DynamicMap = null,
 		Background = null,
@@ -354,17 +355,12 @@ this.perk_tree <- {
 	function clear()
 	{
 		this.m.Tree.clear();
+		this.m.LookupMap.clear();
 	}
 
 	function hasPerk( _id )
 	{
-		foreach (row in this.m.Tree)
-		{
-			foreach (perk in row)
-			{
-				if (perk.ID == _id) return true;
-			}
-		}
+		if (_id in this.m.LookupMap) return true;
 
 		if (this.m.LocalMap != null)
 		{
@@ -380,35 +376,9 @@ this.perk_tree <- {
 		return false;
 	}
 
-	function getPerk( _id )
-	{
-		foreach (row in this.m.Tree)
-		{
-			foreach (perk in row)
-			{
-				if (perk.ID == _id) return perk;
-			}
-		}
-	}
-
 	function isPerkUnlockable( _id )
 	{
-		local unlocks;
-		foreach (i, row in this.m.Tree)
-		{
-			foreach (perk in row)
-			{
-				if (perk.ID == _id)
-				{
-					unlocks = i;
-					break;
-				}
-			}
-		}
-
-		if (unlocks < this.m.Background.getContainer().getActor().getPerkPointsSpent()) return true;
-
-		return false;
+		return this.m.LookupMap[_id] <= this.m.Background.getContainer().getActor().getPerkPointsSpent();
 	}
 
 	function getPerkRequirementsTooltip( _id )
@@ -420,7 +390,7 @@ this.perk_tree <- {
 			id = 3,
 			type = "hint",
 			icon = "ui/icons/icon_locked.png",
-			text = "Locked until " + (player.getBackground().getPerkTree().m.PerkUnlocks[_perkId] - player.getPerkPointsSpent()) + " more perk points are spent"
+			text = "Locked until " + (this.m.LookupMap[_perkID] - player.getPerkPointsSpent()) + " more perk point(s) are spent"
 		});
 
 		// at the end add the custom requirement tooltip added by modder for _requiresFunction
@@ -433,22 +403,28 @@ this.perk_tree <- {
 		// Don't use hasPerk because that also considers perks in the LocalMap
 		// which causes the perks to never be added during dynamic build
 		// as it thinks that it already has the perk.
-		if (this.getPerk(_perkID) != null) return;
+		if (_perkID in this.m.LookupMap) return;
 
 		while (this.m.Tree.len() < _tier)
 		{
 			this.m.Tree.push([]);
 		}
 		this.m.Tree[_tier - 1].push(::Const.Perks.findById(_perkID));
+		this.m.LookupMap[_perkID] <- _tier - 1;
 	}
 
 	function removePerk( _perkID )
 	{
-		foreach (row in this.m.Tree)
+		if (this.hasPerk(_perkID))
 		{
+			local row = this.m.Tree[this.m.LookupMap[_perkID]];
 			foreach (i, perk in row)
 			{
-				if (perk.ID == _perkID) row.remove(i);
+				if (perk.ID == _perkID)
+				{
+					row.remove(i);
+					delete this.m.LookupMap[_perkID];
+				}
 			}
 		}
 	}
