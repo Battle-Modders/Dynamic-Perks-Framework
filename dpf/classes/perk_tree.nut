@@ -597,7 +597,14 @@ this.perk_tree <- {
 
 		foreach (id, mult in multipliers)
 		{
-			if (_perkGroupContainer.contains(id)) _perkGroupContainer.setWeight(id, _perkGroupContainer.getWeight(id) * mult);
+			if (_perkGroupContainer.contains(id))
+			{
+				if (mult == 0) _perkGroupContainer.setWeight(id, 0);
+				else
+				{
+					if (_perkGroupContainer.getWeight(id) > 0) _perkGroupContainer.setWeight(id, _perkGroupContainer.getWeight(id) * mult);
+				}
+			}
 		}
 	}
 
