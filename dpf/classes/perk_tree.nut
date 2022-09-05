@@ -449,7 +449,7 @@ this.perk_tree <- {
 		local count = 0;
 		foreach (perkGroupID in _perkGroupCollection.getGroups())
 		{
-			foreach (row in ::DPF.Perks.PerkGroups.findById(perkGroupID))
+			foreach (row in ::DPF.Perks.PerkGroups.findById(perkGroupID).getTree())
 			{
 				foreach (perkID in row)
 				{
