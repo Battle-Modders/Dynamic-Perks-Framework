@@ -92,7 +92,7 @@ this.perk_group_collection <- {
 
 	function setOrderOfAssignment( _order )
 	{
-		::MSU.requireInt(_order);
+		::MSU.requireOneFromTypes(["integer", "float"], _order);
 		this.m.OrderOfAssignment = _order;
 	}
 
@@ -117,14 +117,14 @@ this.perk_group_collection <- {
 		if (_exclude != null)
 		{
 			::MSU.requireArray(_exclude);
-			return ::DPF.Perks.PerkGroups.findById(::MSU.Array.rand(this.m.Groups.filter(@(idx, groupID) _exclude.find(groupID) == null)));
+			return ::MSU.Array.rand(this.m.Groups.filter(@(idx, groupID) _exclude.find(groupID) == null));
 		}
 
-		return ::DPF.Perks.PerkGroups.findById(::MSU.Array.rand(this.m.Groups));
+		return ::MSU.Array.rand(this.m.Groups);
 	}
 
 	function getRandomPerk( _exclude = null )
 	{
-		return this.getRandomGroup().getRandomPerk(null, _exclude);
+		return ::DPF.PerkGroups.findById(this.getRandomGroup()).getRandomPerk(null, _exclude);
 	}
 };
