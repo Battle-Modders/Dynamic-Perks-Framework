@@ -4,7 +4,7 @@ this.perk_group <- {
 		Name = "Not initialized Perk Group",
 		FlavorText = ["Not initialized perk group"], // TODO: Should it be named FlavorTexts ?
 		PerkTreeMultipliers = {},
-		Tree = []
+		Trees = {}
 	},
 	function create()
 	{
@@ -76,14 +76,20 @@ this.perk_group <- {
 		}
 	}
 
-	function getTree()
+	function getTrees()
 	{
-		return this.m.Tree;
+		return this.m.Trees;
 	}
 
-	function setTree( _tree )
+	function getTree( _id = "default" )
+	{
+		return this.m.Trees[_id];
+	}
+
+	function setTree( _tree, _id = "default" )
 	{
 		::MSU.requireArray(_tree);
+		::MSU.requireString(_id);
 		foreach (row in _tree)
 		{
 			::MSU.requireArray(row);
@@ -93,7 +99,12 @@ this.perk_group <- {
 			}
 		}
 
-		this.m.Tree = _tree;
+		this.m.Trees[_id] = _tree;
+	}
+
+	function getRandomTree()
+	{
+		return ::MSU.Table.randValue(this.m.Trees);
 	}
 
 	function getPerkTreeMultipliers()
