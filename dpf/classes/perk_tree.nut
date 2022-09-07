@@ -211,7 +211,7 @@ this.perk_tree <- {
 	{
 		foreach (specialPerk in ::DPF.Perks.SpecialPerks.getAll())
 		{
-			local object = specialPerk.roll(this.m.Background.getContainer().getActor());
+			local object = specialPerk.roll(this);
 			if (object == null) continue;
 
 			local hasRow = false;

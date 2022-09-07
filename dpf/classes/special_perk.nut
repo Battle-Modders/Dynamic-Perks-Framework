@@ -71,20 +71,20 @@ this.special_perk <- {
 		this.m.FlavorText = _flavorText;
 	}
 
-	function calculateChance( _player )
+	function calculateChance( _perkTree )
 	{
 		local chance = this.m.Chance;
 
-		if (this.m.PerkID in _player.getBackground().m.PerkTreeMultipliers)
+		if (this.m.PerkID in _perkTree.getBackground().m.PerkTreeMultipliers)
 		{
-			chance *= _player.getBackground().m.PerkTreeMultipliers[this.m.PerkID];
+			chance *= _perkTree.getBackground().m.PerkTreeMultipliers[this.m.PerkID];
 		}
 
-		if (this.m.ChanceFunction != null) chance *= this.m.ChanceFunction(_player);
+		if (this.m.ChanceFunction != null) chance *= this.m.ChanceFunction(_perkTree);
 
-		if (_player.getBackground().getPerkTree().m.Traits != null)
+		if (_perkTree.m.Traits != null)
 		{
-			foreach (trait in _player.getBackground().getPerkTree().m.Traits)
+			foreach (trait in _perkTree.m.Traits)
 			{
 				if (this.m.PerkID in trait.m.PerkTreeMultipliers)
 				{
@@ -93,22 +93,22 @@ this.special_perk <- {
 			}
 		}
 
-		if (_player.getTalents().len() > 0)
+		if (_perkTree.getActor().getTalents().len() > 0)
 		{
-			for (local attribute = 0; attribute < this.Const.Attributes.COUNT; attribute++)
+			for (local attribute = 0; attribute < ::Const.Attributes.COUNT; attribute++)
 			{
-				if (_player.getTalents()[attribute] == 0) continue;
+				if (_perkTree.getActor().getTalents()[attribute] == 0) continue;
 
 				foreach (id, mult in ::DPF.Perks.TalentMultipliers.findByAttribute(attribute))
 				{
-					chance *= mult * _player.getTalents()[attribute];
+					chance *= mult * _perkTree.getActor().getTalents()[attribute];
 				}
 			}
 		}
 
-		if (_player.getBackground().getPerkTree().m.LocalMap != null)
+		if (_perkTree.m.LocalMap != null)
 		{
-			foreach (category in _player.getBackground().getPerkTree().m.LocalMap)
+			foreach (category in _perkTree.m.LocalMap)
 			{
 				foreach (perkGroup in category)
 				{
@@ -123,9 +123,9 @@ this.special_perk <- {
 		return chance;
 	}
 
-	function roll( _player )
+	function roll( _perkTree )
 	{
-		local chance = this.calculateChance(_player);
+		local chance = this.calculateChance(_perkTree);
 
 		if (chance < 0 || ::Math.rand(1, 100) <= chance) return { PerkID = this.m.PerkID, Tier = this.m.Tier };
 
