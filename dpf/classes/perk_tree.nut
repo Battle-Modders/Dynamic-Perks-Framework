@@ -305,6 +305,11 @@ this.perk_tree <- {
 		return this.m.Background;
 	}
 
+	function getActor()
+	{
+		return this.m.Background.getContainer().getActor();
+	}
+
 	function setBackground( _background )
 	{
 		if (!::MSU.isKindOf(_background, "character_background")) throw ::MSU.Exception.InvalidType(_background);
