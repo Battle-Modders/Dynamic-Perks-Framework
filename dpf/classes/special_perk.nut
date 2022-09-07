@@ -2,7 +2,6 @@ this.special_perk <- {
 	m = {
 		PerkID = null,
 		Chance = null,
-		ChanceFunction = null,
 		Tier = null,
 		FlavorText = null
 	},
@@ -10,13 +9,13 @@ this.special_perk <- {
 	{
 	}
 
-    function init( _chance, _tier, _perkID, _flavorText, _chanceFunction = null )
+    function init( _chance, _tier, _perkID, _flavorText, _multiplierFunction = null )
 	{
 		this.setChance(_chance);
 		this.setTier(_tier);
 		this.setPerkID(_perkID);
 		this.setFlavorText(_flavorText);
-		if (_chanceFunction != null) this.setChanceFunction(_chanceFunction);
+		if (_multiplierFunction != null) this.getMultiplier = _multiplierFunction;
 
 		return this;
 	}
@@ -30,6 +29,11 @@ this.special_perk <- {
 	{
 		::MSU.requireInteger(_chance);
 		this.m.Chance = _chance;
+	}
+
+	function getMultiplier( _perkTree )
+	{
+		return 1.0;
 	}
 
 	function getTier()
@@ -80,7 +84,7 @@ this.special_perk <- {
 			chance *= _perkTree.getBackground().m.PerkTreeMultipliers[this.m.PerkID];
 		}
 
-		if (this.m.ChanceFunction != null) chance *= this.m.ChanceFunction(_perkTree);
+		if (this.m.ChanceFunction != null) chance *= this.getMultiplier(_perkTree);
 
 		if (_perkTree.m.Traits != null)
 		{
