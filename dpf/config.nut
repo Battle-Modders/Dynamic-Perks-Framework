@@ -5,6 +5,10 @@
 	SpecialPerk = "dpf/classes/special_perk"
 };
 
+::DPF.Const <- {
+	DefaultPerkTier = 0	// A brother that has never spent a perk point has this PerkTier (e.g. after resetting the tree or freshly hiring them)
+};
+
 ::DPF.Perks <- {};
 
 ::DPF.Perks.addPerks <- function( _perks )

@@ -1,14 +1,33 @@
 ::mods_hookExactClass("entity/tactical/player", function (o) {
-	local isPerkUnlockable = o.isPerkUnlockable;
+	o.m.PerkTier <- ::DPF.Const.DefaultPerkTier;
+
+	o.getPerkTier <- function()
+	{
+		return this.m.PerkTier;
+	}
+
+	o.setPerkTier <- function( _perkTier )
+	{
+		this.m.PerkTier = _perkTier;
+	}
+
+	o.resetPerkTier <- function()
+	{
+		this.setPerkTier(::DPF.Const.DefaultPerkTier + this.getPerkPointsSpent());
+	}
+
 	o.isPerkUnlockable = function( _id )
 	{
-		if (isPerkUnlockable(_id))
-		{
-			local perk = this.getBackground().getPerkTree().getPerk(_id);
-			if (perk != null && this.m.PerkPointsSpent >= perk.Unlocks) return true;
-		}
+		local perk = this.getBackground().getPerkTree().getPerk(_id);
+		return perk != null && this.getPerkTier() >= perk.Unlocks;
+	}
 
-		return false;
+	local unlockPerk = o.unlockPerk;
+	o.unlockPerk = function( _id )
+	{
+		local ret = unlockPerk( _id );
+		if (ret) this.setPerkTier(this.getPerkTier() + 1);
+		return ret;
 	}
 
 	local setStartValuesEx = o.setStartValuesEx;
@@ -36,6 +55,8 @@
 			this.m.PerkPointsSpent--;
 		}
 
+		this.resetPerkTier();
+		
 		this.getSkills().update();
 
 		// Re-equip the items
@@ -44,4 +65,19 @@
 			this.getItems().equip(item);
 		}
 	}
+
+	local onSerialize = o.onSerialize;
+	function onSerialize( _out )
+	{
+		_out.writeU8(this.m.PerkTier);
+		onSerialize(_out);
+	}
+
+	local onDeserialize = o.onDeserialize;
+	function onDeserialize( _in )
+	{
+		this.m.PerkTier = _in.readU8();
+		onDeserialize(_in);
+	}
 });
+
