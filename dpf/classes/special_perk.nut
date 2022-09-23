@@ -86,14 +86,11 @@ this.special_perk <- {
 
 		if (this.m.ChanceFunction != null) chance *= this.getMultiplier(_perkTree);
 
-		if (_perkTree.m.Traits != null)
+		foreach (trait in _perkTree.getBackground().getContainer().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait))
 		{
-			foreach (trait in _perkTree.m.Traits)
+			if (this.m.PerkID in trait.m.PerkTreeMultipliers)
 			{
-				if (this.m.PerkID in trait.m.PerkTreeMultipliers)
-				{
-					chance *= trait.m.PerkTreeMultipliers[this.m.PerkID];
-				}
+				chance *= trait.m.PerkTreeMultipliers[this.m.PerkID];
 			}
 		}
 

@@ -5,7 +5,6 @@ this.perk_tree <- {
 		DynamicMap = null,
 		Background = null,
 		LocalMap = null,
-		Traits = null,
 		PrepareBuildFunctions = [
 			"setupLocalMap",
 			"addFromDynamicMap",
@@ -248,8 +247,6 @@ this.perk_tree <- {
 			this.buildFromTemplate(this.m.Template);
 			return;
 		}
-
-		this.m.Traits = this.m.Background.getContainer().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait);
 
 		foreach (func in this.m.PrepareBuildFunctions)
 		{
@@ -578,15 +575,12 @@ this.perk_tree <- {
 
 	function addTraitMultipliers( _multipliers )
 	{
-		if (this.m.Traits != null)
+		foreach (trait in this.m.Background.getContainer().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait))
 		{
-			foreach (trait in this.m.Traits)
+			foreach (id, mult in trait.getPerkTreeMultipliers())
 			{
-				foreach (id, mult in trait.getPerkTreeMultipliers())
-				{
-					if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
-					else _multipliers[id] <- mult;
-				}
+				if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
+				else _multipliers[id] <- mult;
 			}
 		}
 	}
