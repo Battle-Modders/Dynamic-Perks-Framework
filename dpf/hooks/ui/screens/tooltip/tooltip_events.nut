@@ -1,4 +1,4 @@
-::mods_hookNewObject("ui/screens/tooltip/tooltip_events", function (o) {
+::mods_hookNewObjectOnce("ui/screens/tooltip/tooltip_events", function (o) {
 	local general_queryUIPerkTooltipData = o.general_queryUIPerkTooltipData;
 	o.general_queryUIPerkTooltipData = function( _entityId, _perkId )
 	{
