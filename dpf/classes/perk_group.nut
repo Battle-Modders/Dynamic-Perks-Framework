@@ -99,7 +99,7 @@ this.perk_group <- {
 			}
 		}
 
-		this.m.Trees[_id] = _tree;
+		this.m.Trees[_id] <- _tree;
 	}
 
 	function getRandomTree()
