@@ -1,5 +1,6 @@
 ::mods_hookExactClass("entity/tactical/player", function (o) {
-	o.m.PerkTier <- ::DPF.Const.DefaultPerkTier;
+	// o.m.PerkTier <- ::DPF.Const.DefaultPerkTier;
+	o.m.PerkTier <- 1;
 
 	o.getPerkTier <- function()
 	{
@@ -18,8 +19,9 @@
 
 	o.isPerkUnlockable = function( _id )
 	{
-		local perk = this.getBackground().getPerkTree().getPerk(_id);
-		return perk != null && this.getPerkTier() >= perk.Unlocks;
+		// local perk = this.getBackground().getPerkTree().getPerk(_id);
+		// return perk != null && this.getPerkTier() >= perk.Unlocks;
+		return this.getPerkTier() >= this.getBackground().getPerkTree().getPerkTier(_id);
 	}
 
 	local unlockPerk = o.unlockPerk;

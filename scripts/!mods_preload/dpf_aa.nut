@@ -21,7 +21,8 @@
 		Name = "Test Perk",
 		Tooltip = "Let\'s test this perk",
 		Icon = "ui/perks/perk_33.png",
-		IconDisabled = "ui/perks/perk_33_sw.png"
+		IconDisabled = "ui/perks/perk_33_sw.png",
+		Unlocks = 1
 	};
 
 	::DPF.Perks.PerkGroups.add(::new(::DPF.Class.PerkGroup).init("TestPerkGroup", "TestPerkGroup", ["test perk group"], [
