@@ -5,7 +5,7 @@
 		::DPF.PerkTooltipEntityID = _entityId;
 
 		local player = ::Tactical.getEntityByID(_entityId);
-		// Temporary Switcheroo so that the vanilla function does its warnings according to our newly defined 'getCurrentPerkTier' function
+		// Temporary Switcheroo so that the vanilla function does its warnings according to our newly defined 'getPerkTier' function
 		local getPerkPointsSpent = player.getPerkPointsSpent;
 		player.getPerkPointsSpent = player.getPerkTier;
 
