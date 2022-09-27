@@ -393,6 +393,17 @@ this.perk_tree <- {
 		}
 	}
 
+	function getPerkTier( _perkID )
+	{
+		foreach (i, row in this.m.Tree)
+		{
+			foreach (perk in row)
+			{
+				if (perk.ID == _perkID) return i + 1;
+			}
+		}
+	}
+
 	function addPerk( _perkID, _tier = 1 )
 	{
 		// Don't use hasPerk because that also considers perks in the LocalMap

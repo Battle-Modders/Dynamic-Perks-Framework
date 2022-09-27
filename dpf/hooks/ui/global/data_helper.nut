@@ -6,6 +6,7 @@
 		if (_entity.getBackground() != null)
 		{
 			result.perkTree <- _entity.getBackground().getPerkTree().getTree();
+			result.perkTier <- _entity.getPerkTier();
 		}
 		return result;
 	}

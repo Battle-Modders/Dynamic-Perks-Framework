@@ -18,8 +18,7 @@
 
 	o.isPerkUnlockable = function( _id )
 	{
-		local perk = this.getBackground().getPerkTree().getPerk(_id);
-		return perk != null && this.getPerkTier() >= perk.Unlocks;
+		return this.getPerkTier() >= this.getBackground().getPerkTree().getPerkTier(_id);
 	}
 
 	local unlockPerk = o.unlockPerk;
@@ -35,6 +34,7 @@
 	{
 		setStartValuesEx(_backgrounds, _addTraits);
 		this.getBackground().getPerkTree().build();
+		this.getSkills().add(::new("scripts/skills/perks/perk_reach_advantage"));
 	}
 
 	o.resetPerks <- function()
