@@ -1,7 +1,6 @@
 this.perk_tree <- {
 	m = {
 		Tree = [],
-		PerkTierMap = {},
 		Template = null,
 		DynamicMap = null,
 		Background = null,
@@ -357,12 +356,17 @@ this.perk_tree <- {
 	function clear()
 	{
 		this.m.Tree.clear();
-		this.m.PerkTierMap.clear();
 	}
 
 	function hasPerk( _id )
 	{
-		if (_id in this.m.PerkTierMap) return true;
+		foreach (row in this.m.Tree)
+		{
+			foreach (perk in row)
+			{
+				if (perk.ID == _id) return true;
+			}
+		}
 
 		if (this.m.LocalMap != null)
 		{
@@ -389,31 +393,21 @@ this.perk_tree <- {
 		}
 	}
 
-	function getPerkTier( _perkID )
-	{
-		return this.m.PerkTierMap[_perkID];
-	}
-
 	function addPerk( _perkID, _tier = 1 )
 	{
 		// Don't use hasPerk because that also considers perks in the LocalMap
 		// which causes the perks to never be added during dynamic build
 		// as it thinks that it already has the perk.
-		if (_perkID in this.m.PerkTierMap) return;
+		if (this.getPerk(_perkID) != null) return;
 
-		local perk = ::Const.Perks.findById(_perkID);
-		if (perk == null)
-		{
-			::logError("_perkID must be a valid perk ID");
-			throw ::MSU.Exception.InvalidValue(_perkID);
-		}
-
+		local perk = clone ::Const.Perks.findById(_perkID);
+		perk.Row <- _tier - 1;
+		perk.Unlocks <- _tier - 1;
 		while (this.m.Tree.len() < _tier)
 		{
 			this.m.Tree.push([]);
 		}
 		this.m.Tree[_tier - 1].push(perk);
-		this.m.PerkTierMap[_perkID] <- _tier;
 	}
 
 	function removePerk( _perkID )
@@ -422,12 +416,7 @@ this.perk_tree <- {
 		{
 			foreach (i, perk in row)
 			{
-				if (perk.ID == _perkID)
-				{
-					row.remove(i);
-					delete this.m.PerkTierMap[_perkID];
-					return;
-				}
+				if (perk.ID == _perkID) row.remove(i);
 			}
 		}
 	}
