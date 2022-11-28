@@ -107,16 +107,14 @@ this.special_perk <- {
 			}
 		}
 
-		if (_perkTree.m.LocalMap != null)
+		if (_perkTree.m.Exclude != null)
 		{
-			foreach (category in _perkTree.m.LocalMap)
+			foreach (perkGroupID in _perkTree.m.Exclude)
 			{
-				foreach (perkGroup in category)
+				local perkGroup = ::DPF.Perks.PerkGroups.findById(perkGroupID);
+				if (this.m.PerkID in perkGroup.m.PerkTreeMultipliers)
 				{
-					if (this.m.PerkID in perkGroup.m.PerkTreeMultipliers)
-					{
-						chance *= perkGroup.m.PerkTreeMultipliers[this.m.PerkID];
-					}
+					chance *= perkGroup.m.PerkTreeMultipliers[this.m.PerkID];
 				}
 			}
 		}

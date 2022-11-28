@@ -4,17 +4,15 @@ this.perk_tree <- {
 		Template = null,
 		DynamicMap = null,
 		Background = null,
-		LocalMap = null,
+		Exclude = [],
 		PrepareBuildFunctions = [
-			"setupLocalMap",
 			"addFromDynamicMap",
 			"addMins",
-			"setupTemplate",
-			"addSpecialPerksToTemplate"
+			"addSpecialPerks"
 		],
 		MultiplierFunctions = [
 			"addBackgroundMultipliers",
-			"addLocalMapMultipliers",
+			"addPerkGroupMultipliers",
 			"addItemMultipliers",
 			"addTalentMultipliers",
 			"addTraitMultipliers"
@@ -99,27 +97,12 @@ this.perk_tree <- {
 		return ret.len() < 2 ? ret : ret.slice(0, -2);
 	}
 
-	function setupLocalMap()
-	{
-		this.m.LocalMap = {};
-		foreach (collection in ::DPF.Perks.PerkGroupCategories.getOrdered())
-		{
-			this.m.LocalMap[collection.getID()] <- [];
-		}
-	}
-
 	function addFromDynamicMap()
 	{
 		foreach (collection in ::DPF.Perks.PerkGroupCategories.getOrdered())
 		{
 			if (collection.getID() in this.m.DynamicMap)
 			{
-				local exclude = array(this.m.LocalMap[collection.getID()].len());
-				foreach (i, perkGroup in this.m.LocalMap[collection.getID()])
-				{
-					exclude[i] = perkGroup.getID();
-				}
-
 				foreach (perkGroupContainer in this.m.DynamicMap[collection.getID()])
 				{
 					local id;
@@ -147,10 +130,12 @@ this.perk_tree <- {
 						continue;
 					}
 
-					if (perkGroup.getID() == "DPF_RandomPerkGroup") perkGroup = this.__getWeightedRandomGroupFromCollection(categoryName, exclude);
-
-					this.m.LocalMap[collection.getID()].push(perkGroup);
-					if (perkGroup.getID() != "DPF_NoPerkGroup") exclude.push(perkGroup.getID());
+					if (perkGroup.getID() == "DPF_RandomPerkGroup") perkGroup = this.__getWeightedRandomGroupFromCollection(categoryName, this.m.Exclude);
+					if (perkGroup.getID() != "DPF_NoPerkGroup")
+					{
+						this.m.Exclude.push(perkGroup.getID());
+						this.addPerkGroup(perkGroup.getID());
+					}
 				}
 			}
 		}
@@ -163,50 +148,19 @@ this.perk_tree <- {
 			local min = this.m.Background.getCollectionMin(collection.getID());
 			if (min == null) min = collection.getMin();
 
-			if (min > 0)
+			for (local i = (collection.getID() in this.m.DynamicMap) ? this.m.DynamicMap[collection.getID()].len() : 0; i < min; i++)
 			{
-				local exclude = array(this.m.LocalMap[collection.getID()].len());
-				foreach (i, perkGroup in this.m.LocalMap[collection.getID()])
+				local perkGroup = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
+				if (perkGroup.getID() != "DPF_NoPerkGroup")
 				{
-					exclude[i] = perkGroup.getID();
-				}
-
-				local r = ::Math.rand(0, 100);
-				for (local i = this.m.LocalMap[collection.getID()].len(); i < min; i++)
-				{
-					local perkGroup = this.__getWeightedRandomGroupFromCollection(collection.getID(), exclude);
-					this.m.LocalMap[collection.getID()].push(perkGroup);
-					exclude.push(perkGroup.getID());
+					this.m.Exclude.push(perkGroup.getID());
+					this.addPerkGroup(perkGroup.getID());
 				}
 			}
 		}
 	}
 
-	function setupTemplate()
-	{
-		this.m.Template = [ [], [], [], [], [], [], [] ]; // Length 7
-
-		foreach (category in this.m.LocalMap)
-		{
-			foreach (perkGroup in category)
-			{
-				foreach (rowNumber, perkIDs in perkGroup.getTree())
-				{
-					while (this.m.Template.len() < rowNumber + 1)
-					{
-						this.m.Template.push([]);
-					}
-
-					foreach (perkID in perkIDs)
-					{
-						this.m.Template[rowNumber].push(perkID);
-					}
-				}
-			}
-		}
-	}
-
-	function addSpecialPerksToTemplate()
+	function addSpecialPerks()
 	{
 		foreach (specialPerk in ::DPF.Perks.SpecialPerks.getAll())
 		{
@@ -236,35 +190,42 @@ this.perk_tree <- {
 
 			row = hasRow ? this.Math.max(0, this.Math.min(row, 6)) : object.Tier - 1;
 
-			this.m.Template[row].push(object.PerkID);
+			this.addPerk(object.PerkID, row + 1);
 		}
 	}
 
 	function build()
 	{
+		this.clear();
+
 		if (this.m.Template != null)
 		{
 			this.buildFromTemplate(this.m.Template);
-			return;
 		}
+		else
+		{
+			this.buildFromDynamicMap();
+		}
+
+		if (!::MSU.isNull(this.m.Background)) this.m.Background.onBuildPerkTree();
+	}
+
+	function buildFromDynamicMap()
+	{
+		this.m.Exclude = [];
 
 		foreach (func in this.m.PrepareBuildFunctions)
 		{
 			this[func]();
 		}
 
-		this.buildFromTemplate(this.m.Template);
-
-		this.m.LocalMap = null;
+		this.m.Exclude = null;
 		this.m.DynamicMap = null;
-		this.m.Template = null;
 	}
 
 	function buildFromTemplate( _template )
 	{
 		::MSU.requireArray(_template);
-
-		this.clear();
 
 		foreach (i, row in _template)
 		{
@@ -274,8 +235,6 @@ this.perk_tree <- {
 				this.addPerk(perkID, i + 1);
 			}
 		}
-
-		if (!::MSU.isNull(this.m.Background)) this.m.Background.onBuildPerkTree();
 	}
 
 	function toTemplate()
@@ -368,17 +327,6 @@ this.perk_tree <- {
 			}
 		}
 
-		if (this.m.LocalMap != null)
-		{
-			foreach (category in this.m.LocalMap)
-			{
-				foreach (perkGroup in category)
-				{
-					if (perkGroup.hasPerk(_id)) return true;
-				}
-			}
-		}
-
 		return false;
 	}
 
@@ -406,10 +354,7 @@ this.perk_tree <- {
 
 	function addPerk( _perkID, _tier = 1 )
 	{
-		// Don't use hasPerk because that also considers perks in the LocalMap
-		// which causes the perks to never be added during dynamic build
-		// as it thinks that it already has the perk.
-		if (this.getPerk(_perkID) != null) return;
+		if (this.hasPerk(_perkID)) return;
 
 		local perk = clone ::Const.Perks.findById(_perkID);
 		perk.Row <- _tier - 1;
@@ -538,7 +483,7 @@ this.perk_tree <- {
 
 	function addLocalMapMultipliers( _multipliers )
 	{
-		foreach (category in this.m.LocalMap)
+		foreach (perkGroup in this.m.Exclude)
 		{
 			foreach (perkGroup in category)
 			{
