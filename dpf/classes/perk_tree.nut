@@ -476,21 +476,26 @@ this.perk_tree <- {
 	{
 		foreach (id, mult in this.m.Background.getPerkTreeMultipliers())
 		{
-			if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
-			else _multipliers[id] <- mult;
+			if (!(id in _multipliers)) _multipliers[id] <- mult;
+			else
+			{
+				if (mult < 0 || _multipliers[id] < 0) _multipliers[id] = -1;
+				else _multipliers[id] *= mult;
+			}
 		}
 	}
 
-	function addLocalMapMultipliers( _multipliers )
+	function addPerkGroupMultipliers( _multipliers )
 	{
 		foreach (perkGroup in this.m.Exclude)
 		{
-			foreach (perkGroup in category)
+			foreach (id, mult in perkGroup.getPerkTreeMultipliers())
 			{
-				foreach (id, mult in perkGroup.getPerkTreeMultipliers())
+				if (!(id in _multipliers)) _multipliers[id] <- mult;
+				else
 				{
-					if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
-					else _multipliers[id] <- mult;
+					if (mult < 0 || _multipliers[id] < 0) _multipliers[id] = -1;
+					else _multipliers[id] *= mult;
 				}
 			}
 		}
@@ -503,8 +508,12 @@ this.perk_tree <- {
 		{
 			foreach (id, mult in item.getPerkTreeMultipliers())
 			{
-				if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
-				else _multipliers[id] <- mult;
+				if (!(id in _multipliers)) _multipliers[id] <- mult;
+				else
+				{
+					if (mult < 0 || _multipliers[id] < 0) _multipliers[id] = -1;
+					else _multipliers[id] *= mult;
+				}
 			}
 		}
 	}
@@ -522,8 +531,12 @@ this.perk_tree <- {
 				foreach (id, mult in ::DPF.Perks.TalentMultipliers.findByAttribute(attribute))
 				{
 					mult = mult < 1 ? mult / talents[attribute] : mult;
-					if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
-					else _multipliers[id] <- mult;
+					if (!(id in _multipliers)) _multipliers[id] <- mult;
+					else
+					{
+						if (mult < 0 || _multipliers[id] < 0) _multipliers[id] = -1;
+						else _multipliers[id] *= mult;
+					}
 				}
 			}
 		}
@@ -535,8 +548,12 @@ this.perk_tree <- {
 		{
 			foreach (id, mult in trait.getPerkTreeMultipliers())
 			{
-				if (id in _multipliers) _multipliers[id] = _multipliers[id] * mult;
-				else _multipliers[id] <- mult;
+				if (!(id in _multipliers)) _multipliers[id] <- mult;
+				else
+				{
+					if (mult < 0 || _multipliers[id] < 0) _multipliers[id] = -1;
+					else _multipliers[id] *= mult;
+				}
 			}
 		}
 	}
