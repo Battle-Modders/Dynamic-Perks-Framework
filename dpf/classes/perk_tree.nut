@@ -49,22 +49,23 @@ this.perk_tree <- {
 		local ret = "";
 		foreach (collection in ::DPF.Perks.PerkGroupCategories.getOrdered())
 		{
-			local text = _flavored ? collection.getTooltipPrefix() + " " : "";
-			local has = false;
+			local text = "";
 			foreach (groupID in collection.getGroups())
 			{
 				if (this.hasPerkGroup(groupID))
 				{
-					has = true;
 					if (_flavored) text += ::MSU.Array.rand(::DPF.Perks.PerkGroups.findById(groupID).getFlavorText()) + ", ";
 					else text += ::DPF.Perks.PerkGroups.findById(groupID).getName() + ", ";
 				}
 			}
 
-			if (has) ret += text.slice(0, -2) + ".\n";
+			if (text != "")
+			{
+				ret += format("%s%s.\n", _flavored ? collection.getTooltipPrefix() + " " : "", text.slice(0, -2));
+			}
 		}
 
-		return ret.len() < 2 ? ret : ret.slice(0, -2);
+		return ret == "" ? ret : ret.slice(0, -2);
 	}
 
 	function getSpecialPerksTooltip( _flavored = true )
@@ -79,7 +80,7 @@ this.perk_tree <- {
 			}
 		}
 
-		return ret.len() < 2 ? ret : ret.slice(0, -2);
+		return ret == "" ? ret : ret.slice(0, -2);
 	}
 
 	function getPerksTooltip()
@@ -94,7 +95,7 @@ this.perk_tree <- {
 			ret = ret.slice(0, -2) + "\n";
 		}
 
-		return ret.len() < 2 ? ret : ret.slice(0, -2);
+		return ret == "" ? ret : ret.slice(0, -2);
 	}
 
 	function addFromDynamicMap()
