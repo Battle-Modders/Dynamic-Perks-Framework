@@ -280,15 +280,18 @@ this.perk_tree <- {
 
 	function setTemplate( _template )
 	{
-		::MSU.requireArray(_template);
-		foreach (row in _template)
+		if (_template != null)
 		{
-			foreach (perkID in row)
+			::MSU.requireArray(_template);
+			foreach (row in _template)
 			{
-				if (::Const.Perks.findById(perkID) == null)
+				foreach (perkID in row)
 				{
-					::logError(perkID + " is not a valid perk ID.");
-					throw ::MSU.Exception.InvalidValue(perkID);
+					if (::Const.Perks.findById(perkID) == null)
+					{
+						::logError(perkID + " is not a valid perk ID.");
+						throw ::MSU.Exception.InvalidValue(perkID);
+					}
 				}
 			}
 		}
