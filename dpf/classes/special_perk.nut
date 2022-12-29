@@ -9,26 +9,9 @@ this.special_perk <- {
 	{
 	}
 
-    function init( _chance, _tier, _perkID, _flavorText, _multiplierFunction = null )
-	{
-		this.setChance(_chance);
-		this.setTier(_tier);
-		this.setPerkID(_perkID);
-		this.setFlavorText(_flavorText);
-		if (_multiplierFunction != null) this.getMultiplier = _multiplierFunction;
-
-		return this;
-	}
-
 	function getChance()
 	{
 		return this.m.Chance;
-	}
-
-	function setChance( _chance )
-	{
-		::MSU.requireInteger(_chance);
-		this.m.Chance = _chance;
 	}
 
 	function getMultiplier( _perkTree )
@@ -41,38 +24,14 @@ this.special_perk <- {
 		return this.m.Tier;
 	}
 
-	function setTier( _tier )
-	{
-		::MSU.requireInteger(_tier);
-		this.m.Tier = _tier;
-	}
-
 	function getPerkID()
 	{
 		return this.m.PerkID;
 	}
 
-	function setPerkID( _perkID )
-	{
-		if (::Const.Perks.findById(_perk) == null) throw ::MSU.Exception.KeyNotFound(_perk);
-		this.m.PerkID = _perkID;
-	}
-
-	function setChanceFunction( _function )
-	{
-		::MSU.requireFunction(_function);
-		this.m.ChanceFunction = _function;
-	}
-
 	function getFlavorText()
 	{
 		return this.m.FlavorText;
-	}
-
-	function setFlavorText( _flavorText )
-	{
-		::MSU.requireString(_flavorText);
-		this.m.FlavorText = _flavorText;
 	}
 
 	function calculateChance( _perkTree )
