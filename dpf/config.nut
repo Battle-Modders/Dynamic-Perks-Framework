@@ -2,7 +2,8 @@
 	PerkGroup = "dpf/classes/perk_group",
 	PerkGroupCollection = "dpf/classes/perk_group_collection",
 	PerkTree = "dpf/classes/perk_tree",
-	SpecialPerk = "dpf/classes/special_perk"
+	SpecialPerk = "dpf/classes/special_perk",
+	PerkGroupWithChance = "dpf/classes/perk_group_with_chance"
 };
 
 ::DPF.Const <- {
