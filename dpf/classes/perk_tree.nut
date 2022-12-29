@@ -86,6 +86,29 @@ this.perk_tree <- {
 		return ret == "" ? ret : ret.slice(0, -2);
 	}
 
+	function getPerkGroups()
+	{
+		local ret = [];
+		foreach (collection in ::DPF.Perks.PerkGroupCategories.getOrdered())
+		{
+			ret.extend(collection.getGroups().filter(@(idx, groupID) this.hasPerkGroup(groupID)));
+		}
+		return ret;
+	}
+
+	function getPerks()
+	{
+		local ret = [];
+		foreach (row in this.getTree())
+		{
+			foreach (perk in row)
+			{
+				ret.push(perk.ID);
+			}
+		}
+		return ret;
+	}
+
 	function addFromDynamicMap()
 	{
 		foreach (collection in ::DPF.Perks.PerkGroupCategories.getOrdered())
