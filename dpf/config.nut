@@ -6,7 +6,21 @@
 };
 
 ::DPF.Const <- {
-	DefaultPerkTier = 1	// A brother that has never spent a perk point has this PerkTier (e.g. after resetting the tree or freshly hiring them)
+	DefaultPerkTier = 1,	// A brother that has never spent a perk point has this PerkTier (e.g. after resetting the tree or freshly hiring them)
+	PerkTree <- {
+		PrepareBuildFunctions <- [
+		"addFromDynamicMap",
+		"addMins",
+		"addSpecialPerks"
+		],
+		MultiplierFunctions = [
+			"addBackgroundMultipliers",
+			"addPerkGroupMultipliers",
+			"addItemMultipliers",
+			"addTalentMultipliers",
+			"addTraitMultipliers"
+		]
+	}
 };
 
 ::DPF.Perks <- {};

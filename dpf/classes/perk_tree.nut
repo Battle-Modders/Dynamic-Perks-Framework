@@ -4,19 +4,7 @@ this.perk_tree <- {
 		Template = null,
 		DynamicMap = null,
 		Background = null,
-		Exclude = [],
-		PrepareBuildFunctions = [
-			"addFromDynamicMap",
-			"addMins",
-			"addSpecialPerks"
-		],
-		MultiplierFunctions = [
-			"addBackgroundMultipliers",
-			"addPerkGroupMultipliers",
-			"addItemMultipliers",
-			"addTalentMultipliers",
-			"addTraitMultipliers"
-		]
+		Exclude = []
 	},
 	function create()
 	{
@@ -215,7 +203,7 @@ this.perk_tree <- {
 	{
 		this.m.Exclude = [];
 
-		foreach (func in this.m.PrepareBuildFunctions)
+		foreach (func in ::DPF.Const.PerkTree.PrepareBuildFunctions)
 		{
 			this[func]();
 		}
@@ -566,7 +554,7 @@ this.perk_tree <- {
 	{
 		local multipliers = {};
 
-		foreach (func in this.m.MultiplierFunctions)
+		foreach (func in ::DPF.Const.PerkTree.MultiplierFunctions)
 		{
 			this[func](multipliers);
 		}
