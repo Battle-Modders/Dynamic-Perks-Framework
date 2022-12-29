@@ -115,6 +115,13 @@ local findById = ::Const.Perks.findById;
 		return this.LookupMap;
 	}
 
+	function getByType( _filter )
+	{
+		local arr = split(_filter, "/");
+		_filter = arr[arr.len() - 1];
+		return ::MSU.LookupMap.filter(@(key, value) ::MSU.isKindOf(value, _filter));
+	}
+
 	function findById( _id )
 	{
 		if (_id in this.LookupMap) return this.LookupMap[_id];
