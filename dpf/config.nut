@@ -1,10 +1,3 @@
-::DPF.Class <- {
-	PerkGroup = "dpf/classes/perk_group",
-	PerkGroupCollection = "dpf/classes/perk_group_collection",
-	PerkTree = "dpf/classes/perk_tree",
-	SpecialPerk = "dpf/classes/special_perk"
-};
-
 ::DPF.Const <- {
 	DefaultPerkTier = 1,	// A brother that has never spent a perk point has this PerkTier (e.g. after resetting the tree or freshly hiring them)
 	PerkTree <- {
