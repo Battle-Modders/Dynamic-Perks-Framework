@@ -34,7 +34,6 @@
 	{
 		setStartValuesEx(_backgrounds, _addTraits);
 		this.getBackground().getPerkTree().build();
-		this.getSkills().add(::new("scripts/skills/perks/perk_reach_advantage"));
 	}
 
 	o.resetPerks <- function()
