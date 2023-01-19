@@ -502,9 +502,9 @@ this.perk_tree <- {
 
 	function addPerkGroupMultipliers( _multipliers )
 	{
-		foreach (perkGroup in this.m.Exclude)
+		foreach (perkGroupID in this.m.Exclude)
 		{
-			foreach (id, mult in perkGroup.getPerkTreeMultipliers())
+			foreach (id, mult in ::DPF.Perks.PerkGroups.findById(perkGroupID).getPerkTreeMultipliers())
 			{
 				if (!(id in _multipliers)) _multipliers[id] <- mult;
 				else
