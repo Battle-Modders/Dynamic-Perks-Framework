@@ -42,18 +42,18 @@ this.perk_tree <- {
 			{
 				if (this.hasPerkGroup(groupID))
 				{
-					if (_flavored) text += ::MSU.Array.rand(::DPF.Perks.PerkGroups.findById(groupID).getFlavorText()) + ", ";
-					else text += ::DPF.Perks.PerkGroups.findById(groupID).getName() + ", ";
+					local str = _flavored ? ::MSU.Array.rand(::DPF.Perks.PerkGroups.findById(groupID).getFlavorText()) : ::DPF.Perks.PerkGroups.findById(groupID).getName();
+					if (str != "") text += str + ", ";
 				}
 			}
 
 			if (text != "")
 			{
-				ret += format("%s%s.\n", _flavored ? collection.getTooltipPrefix() + " " : "", text.slice(0, -2));
+				ret += format("%s%s.\n", _flavored ? collection.getTooltipPrefix() + " " : "", text.slice(0, -2)); // remove ", "
 			}
 		}
 
-		return ret == "" ? ret : ret.slice(0, -2);
+		return ret == "" ? ret : ret.slice(0, -1); // remove \n
 	}
 
 	function getSpecialPerksTooltip( _flavored = true )
@@ -68,7 +68,7 @@ this.perk_tree <- {
 			}
 		}
 
-		return ret == "" ? ret : ret.slice(0, -2);
+		return ret == "" ? ret : ret.slice(0, -1); // remove \n
 	}
 
 	function getPerksTooltip()
