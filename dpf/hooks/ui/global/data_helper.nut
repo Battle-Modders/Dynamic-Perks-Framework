@@ -7,6 +7,14 @@
 		{
 			result.perkTree <- _entity.getBackground().getPerkTree().getTree();
 			result.perkTier <- _entity.getPerkTier();
+			result.lockedPerks <- [];
+			foreach (row in result.perkTree)
+			{
+				foreach (perk in row)
+				{
+					if (!_entity.isPerkUnlockable(perk.ID)) result.lockedPerks.push(perk.ID);
+				}
+			}
 		}
 		return result;
 	}

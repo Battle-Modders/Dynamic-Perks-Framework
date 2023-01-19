@@ -32,13 +32,46 @@ CharacterScreenDatasource.prototype.getBrotherPerkTier = function (_brother)
 	return 0;
 };
 
+CharacterScreenDatasource.prototype.getLockedPerks = function (_brother)
+{
+	if (_brother === null || !(CharacterScreenIdentifier.Entity.Character.Key in _brother))
+	{
+		return 0;
+	}
+
+	var character = _brother[CharacterScreenIdentifier.Entity.Character.Key];
+	if (character === null)
+	{
+		return 0;
+	}
+
+	if (CharacterScreenIdentifier.Entity.Character.PerkPoints in character)
+	{
+		var lockedPerks = _brother.lockedPerks;
+		if (lockedPerks !== null)
+		{
+			return lockedPerks;
+		}
+	}
+
+	return null;
+};
+
 CharacterScreenPerksModule.prototype.isPerkUnlockable = function (_perk)
 {
 	var perkPoints = this.mDataSource.getBrotherPerkPoints(this.mDataSource.getSelectedBrother());
 	var perkTier = this.mDataSource.getBrotherPerkTier(this.mDataSource.getSelectedBrother());
+	var lockedPerks = this.mDataSource.getLockedPerks(this.mDataSource.getSelectedBrother());
 
 	if (perkPoints > 0 && perkTier >= _perk.Row + 1)
 	{
+		for (var row = 0; row < lockedPerks.length; ++row)
+		{
+			if (_perk.ID === lockedPerks[row])
+			{
+				return false;
+			}
+		}
 		return true;
 	}
 
