@@ -210,6 +210,8 @@ this.perk_tree <- {
 	{
 		this.clear();
 
+		this.m.Exclude = [];
+
 		if (this.m.Template != null)
 		{
 			this.buildFromTemplate(this.m.Template);
@@ -219,20 +221,17 @@ this.perk_tree <- {
 			this.buildFromDynamicMap();
 		}
 
+		this.m.Exclude = null;
+		this.m.DynamicMap = null;
+
 		if (!::MSU.isNull(this.m.Background)) this.m.Background.onBuildPerkTree();
 	}
 
 	function buildFromDynamicMap()
 	{
-		this.m.Exclude = [];
-
-		foreach (func in ::DPF.Const.PerkTree.PrepareBuildFunctions)
-		{
-			this[func]();
-		}
-
-		this.m.Exclude = null;
-		this.m.DynamicMap = null;
+		this.addFromDynamicMap();
+		this.addMins();
+		this.addSpecialPerks();
 	}
 
 	function buildFromTemplate( _template )
