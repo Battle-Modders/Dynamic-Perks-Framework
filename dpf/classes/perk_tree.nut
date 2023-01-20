@@ -149,24 +149,18 @@ this.perk_tree <- {
 						this.addPerkGroup(perkGroup.getID());
 					}
 				}
-			}
-		}
-	}
 
-	function addMins()
-	{
-		foreach (collection in ::DPF.Perks.PerkGroupCategories.getOrdered())
-		{
-			local min = this.m.Background.getCollectionMin(collection.getID());
-			if (min == null) min = collection.getMin();
+				local min = this.m.Background.getCollectionMin(collection.getID());
+				if (min == null) min = collection.getMin();
 
-			for (local i = (collection.getID() in this.m.DynamicMap) ? this.m.DynamicMap[collection.getID()].len() : 0; i < min; i++)
-			{
-				local perkGroup = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
-				if (perkGroup.getID() != "DPF_NoPerkGroup")
+				for (local i = (collection.getID() in this.m.DynamicMap) ? this.m.DynamicMap[collection.getID()].len() : 0; i < min; i++)
 				{
-					this.m.Exclude.push(perkGroup.getID());
-					this.addPerkGroup(perkGroup.getID());
+					local perkGroup = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
+					if (perkGroup.getID() != "DPF_NoPerkGroup")
+					{
+						this.m.Exclude.push(perkGroup.getID());
+						this.addPerkGroup(perkGroup.getID());
+					}
 				}
 			}
 		}
@@ -230,7 +224,6 @@ this.perk_tree <- {
 	function buildFromDynamicMap()
 	{
 		this.addFromDynamicMap();
-		this.addMins();
 		this.addSpecialPerks();
 	}
 
