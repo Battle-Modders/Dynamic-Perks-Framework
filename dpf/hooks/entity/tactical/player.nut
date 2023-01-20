@@ -18,7 +18,14 @@
 
 	o.isPerkUnlockable = function( _id )
 	{
-		return this.getPerkTier() >= this.getBackground().getPerkTree().getPerkTier(_id);
+		if (this.getPerkTier() < this.getBackground().getPerkTree().getPerkTier(_id))
+			return false;
+
+		local perk = this.getBackground().getPerkTree().getPerk(_id);
+		if (("verifyPrerequisites" in perk) && !perk.verifyPrerequisites(this, [])) // TODO: Efficiency issue: passing an empty array every time
+			return false;
+
+		return true;
 	}
 
 	local unlockPerk = o.unlockPerk;

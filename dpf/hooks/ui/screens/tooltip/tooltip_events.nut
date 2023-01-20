@@ -24,11 +24,6 @@
 
 			if (!player.hasPerk(_perkId))
 			{
-				if ("PreReq" in perk)
-				{
-					ret.extend(::DPF.Perks.getPreReqTooltip(_perkId, player));
-				}
-
 				local reqTier = player.getBackground().getPerkTree().getPerkTier(_perkId);
 
 				if (player.getPerkTier() >= reqTier)
@@ -61,6 +56,8 @@
 						text = "Locked until " + (reqTier - player.getPerkTier()) + " more perk point is spent"
 					});
 				}
+
+				if ("verifyPrerequisites" in perk) perk.verifyPrerequisites(player, ret);
 			}
 
 			return ret;
