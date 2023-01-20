@@ -81,6 +81,7 @@ CharacterScreenPerksModule.prototype.isPerkUnlockable = function (_perk)
 CharacterScreenPerksModule.prototype.initPerkTree = function (_perkTree, _perksUnlocked)
 {
 	var perkTier = this.mDataSource.getBrotherPerkTier(this.mDataSource.getSelectedBrother());
+	var lockedPerks = this.mDataSource.getLockedPerks(this.mDataSource.getSelectedBrother());
 
 	for (var row = 0; row < this.mPerkRows.length; ++row)
 	{
@@ -96,6 +97,14 @@ CharacterScreenPerksModule.prototype.initPerkTree = function (_perkTree, _perksU
 			if (row >= perkTier)
 			{
 				imageLayer.addClass('is-locked').removeClass('is-unlocked');
+			}
+
+			for (var j = 0; j < lockedPerks.length; ++j)
+			{
+				if (lockedPerks[j] == perk.ID)
+				{
+					imageLayer.addClass('is-locked').removeClass('is-unlocked');
+				}
 			}
 
 			for (var j = 0; j < _perksUnlocked.length; ++j)
