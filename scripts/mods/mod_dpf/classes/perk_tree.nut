@@ -143,7 +143,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 					}
 
 					if (perkGroup.getID() == "DPF_RandomPerkGroup")
-						id = this.__getWeightedRandomGroupFromCollection(categoryName, this.m.Exclude);
+						id = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
 
 					if (id != "DPF_NoPerkGroup")
 					{
