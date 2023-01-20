@@ -196,12 +196,6 @@ foreach (i, row in ::Const.Perks.Perks)
 	}
 }
 
-::DPF.Perks.DefaultPerkTree <- ::new(::DPF.Class.PerkTree).init(::DPF.Perks.DefaultPerkTreeTemplate);
-::DPF.Perks.DefaultPerkTree.build();
-
-::DPF.Perks.PerkGroups.add(::new(::DPF.Class.PerkGroup).init("DPF_RandomPerkGroup", "Random", ["Random perk group"], []));
-::DPF.Perks.PerkGroups.add(::new(::DPF.Class.PerkGroup).init("DPF_NoPerkGroup", "NoPerkGroup", ["No perk group"], []));
-
 ::DPF.Perks.addPerkGroupToTooltips <- function( _perkID = null, _groups = null )
 {
 	local map = {};
