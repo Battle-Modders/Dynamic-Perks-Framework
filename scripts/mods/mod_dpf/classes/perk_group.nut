@@ -4,7 +4,9 @@ this.perk_group <- {
 		Name = "Not initialized Perk Group",
 		FlavorText = ["Not initialized perk group"], // TODO: Should it be named FlavorTexts ?
 		PerkTreeMultipliers = {},
-		Trees = {}
+		Trees = {
+			"default": []
+		}
 	},
 	function create()
 	{
