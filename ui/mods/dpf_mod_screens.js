@@ -65,9 +65,9 @@ CharacterScreenPerksModule.prototype.isPerkUnlockable = function (_perk)
 
 	if (perkPoints > 0 && perkTier >= _perk.Row + 1)
 	{
-		for (var row = 0; row < lockedPerks.length; ++row)
+		for (var i = 0; i < lockedPerks.length; ++i)
 		{
-			if (_perk.ID === lockedPerks[row])
+			if (_perk.ID === lockedPerks[i])
 			{
 				return false;
 			}
