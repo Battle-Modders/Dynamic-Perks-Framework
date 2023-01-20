@@ -1,4 +1,4 @@
-this.perk_tree <- {
+this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 	m = {
 		Tree = [],
 		Template = null,
