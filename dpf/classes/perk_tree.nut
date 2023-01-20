@@ -572,16 +572,20 @@ this.perk_tree <- {
 		}
 	}
 
+	function getAllMultipliers()
+	{
+		local ret = {};
+		this.addBackgroundMultipliers(ret);
+		this.addPerkGroupMultipliers(ret);
+		this.addItemMultipliers(ret);
+		this.addTalentMultipliers(ret);
+		this.addTraitMultipliers(ret);
+		return ret;
+	}
+
 	function __applyMultipliers( _perkGroupContainer )
 	{
-		local multipliers = {};
-
-		foreach (func in ::DPF.Const.PerkTree.MultiplierFunctions)
-		{
-			this[func](multipliers);
-		}
-
-		foreach (id, mult in multipliers)
+		foreach (id, mult in this.getAllMultipliers())
 		{
 			if (_perkGroupContainer.contains(id))
 			{
