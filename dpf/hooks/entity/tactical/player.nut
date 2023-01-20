@@ -73,17 +73,17 @@
 	}
 
 	local onSerialize = o.onSerialize;
-	function onSerialize( _out )
+	o.onSerialize = function( _out )
 	{
-		_out.writeU8(this.m.PerkTier);
 		onSerialize(_out);
+		_out.writeU8(this.m.PerkTier);
 	}
 
 	local onDeserialize = o.onDeserialize;
-	function onDeserialize( _in )
+	o.onDeserialize = function( _in )
 	{
-		this.m.PerkTier = _in.readU8();
 		onDeserialize(_in);
+		this.m.PerkTier = _in.readU8();
 	}
 });
 
