@@ -142,11 +142,13 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 						continue;
 					}
 
-					if (perkGroup.getID() == "DPF_RandomPerkGroup") perkGroup = this.__getWeightedRandomGroupFromCollection(categoryName, this.m.Exclude);
-					if (perkGroup.getID() != "DPF_NoPerkGroup")
+					if (perkGroup.getID() == "DPF_RandomPerkGroup")
+						id = this.__getWeightedRandomGroupFromCollection(categoryName, this.m.Exclude);
+
+					if (id != "DPF_NoPerkGroup")
 					{
-						this.m.Exclude.push(perkGroup.getID());
-						this.addPerkGroup(perkGroup.getID());
+						this.m.Exclude.push(id);
+						this.addPerkGroup(id);
 					}
 				}
 
@@ -155,11 +157,11 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 				for (local i = (collection.getID() in this.m.DynamicMap) ? this.m.DynamicMap[collection.getID()].len() : 0; i < min; i++)
 				{
-					local perkGroup = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
-					if (perkGroup.getID() != "DPF_NoPerkGroup")
+					local perkGroupID = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
+					if (perkGroupID != "DPF_NoPerkGroup")
 					{
-						this.m.Exclude.push(perkGroup.getID());
-						this.addPerkGroup(perkGroup.getID());
+						this.m.Exclude.push(perkGroupID);
+						this.addPerkGroup(perkGroupID);
 					}
 				}
 			}
@@ -600,7 +602,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		{
 			if (_exclude != null && _exclude.find(groupID) != null) continue;
 			local group = ::DPF.Perks.PerkGroups.findById(groupID);
-			potentialGroups.add(group, group.getSelfMultiplier());
+			potentialGroups.add(group.getID(), group.getSelfMultiplier());
 		}
 
 		if (potentialGroups.len() != 0)
@@ -612,7 +614,8 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 			this.__applyMultipliers(potentialGroups);
 		}
 
-		local group = potentialGroups.roll();
-		return group != null ? group : ::DPF.Perks.PerkGroups.findById("DPF_NoPerkGroup");
+		local groupID = potentialGroups.roll();
+
+		return groupID != null ? groupID : "DPF_NoPerkGroup";
 	}
-}
+});
