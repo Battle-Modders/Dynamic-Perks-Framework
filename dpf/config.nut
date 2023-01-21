@@ -98,40 +98,23 @@ local findById = ::Const.Perks.findById;
 		if (_id in this.LookupMap) return this.LookupMap[_id];
 	}
 
+	function getByType( _filter )
+	{
+		_filter = split(_filter, "/").top();
+		switch (_filter)
+		{
+			case "perk_group":
+				return ::MSU.Table.filter(this.LookupMap, @(_, value) value.ClassName == _filter);
+
+			default:
+				return ::MSU.Table.filter(this.LookupMap, @(_, value) value.SuperName == _filter);
+		}
+	}
+
 	function add( _perkGroup )
 	{
 		if (_perkGroup.getID() in this.LookupMap) throw ::MSU.Exception.DuplicateKey(_perkGroup.getID());
 		this.LookupMap[_perkGroup.getID()] <- _perkGroup;
-	}
-
-	function remove( _id )
-	{
-		if (_id in this.LookupMap) delete this.LookupMap[_id];
-	}
-
-	function removeAll()
-	{
-		this.LookupMap.clear();
-	}
-};
-
-::DPF.Perks.SpecialPerks <- {
-	LookupMap = {},
-
-	function getAll()
-	{
-		return this.LookupMap;
-	}
-
-	function findById( _id )
-	{
-		if (_id in this.LookupMap) return this.LookupMap[_id];
-	}
-
-	function add( _specialPerk )
-	{
-		if (_specialPerk.getPerkID() in this.LookupMap) throw ::MSU.Exception.DuplicateKey(_specialPerk.getPerkID());
-		this.LookupMap[_specialPerk.getID()] <- _specialPerk;
 	}
 
 	function remove( _id )

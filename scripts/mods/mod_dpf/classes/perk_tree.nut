@@ -28,8 +28,22 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 	{
 		local ret = this.getPerkGroupsTooltip(_flavored);
 		if (ret != "") ret += "\n";
-		ret += this.getSpecialPerksTooltip(_flavored);
+		ret += this.getSpecialPerkGroupsTooltip(_flavored);
 		return ret;
+	}
+
+	function getSpecialPerkGroupsTooltip( _flavored = true )
+	{
+		local ret = "";
+		foreach (group in ::DPF.Perks.PerkGroups.getByType(::DPF.Class.SpecialPerkGroup))
+		{
+			if (this.hasPerkGroup(group.getID()))
+			{
+				local str = _flavored ? ::MSU.Array.rand(group.getFlavorText()) : group.getName();
+				if (str != "") ret += ::MSU.Text.color("#000ec1", str) + "\n";
+			}
+		}
+		return ret == "" ? ret : ret.slice(0, -1); // remove \n
 	}
 
 	function getPerkGroupsTooltip( _flavored = true )
@@ -50,21 +64,6 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 			if (text != "")
 			{
 				ret += format("%s%s.\n", _flavored ? collection.getTooltipPrefix() + " " : "", text.slice(0, -2)); // remove ", "
-			}
-		}
-
-		return ret == "" ? ret : ret.slice(0, -1); // remove \n
-	}
-
-	function getSpecialPerksTooltip( _flavored = true )
-	{
-		local ret = "";
-		foreach (perk in ::DPF.Perks.SpecialPerks.getAll())
-		{
-			if (this.hasPerk(perk.getPerkID()))
-			{
-				if (_flavored) ret += "[color=" + this.Const.UI.Color.NegativeValue + "]" + perk.getFlavorText() + ".[/color]\n";
-				else ret += ::Const.Perks.findById(perk.getPerkID()).Name + "\n";
 			}
 		}
 
@@ -168,37 +167,14 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		}
 	}
 
-	function addSpecialPerks()
+	function addSpecialPerkGroups()
 	{
-		foreach (specialPerk in ::DPF.Perks.SpecialPerks.getAll())
+		foreach (group in ::DPF.Perks.PerkGroups.getByType(::DPF.Class.SpecialPerkGroup))
 		{
-			local object = specialPerk.roll(this);
-			if (object == null) continue;
-
-			local hasRow = false;
-			local direction = -1;
-			local row = object.Tier - 1;
-
-			while (row >= 0 && row <= 6)
+			if (group.roll(this))
 			{
-				if (this.m.Template[row].len() < 13)
-				{
-					hasRow = true;
-					break;
-				}
-
-				row += direction;
-
-				if (row == -1)
-				{
-					row = object.Tier - 1;
-					direction = 1;
-				}
+				this.addPerkGroup(group.getID());
 			}
-
-			row = hasRow ? this.Math.max(0, this.Math.min(row, 6)) : object.Tier - 1;
-
-			this.addPerk(object.PerkID, row + 1);
 		}
 	}
 
@@ -226,7 +202,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 	function buildFromDynamicMap()
 	{
 		this.addFromDynamicMap();
-		this.addSpecialPerks();
+		this.addSpecialPerkGroups();
 	}
 
 	function buildFromTemplate( _template )
