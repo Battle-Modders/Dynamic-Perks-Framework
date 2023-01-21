@@ -91,7 +91,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		local ret = [];
 		foreach (collection in ::DPF.Perks.PerkGroupCategories.getOrdered())
 		{
-			ret.extend(collection.getGroups().filter(@(idx, groupID) this.hasPerkGroup(groupID)));
+			ret.extend(collection.getGroups().filter((@(idx, groupID) this.hasPerkGroup(groupID)).bindenv(this)));
 		}
 		return ret;
 	}
