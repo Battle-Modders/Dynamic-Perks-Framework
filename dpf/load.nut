@@ -3,6 +3,7 @@
 	PerkGroupCollection = "scripts/mods/mod_dpf/classes/perk_group_collection",
 	PerkTree = "scripts/mods/mod_dpf/classes/perk_tree",
 	SpecialPerk = "scripts/mods/mod_dpf/classes/special_perk"
+	SpecialPerkGroup = "scripts/mods/mod_dpf/classes/special_perk_group"
 };
 
 ::includeFiles(::IO.enumerateFiles("dpf/hooks"));
