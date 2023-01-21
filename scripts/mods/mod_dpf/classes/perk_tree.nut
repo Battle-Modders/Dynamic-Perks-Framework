@@ -135,6 +135,12 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 							throw ::MSU.Exception.InvalidType("perkGroupContainer");
 					}
 
+					if (id == "DPF_RandomPerkGroup")
+						id = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
+
+					if (id == "DPF_NoPerkGroup")
+						continue;
+
 					local perkGroup = ::DPF.Perks.PerkGroups.findById(id);
 					if (perkGroup == null)
 					{
@@ -142,14 +148,8 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 						continue;
 					}
 
-					if (perkGroup.getID() == "DPF_RandomPerkGroup")
-						id = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
-
-					if (id != "DPF_NoPerkGroup")
-					{
-						this.m.Exclude.push(id);
-						this.addPerkGroup(id);
-					}
+					this.m.Exclude.push(id);
+					this.addPerkGroup(id);
 				}
 
 				local min = this.m.Background.getCollectionMin(collection.getID());
