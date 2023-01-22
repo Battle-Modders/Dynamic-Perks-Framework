@@ -7,4 +7,3 @@
 
 ::includeFiles(::IO.enumerateFiles("dpf/hooks"));
 ::include("dpf/config.nut");
-::include("dpf/tooltips.nut");

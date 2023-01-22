@@ -82,10 +82,7 @@ GenericPerksModule.prototype.setupPerkTreeTooltips = function(_entityID)
 		{
 			var perk = this.mPerkTree[row][i];
 			perk.Image.unbindTooltip();
-			if (_entityID !== undefined && _entityID !== null)
-				perk.Image.bindTooltip({ contentType: 'ui-perk', entityId: _entityID, perkId: perk.ID });
-			else
-				perk.Image.bindTooltip({ contentType: 'msu-generic', modId: "mod_dpf", elementId: "Perks.GenericTooltip", perkID : perk.ID})
+			perk.Image.bindTooltip({ contentType: 'ui-perk', entityId: _entityID || null, perkId: perk.ID });
 		}
 	}
 };
