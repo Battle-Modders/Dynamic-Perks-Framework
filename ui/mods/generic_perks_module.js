@@ -74,16 +74,18 @@ GenericPerksModule.prototype.createPerkTreeDIV = function (_perkTree, _parentDiv
 	}
 };
 
-GenericPerksModule.prototype.setupPerkTreeTooltips = function(_perkTree, _brotherId)
+GenericPerksModule.prototype.setupPerkTreeTooltips = function(_entityID)
 {
-	for (var row = 0; row < _perkTree.length; ++row)
+	for (var row = 0; row < this.mPerkTree.length; ++row)
 	{
-		for (var i = 0; i < _perkTree[row].length; ++i)
+		for (var i = 0; i < this.mPerkTree[row].length; ++i)
 		{
-			var perk = _perkTree[row][i];
+			var perk = this.mPerkTree[row][i];
 			perk.Image.unbindTooltip();
-			perk.Image.bindTooltip({ contentType: 'msu-generic', modId: "mod_dpf", elementId: "Perks.GenericTooltip", perkID : perk.ID})
-			// perk.Image.bindTooltip({ contentType: 'ui-perk', entityId: _brotherId, perkId: perk.ID });
+			if (_entityID !== undefined && _entityID !== null)
+				perk.Image.bindTooltip({ contentType: 'ui-perk', entityId: _entityID, perkId: perk.ID });
+			else
+				perk.Image.bindTooltip({ contentType: 'msu-generic', modId: "mod_dpf", elementId: "Perks.GenericTooltip", perkID : perk.ID})
 		}
 	}
 };
@@ -94,18 +96,13 @@ GenericPerksModule.prototype.setupPerkTree = function ()
     this.createPerkTreeDIV(this.mPerkTree, this.mTreeContainer);
 };
 
-GenericPerksModule.prototype.loadPerkTreesWithBrotherData = function (_data)
+GenericPerksModule.prototype.loadFromData = function (_perkTree, _entityID)
 {
-
-	// {
-	// 	perkTree : array of arrays of objects which have `id` and `icon` at least
-	// 	ID: of the owning entity, for tooltips
-	// }
-	if (_data.perkTree === undefined)
+	if (_perkTree === undefined || _perkTree === null)
 		return;
-    this.mPerkTree = _data.perkTree;
+    this.mPerkTree = _perkTree;
     this.setupPerkTree();
-    this.setupPerkTreeTooltips(this.mPerkTree, _data.ID);
+    this.setupPerkTreeTooltips(_entityID);
 };
 
 GenericPerksModule.prototype.create = function(_parentDiv)
