@@ -221,6 +221,24 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		return ret;
 	}
 
+	function toUIData()
+	{
+		local ret = array(this.m.Tree.len());
+		foreach (i, row in this.m.Tree)
+		{
+			ret[i] = array(row.len());
+			foreach (j, perk in row)
+			{
+				ret[i][j] = {
+					ID = perk.ID,
+					IconDisabled = perk.IconDisabled,
+					Icon = perk.Icon
+				}
+			}
+		}
+		return ret;
+	}
+
 	function hasPerk( _id )
 	{
 		return _id in this.m.PerkLookupMap;
