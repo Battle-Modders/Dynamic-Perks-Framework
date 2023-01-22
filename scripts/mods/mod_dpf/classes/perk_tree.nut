@@ -213,7 +213,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		foreach (i, row in this.m.Tree)
 		{
 			ret[i] = array(row.len());
-			foreach (i, perk in row)
+			foreach (j, perk in row)
 			{
 				ret[i][j] = perk.ID;
 			}
