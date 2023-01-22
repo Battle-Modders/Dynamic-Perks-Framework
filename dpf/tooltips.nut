@@ -1,10 +1,9 @@
 local tooltips = {
 	Perks = {
 		GenericTooltip = ::MSU.Class.CustomTooltip(function(_data){
-			local id = _data.perkID
-        	if (!(id in ::Const.Perks.LookupMap))
+        	local perk = ::Const.Perks.findById(_data.perkID);
+        	if (perk == null)
         		return null;
-        	local perk = ::Const.Perks.LookupMap[id];
         	return [
         		{
         			id = 1,
