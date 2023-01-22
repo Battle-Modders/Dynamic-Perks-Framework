@@ -232,7 +232,8 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 				ret[i][j] = {
 					ID = perk.ID,
 					IconDisabled = perk.IconDisabled,
-					Icon = perk.Icon
+					Icon = perk.Icon,
+					Row = perk.Row
 				}
 			}
 		}
