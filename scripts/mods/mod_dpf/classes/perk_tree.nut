@@ -4,7 +4,8 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		Template = null,
 		DynamicMap = null,
 		Background = null,
-		Exclude = []
+		Exclude = [],
+		PerkLookupMap = {}
 	},
 	function create()
 	{
@@ -91,19 +92,6 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		foreach (collection in ::DPF.Perks.PerkGroupCategories.getOrdered())
 		{
 			ret.extend(collection.getGroups().filter((@(idx, groupID) this.hasPerkGroup(groupID)).bindenv(this)));
-		}
-		return ret;
-	}
-
-	function getPerks()
-	{
-		local ret = [];
-		foreach (row in this.getTree())
-		{
-			foreach (perk in row)
-			{
-				ret.push(perk.ID);
-			}
 		}
 		return ret;
 	}
@@ -233,6 +221,26 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		return ret;
 	}
 
+	function hasPerk( _id )
+	{
+		return _id in this.m.PerkLookupMap;
+	}
+
+	function getPerk( _id )
+	{
+		return this.m.PerkLookupMap[_id];
+	}
+
+	function getPerks()
+	{
+		return this.m.PerkLookupMap;
+	}
+
+	function getPerkTier( _id )
+	{
+		return this.m.PerkLookupMap[_id].Row + 1
+	}
+
 	function getTree()
 	{
 		return this.m.Tree;
@@ -302,41 +310,6 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		this.m.Tree.clear();
 	}
 
-	function hasPerk( _id )
-	{
-		foreach (row in this.m.Tree)
-		{
-			foreach (perk in row)
-			{
-				if (perk.ID == _id) return true;
-			}
-		}
-
-		return false;
-	}
-
-	function getPerk( _id )
-	{
-		foreach (row in this.m.Tree)
-		{
-			foreach (perk in row)
-			{
-				if (perk.ID == _id) return perk;
-			}
-		}
-	}
-
-	function getPerkTier( _perkID )
-	{
-		foreach (i, row in this.m.Tree)
-		{
-			foreach (perk in row)
-			{
-				if (perk.ID == _perkID) return i + 1;
-			}
-		}
-	}
-
 	function addPerk( _perkID, _tier = 1 )
 	{
 		if (this.hasPerk(_perkID)) return;
@@ -344,6 +317,9 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		local perk = clone ::Const.Perks.findById(_perkID);
 		perk.Row <- _tier - 1;
 		perk.Unlocks <- _tier - 1;
+
+		this.m.PerkLookupMap[_perkID] <- perk;
+
 		while (this.m.Tree.len() < _tier)
 		{
 			this.m.Tree.push([]);
@@ -360,6 +336,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 				if (perk.ID == _perkID) row.remove(i);
 			}
 		}
+		delete this.m.PerkLookupMap[_perkID];
 	}
 
 	function hasPerkGroup( _perkGroupID )
