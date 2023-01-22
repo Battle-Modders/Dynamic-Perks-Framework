@@ -314,9 +314,10 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 	{
 		if (this.hasPerk(_perkID)) return;
 
-		local perk = clone ::Const.Perks.findById(_perkID);
-		perk.Row <- _tier - 1;
-		perk.Unlocks <- _tier - 1;
+		local perk = {
+			Row = _tier - 1,
+			Unlocks = _tier - 1,
+		}.setdelegate(::Const.Perks.findById(_perkID));
 
 		this.m.PerkLookupMap[_perkID] <- perk;
 
