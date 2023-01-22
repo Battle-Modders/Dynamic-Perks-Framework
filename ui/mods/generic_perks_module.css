@@ -1,0 +1,41 @@
+ .generic-perks-module
+{
+	width: 100%;
+	height: 100%;
+}
+
+ .generic-perks-module .perks-tree
+{
+	width: 100%;
+	height: 100%;
+
+	display:flex;
+	flex-wrap: wrap;
+}
+
+ .generic-perks-module .perks-tree .perks-row
+{
+	height: 4.0rem;
+	width: 100%;
+	display:flex;
+	align-items: center;
+	justify-content: center;
+}
+
+ .generic-perks-module .perks-tree .perks-row .l-perk-container
+{
+	width: 4.0rem;
+	height: 4.0rem;
+}
+
+ .generic-perks-module .perks-tree .perks-row .l-perk-container .selection-image-layer
+{
+	width: 4.0rem;
+	height: 4.0rem;
+}
+
+ .generic-perks-module .perks-tree .perks-row .l-perk-container .perk-image-layer
+{
+	width: 3.5rem;
+	height: 3.5rem;
+}
