@@ -308,6 +308,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 	function clear()
 	{
 		this.m.Tree.clear();
+		this.m.PerkLookupMap.clear();
 	}
 
 	function addPerk( _perkID, _tier = 1 )
