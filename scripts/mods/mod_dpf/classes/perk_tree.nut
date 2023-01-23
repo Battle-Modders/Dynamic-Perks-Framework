@@ -238,7 +238,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function getPerkTier( _id )
 	{
-		return this.m.PerkLookupMap[_id].Row + 1
+		return this.m.PerkLookupMap[_id].Row + 1;
 	}
 
 	function getTree()
