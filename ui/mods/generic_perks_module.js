@@ -22,22 +22,18 @@ var GenericPerksModule = function(_parentDiv)
 
 GenericPerksModule.prototype.createDIV = function (_parentDiv)
 {
-	// create: containers (init hidden!)
 	this.mContainer = $('<div class="generic-perks-module"/>');
 	_parentDiv.append(this.mContainer);
 
-    // create rows
     this.mTreeContainer = $('<div class="perks-tree"/>');
     this.mContainer.append(this.mTreeContainer);
 };
 
 GenericPerksModule.prototype.destroyDIV = function ()
 {
-    this.mTreeContainer.empty();
     this.mTreeContainer.remove();
     this.mTreeContainer = null;
 
-    this.mContainer.empty();
     this.mContainer.remove();
     this.mContainer = null;
 };
@@ -45,13 +41,13 @@ GenericPerksModule.prototype.destroyDIV = function ()
 
 GenericPerksModule.prototype.createPerkTreeDIV = function (_perkTree, _parentDiv)
 {
+	// Enduriel wants to refactor this
 	var self = this;
 
 	for (var row = 0; row < _perkTree.length; ++row)
 	{
 		var rowDIV = $('<div class="perks-row"/>');
 		_parentDiv.append(rowDIV);
-
 
 		this.mPerkRows[row] = rowDIV;
 
@@ -76,6 +72,7 @@ GenericPerksModule.prototype.createPerkTreeDIV = function (_perkTree, _parentDiv
 
 GenericPerksModule.prototype.setupPerkTreeTooltips = function(_entityID)
 {
+	// Enduriel probably wants to refactor this
 	for (var row = 0; row < this.mPerkTree.length; ++row)
 	{
 		for (var i = 0; i < this.mPerkTree[row].length; ++i)
@@ -89,6 +86,7 @@ GenericPerksModule.prototype.setupPerkTreeTooltips = function(_entityID)
 
 GenericPerksModule.prototype.setupPerkTree = function ()
 {
+	// Enduriel wants to refactor this
     this.mTreeContainer.empty();
     this.createPerkTreeDIV(this.mPerkTree, this.mTreeContainer);
 };
