@@ -20,6 +20,12 @@ this.special_perk_group <- ::inherit(::DPF.Class.PerkGroup, {
 	function calculateChance( _perkTree )
 	{
 		local chance = this.m.Chance;
+
+		if (chance < 0) return 100;
+
+		chance *= this.getMultiplier(_perkTree);
+		if (chance < 0) return 100;
+
 		local myID = this.getID();
 
 		if (myID in _perkTree.getBackground().m.PerkTreeMultipliers)
@@ -28,8 +34,6 @@ this.special_perk_group <- ::inherit(::DPF.Class.PerkGroup, {
 			if (chance < 0 || mult < 0) return 100;
 			else chance *= mult;
 		}
-
-		chance *= this.getMultiplier(_perkTree);
 
 		foreach (trait in _perkTree.getBackground().getContainer().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait))
 		{
