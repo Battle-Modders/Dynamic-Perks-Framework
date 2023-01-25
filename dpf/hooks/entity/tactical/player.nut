@@ -36,13 +36,6 @@
 		return ret;
 	}
 
-	local setStartValuesEx = o.setStartValuesEx;
-	o.setStartValuesEx = function( _backgrounds, _addTraits = true )
-	{
-		setStartValuesEx(_backgrounds, _addTraits);
-		this.getBackground().getPerkTree().build();
-	}
-
 	o.resetPerks <- function()
 	{
 		// Get all items that are adding skills to this character and unequip them to remove those skills
@@ -87,3 +80,13 @@
 	}
 });
 
+::MSU.EndQueue.add(function() {
+	::mods_hookExactClass("entity/tactical/player", function(o) {
+		local setStartValuesEx = o.setStartValuesEx;
+		o.setStartValuesEx = function( _backgrounds, _addTraits = true )
+		{
+			setStartValuesEx(_backgrounds, _addTraits);
+			this.getBackground().getPerkTree().build();
+		}
+	});
+});
