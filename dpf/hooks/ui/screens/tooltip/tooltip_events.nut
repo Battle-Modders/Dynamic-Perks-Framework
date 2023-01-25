@@ -4,7 +4,7 @@
 	{
 		local perk = ::Const.Perks.findById(_perkId);
 		if (perk == null)
-			return null
+			return null;
 
 		local ret = [
 			{
