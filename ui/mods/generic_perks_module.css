@@ -9,33 +9,44 @@
 	width: 100%;
 	height: 100%;
 
-	display:flex;
+	display: flex;
 	flex-wrap: wrap;
+	justify-content: center;
 }
 
  .generic-perks-module .perks-tree .perks-row
 {
-	height: 4.0rem;
-	width: 100%;
-	display:flex;
+	min-height: 4rem;
+	width: 95%;
+	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	justify-content: center;
+	border-bottom: 1px solid rgba(0,0,0,0.4);
 }
 
  .generic-perks-module .perks-tree .perks-row .l-perk-container
 {
-	width: 4.0rem;
-	height: 4.0rem;
+	max-width: 4rem;
+	min-width: 3rem;
+	flex: 1 1 3rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
  .generic-perks-module .perks-tree .perks-row .l-perk-container .selection-image-layer
 {
-	width: 4.0rem;
-	height: 4.0rem;
+	width: 100%;
 }
 
  .generic-perks-module .perks-tree .perks-row .l-perk-container .perk-image-layer
 {
-	width: 3.5rem;
-	height: 3.5rem;
+	width: 90%;
+}
+
+ .generic-perks-module .perks-tree .perks-row .l-perk-container .perk-image-layer > img
+{
+	max-width: 100%;
+	width: auto;
 }
