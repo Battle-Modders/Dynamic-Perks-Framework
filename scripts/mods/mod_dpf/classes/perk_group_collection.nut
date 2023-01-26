@@ -96,11 +96,6 @@ this.perk_group_collection <- {
 		this.m.OrderOfAssignment = _order;
 	}
 
-	function getSpecialMultipliers( _perkTree )
-	{
-		return {};
-	}
-
 	function addPerkGroup( _group )
 	{
 		if (this.m.Groups.find(_group) != null) this.m.Groups.push(_group);

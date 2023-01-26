@@ -578,15 +578,11 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		{
 			if (_exclude != null && _exclude.find(groupID) != null) continue;
 			local group = ::DPF.Perks.PerkGroups.findById(groupID);
-			potentialGroups.add(group.getID(), group.getSelfMultiplier());
+			potentialGroups.add(group.getID(), group.getSelfMultiplier(this));
 		}
 
 		if (potentialGroups.len() != 0)
 		{
-			foreach (id, mult in collection.getSpecialMultipliers(this))
-			{
-				if (potentialGroups.contains(id)) potentialGroups.setWeight(id, potentialGroups.getWeight(id) * mult);
-			}
 			this.__applyMultipliers(potentialGroups);
 		}
 

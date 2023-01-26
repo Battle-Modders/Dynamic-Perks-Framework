@@ -130,7 +130,7 @@ this.perk_group <- {
 		this.m.PerkTreeMultipliers = _multipliers;
 	}
 
-	function getSelfMultiplier()
+	function getSelfMultiplier( _perkTree )
 	{
 		return  1.0;
 	}
