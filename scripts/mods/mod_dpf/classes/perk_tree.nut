@@ -150,18 +150,18 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 					this.m.Exclude.push(id);
 					this.addPerkGroup(id);
 				}
+			}
 
-				local min = this.m.Background.getCollectionMin(collection.getID());
-				if (min == null) min = collection.getMin();
+			local min = this.m.Background.getCollectionMin(collection.getID());
+			if (min == null) min = collection.getMin();
 
-				for (local i = (collection.getID() in this.m.DynamicMap) ? this.m.DynamicMap[collection.getID()].len() : 0; i < min; i++)
+			for (local i = (collection.getID() in this.m.DynamicMap) ? this.m.DynamicMap[collection.getID()].len() : 0; i < min; i++)
+			{
+				local perkGroupID = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
+				if (perkGroupID != "DPF_NoPerkGroup")
 				{
-					local perkGroupID = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
-					if (perkGroupID != "DPF_NoPerkGroup")
-					{
-						this.m.Exclude.push(perkGroupID);
-						this.addPerkGroup(perkGroupID);
-					}
+					this.m.Exclude.push(perkGroupID);
+					this.addPerkGroup(perkGroupID);
 				}
 			}
 		}
