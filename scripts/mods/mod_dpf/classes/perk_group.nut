@@ -2,6 +2,7 @@ this.perk_group <- {
 	m = {
 		ID = "not_initialized",
 		Name = "Not initialized Perk Group",
+		Icon = "",
 		FlavorText = ["Not initialized perk group"], // TODO: Should it be named FlavorTexts ?
 		PerkTreeMultipliers = {},
 		Trees = {
@@ -40,6 +41,11 @@ this.perk_group <- {
 	{
 		::MSU.requireString(_name);
 		this.m.Name = _name;
+	}
+
+	function getIcon()
+	{
+		return this.m.Icon;
 	}
 
 	function getFlavorText()
