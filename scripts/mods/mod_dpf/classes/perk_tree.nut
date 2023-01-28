@@ -213,9 +213,30 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		foreach (i, row in this.m.Tree)
 		{
 			ret[i] = array(row.len());
-			foreach (i, perk in row)
+			foreach (j, perk in row)
 			{
 				ret[i][j] = perk.ID;
+			}
+		}
+		return ret;
+	}
+
+	function toUIData()
+	{
+		local ret = array(this.m.Tree.len());
+		foreach (i, row in this.m.Tree)
+		{
+			ret[i] = array(row.len());
+			foreach (j, perk in row)
+			{
+				ret[i][j] = {
+					ID = perk.ID,
+					IconDisabled = perk.IconDisabled,
+					Icon = perk.Icon,
+					Row = perk.Row,
+					Tooltip = perk.Tooltip,
+					Name = perk.Name
+				}
 			}
 		}
 		return ret;

@@ -12,4 +12,6 @@
 	// ::includeFiles(::IO.enumerateFiles("dpf"));
 	::include("dpf/load.nut");
 	::mods_registerJS("dpf_mod_screens.js");
+	::mods_registerJS("generic_perks_module.js");
+	::mods_registerCSS("generic_perks_module.css");
 });

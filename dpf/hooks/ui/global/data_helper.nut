@@ -5,15 +5,13 @@
 		local result = convertEntityToUIData(_entity, _activeEntity);
 		if (_entity.getBackground() != null)
 		{
-			result.perkTree <- _entity.getBackground().getPerkTree().getTree();
+			local perkTree = _entity.getBackground().getPerkTree();
+			result.perkTree <- perkTree.toUIData();
 			result.perkTier <- _entity.getPerkTier();
 			result.lockedPerks <- [];
-			foreach (row in result.perkTree)
+			foreach (id, perk in perkTree.getPerks())
 			{
-				foreach (perk in row)
-				{
-					if (!_entity.isPerkUnlockable(perk.ID)) result.lockedPerks.push(perk.ID);
-				}
+				if (!_entity.isPerkUnlockable(id)) result.lockedPerks.push(id);
 			}
 		}
 		return result;
