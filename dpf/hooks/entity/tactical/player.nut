@@ -22,7 +22,7 @@
 			return false;
 
 		local perk = this.getBackground().getPerkTree().getPerk(_id);
-		if (("verifyPrerequisites" in perk) && !perk.verifyPrerequisites(this, [])) // TODO: Efficiency issue: passing an empty array every time
+		if (::MSU.isIn("verifyPrerequisites", perk, true)) && !perk.verifyPrerequisites(this, [])) // TODO: Efficiency issue: passing an empty array every time
 			return false;
 
 		return true;
