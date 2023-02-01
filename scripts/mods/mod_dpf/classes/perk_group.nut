@@ -2,6 +2,7 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 	m = {
 		ID = "not_initialized",
 		Name = "Not initialized Perk Group",
+		Description = "",
 		Icon = "",
 		FlavorText = ["Not initialized perk group"], // TODO: Should it be named FlavorTexts ?
 		PerkTreeMultipliers = {},
@@ -41,6 +42,11 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 	{
 		::MSU.requireString(_name);
 		this.m.Name = _name;
+	}
+
+	function getDescription()
+	{
+		return this.m.Description;
 	}
 
 	function getIcon()
