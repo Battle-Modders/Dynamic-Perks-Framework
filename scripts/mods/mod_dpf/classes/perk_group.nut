@@ -28,6 +28,46 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		return this;
 	}
 
+	function getTooltip()
+	{
+		local ret = [
+			{
+				id = 1,
+				type = "title",
+				text = this.getName()
+			},
+			{
+				id = 2,
+				type = "description",
+				text = this.getDescription()
+			}
+		];
+
+		foreach (i, row in this.getTree())
+		{
+			local perks = [];
+			foreach (j, perkID in row)
+			{
+				local perkDef = ::Const.Perks.findById(perkID);
+				perks.push({
+					id = 10,
+					type = "text",
+					icon = perkDef.Icon,
+					text = perkDef.Name
+				});
+			}
+
+			ret.push({
+				id = 3 + i,
+				type = "text",
+				text = "Tier " + (i + 1) + ":",
+				children = perks
+			});
+		}
+
+		return ret;
+	}
+
 	function getID()
 	{
 		return this.m.ID;
