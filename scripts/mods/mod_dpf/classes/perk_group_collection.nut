@@ -1,4 +1,4 @@
-this.perk_group_collection <- {
+this.perk_group_collection <- ::inherit(::MSU.BBClass.Empty, {
 	m = {
 		ID = "perk_group_collection.uninitiatlized",
 		Name = "Uninitialized perk group collection",
@@ -122,4 +122,4 @@ this.perk_group_collection <- {
 	{
 		return ::DPF.PerkGroups.findById(this.getRandomGroup()).getRandomPerk(null, _exclude);
 	}
-};
+});

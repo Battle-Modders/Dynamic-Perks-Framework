@@ -1,4 +1,4 @@
-this.perk_group <- {
+this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 	m = {
 		ID = "not_initialized",
 		Name = "Not initialized Perk Group",
@@ -236,4 +236,4 @@ this.perk_group <- {
 
 		return ::MSU.Array.rand(perks);
 	}
-};
+});
