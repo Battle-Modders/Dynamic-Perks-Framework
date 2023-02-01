@@ -156,6 +156,16 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		this.m.Trees[_id] <- _tree;
 	}
 
+	function toUIData()
+	{
+		return {
+			ID = this.getID(),
+			Name = this.getName(),
+			Description = this.getDescription(),
+			Icon = this.getIcon()
+		}
+	}
+
 	function getRandomTree()
 	{
 		return ::MSU.Table.randValue(this.m.Trees);
