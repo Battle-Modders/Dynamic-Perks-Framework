@@ -1,6 +1,6 @@
 "use strict";
 
-var DynamicPerks.GenericPerkGroupsModule = function(_parentDiv, _displayType)
+DynamicPerks.GenericPerkGroupsModule = function(_parentDiv, _displayType)
 {
 	// container
 	this.mContainer = null;
