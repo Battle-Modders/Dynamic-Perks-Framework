@@ -1,12 +1,7 @@
-/*
- *  @Project:		Battle Brothers
- *	@Company:		Overhype Studios
- *  @Description:	Perks Module JS
- */
 "use strict";
 
 
-var GenericPerksModule = function(_parentDiv)
+DynamicPerks.GenericPerksModule = function(_parentDiv)
 {
 	// container
 	this.mContainer = null;
@@ -20,7 +15,7 @@ var GenericPerksModule = function(_parentDiv)
 };
 
 
-GenericPerksModule.prototype.createDIV = function (_parentDiv)
+DynamicPerks.GenericPerksModule.prototype.createDIV = function (_parentDiv)
 {
 	this.mContainer = $('<div class="generic-perks-module"/>');
 	_parentDiv.append(this.mContainer);
@@ -29,7 +24,7 @@ GenericPerksModule.prototype.createDIV = function (_parentDiv)
     this.mContainer.append(this.mTreeContainer);
 };
 
-GenericPerksModule.prototype.destroyDIV = function ()
+DynamicPerks.GenericPerksModule.prototype.destroyDIV = function ()
 {
     this.mTreeContainer.remove();
     this.mTreeContainer = null;
@@ -39,7 +34,7 @@ GenericPerksModule.prototype.destroyDIV = function ()
 };
 
 
-GenericPerksModule.prototype.createPerkTreeDIV = function (_perkTree, _parentDiv)
+DynamicPerks.GenericPerksModule.prototype.createPerkTreeDIV = function (_perkTree, _parentDiv)
 {
 	// Enduriel wants to refactor this
 	var self = this;
@@ -70,7 +65,7 @@ GenericPerksModule.prototype.createPerkTreeDIV = function (_perkTree, _parentDiv
 	}
 };
 
-GenericPerksModule.prototype.setupPerkTreeTooltips = function(_entityID)
+DynamicPerks.GenericPerksModule.prototype.setupPerkTreeTooltips = function(_entityID)
 {
 	// Enduriel probably wants to refactor this
 	for (var row = 0; row < this.mPerkTree.length; ++row)
@@ -84,14 +79,14 @@ GenericPerksModule.prototype.setupPerkTreeTooltips = function(_entityID)
 	}
 };
 
-GenericPerksModule.prototype.setupPerkTree = function ()
+DynamicPerks.GenericPerksModule.prototype.setupPerkTree = function ()
 {
 	// Enduriel wants to refactor this
     this.mTreeContainer.empty();
     this.createPerkTreeDIV(this.mPerkTree, this.mTreeContainer);
 };
 
-GenericPerksModule.prototype.loadFromData = function (_perkTree, _entityID)
+DynamicPerks.GenericPerksModule.prototype.loadFromData = function (_perkTree, _entityID)
 {
 	if (_perkTree === undefined || _perkTree === null)
 		return;
@@ -100,12 +95,12 @@ GenericPerksModule.prototype.loadFromData = function (_perkTree, _entityID)
     this.setupPerkTreeTooltips(_entityID);
 };
 
-GenericPerksModule.prototype.create = function(_parentDiv)
+DynamicPerks.GenericPerksModule.prototype.create = function(_parentDiv)
 {
     this.createDIV(_parentDiv);
 };
 
-GenericPerksModule.prototype.destroy = function()
+DynamicPerks.GenericPerksModule.prototype.destroy = function()
 {
     this.destroyDIV();
 };

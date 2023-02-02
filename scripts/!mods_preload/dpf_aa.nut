@@ -11,7 +11,14 @@
 
 	// ::includeFiles(::IO.enumerateFiles("dpf"));
 	::include("dpf/load.nut");
-	::mods_registerJS("dpf_mod_screens.js");
-	::mods_registerJS("generic_perks_module.js");
-	::mods_registerCSS("generic_perks_module.css");
+	::mods_registerJS("mod_dpf/setup.js");
+	::mods_registerJS("mod_dpf/generic_perks_module.js");
+	::mods_registerCSS("mod_dpf/generic_perks_module.css");
+
+	local prefixLen = "ui/mods/".len();
+	foreach(file in this.IO.enumerateFiles("ui/mods/mod_dpf/hooks"))
+	{
+		file = file.slice(prefixLen) + ".js";
+		::mods_registerJS(file);
+	}
 });
