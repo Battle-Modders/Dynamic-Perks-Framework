@@ -82,7 +82,7 @@ DynamicPerks.GenericPerkGroupsModule.prototype.addPerkGroupDIV = function(_perkG
 	_perkGroup.Container = $('<div class="l-perk-container"/>')
 		.appendTo(_parentDiv);
 
-	var tooltipID = "PerkGroup." + _perkGroup.ID;
+	var tooltipID = "PerkGroup+" + _perkGroup.ID;
 	_perkGroup.Image = $('<img class="perk-image-layer"/>')
 		.attr('src', Path.GFX + _perkGroup.Icon)
 		.appendTo(_perkGroup.Container)
