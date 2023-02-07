@@ -2,10 +2,16 @@
 	o = o[o.SuperName];
 
 	o.m.IsRefundable <- true;
+	o.m.PerkTreeMultipliers <- {};
 
 	o.isRefundable <- function()
 	{
 		return this.m.IsRefundable;
+	}
+
+	o.getPerkTreeMultipliers <- function()
+	{
+		return this.m.PerkTreeMultipliers;
 	}
 
 	local onSerialize = o.onSerialize;

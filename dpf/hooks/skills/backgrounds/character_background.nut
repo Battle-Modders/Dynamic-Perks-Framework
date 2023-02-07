@@ -9,9 +9,4 @@
 	o.getCollectionMin <- function( _collectionID )
 	{
 	}
-
-	o.getPerkTreeMultipliers <- function()
-	{
-		return this.m.PerkTreeMultipliers;
-	}
 });
