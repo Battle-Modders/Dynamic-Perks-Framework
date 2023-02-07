@@ -3,9 +3,9 @@
 	o.convertEntityToUIData = function( _entity, _activeEntity )
 	{
 		local result = convertEntityToUIData(_entity, _activeEntity);
-		if (_entity.getBackground() != null)
+		if (_entity != null)
 		{
-			local perkTree = _entity.getBackground().getPerkTree();
+			local perkTree = _entity.getPerkTree();
 			result.perkTree <- perkTree.toUIData();
 			result.perkTier <- _entity.getPerkTier();
 			result.lockedPerks <- [];

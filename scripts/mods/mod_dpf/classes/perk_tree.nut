@@ -3,7 +3,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		Tree = [],
 		Template = null,
 		DynamicMap = null,
-		Background = null,
+		Actor = null,
 		Exclude = [],
 		PerkLookupMap = {}
 	},
@@ -140,7 +140,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 				}
 			}
 
-			local min = this.m.Background.getCollectionMin(collection.getID());
+			local min = this.getActor().getBackground().getCollectionMin(collection.getID());
 			if (min == null) min = collection.getMin();
 
 			for (local i = (collection.getID() in this.m.DynamicMap) ? this.m.DynamicMap[collection.getID()].len() : 0; i < min; i++)
@@ -184,7 +184,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		this.m.Exclude = null;
 		this.m.DynamicMap = null;
 
-		if (!::MSU.isNull(this.m.Background)) this.m.Background.onBuildPerkTree();
+		if (!::MSU.isNull(this.getActor())) this.getActor().getBackground().onBuildPerkTree();
 	}
 
 	function buildFromDynamicMap()
@@ -267,20 +267,15 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		return this.m.Tree;
 	}
 
-	function getBackground()
-	{
-		return this.m.Background;
-	}
-
 	function getActor()
 	{
-		return this.m.Background.getContainer().getActor();
+		return this.m.Actor;
 	}
 
-	function setBackground( _background )
+	function setActor( _actor )
 	{
-		if (!::MSU.isKindOf(_background, "character_background")) throw ::MSU.Exception.InvalidType(_background);
-		this.m.Background = ::MSU.asWeakTableRef(_background);
+		if (!::MSU.isKindOf(_actor, "player")) throw ::MSU.Exception.InvalidType(_actor);
+		this.m.Actor = ::MSU.asWeakTableRef(_actor);
 	}
 
 	function getTemplate()
@@ -459,7 +454,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function addBackgroundMultipliers( _multipliers )
 	{
-		foreach (id, mult in this.m.Background.getPerkTreeMultipliers())
+		foreach (id, mult in this.getActor().getBackground().getPerkTreeMultipliers())
 		{
 			if (!(id in _multipliers)) _multipliers[id] <- mult;
 			else
@@ -488,7 +483,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function addItemMultipliers( _multipliers )
 	{
-		local items = this.m.Background.getContainer().getActor().getItems().getAllItems();
+		local items = this.getActor().getItems().getAllItems();
 		foreach (item in items)
 		{
 			foreach (id, mult in item.getPerkTreeMultipliers())
@@ -505,9 +500,9 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function addTalentMultipliers( _multipliers )
 	{
-		if (this.m.Background.getContainer().getActor().getTalents().len() > 0)
+		if (this.getActor().getTalents().len() > 0)
 		{
-			local talents = this.m.Background.getContainer().getActor().getTalents();
+			local talents = this.getActor().getTalents();
 
 			for (local attribute = 0; attribute < this.Const.Attributes.COUNT; attribute++)
 			{
@@ -529,7 +524,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function addTraitMultipliers( _multipliers )
 	{
-		foreach (trait in this.m.Background.getContainer().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait))
+		foreach (trait in this.getActor().getSkills().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait))
 		{
 			foreach (id, mult in trait.getPerkTreeMultipliers())
 			{

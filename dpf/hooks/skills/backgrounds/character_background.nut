@@ -6,18 +6,6 @@
 	{
 	}
 
-	local onAdded = o.onAdded;
-	o.onAdded = function()
-	{
-		onAdded();
-		this.m.PerkTree.setBackground(this);
-	}
-
-	o.getPerkTree <- function()
-	{
-		return this.m.PerkTree;
-	}
-
 	o.getCollectionMin <- function( _collectionID )
 	{
 	}
@@ -25,21 +13,5 @@
 	o.getPerkTreeMultipliers <- function()
 	{
 		return this.m.PerkTreeMultipliers;
-	}
-
-	local onSerialize = o.onSerialize;
-	o.onSerialize = function( _out )
-	{
-		onSerialize(_out);
-		this.m.PerkTree.onSerialize(_out);
-	}
-
-	local onDeserialize = o.onDeserialize;
-	o.onDeserialize = function( _in )
-	{
-		onDeserialize(_in);
-		this.m.PerkTree = ::new(::DPF.Class.PerkTree);
-		this.m.PerkTree.setBackground(this);
-		this.m.PerkTree.onDeserialize(_in);
 	}
 });

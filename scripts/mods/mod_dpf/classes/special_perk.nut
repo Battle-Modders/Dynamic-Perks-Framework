@@ -79,14 +79,14 @@ this.special_perk <- {
 	{
 		local chance = this.m.Chance;
 
-		if (this.m.PerkID in _perkTree.getBackground().m.PerkTreeMultipliers)
+		if (this.m.PerkID in _perkTree.getActor().getBackground().m.PerkTreeMultipliers)
 		{
-			chance *= _perkTree.getBackground().m.PerkTreeMultipliers[this.m.PerkID];
+			chance *= _perkTree.getActor().getBackground().m.PerkTreeMultipliers[this.m.PerkID];
 		}
 
 		if (this.m.ChanceFunction != null) chance *= this.getMultiplier(_perkTree);
 
-		foreach (trait in _perkTree.getBackground().getContainer().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait))
+		foreach (trait in _perkTree.getActor().getSkills().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait))
 		{
 			if (this.m.PerkID in trait.m.PerkTreeMultipliers)
 			{

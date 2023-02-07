@@ -28,14 +28,14 @@ this.special_perk_group <- ::inherit(::DPF.Class.PerkGroup, {
 
 		local myID = this.getID();
 
-		if (myID in _perkTree.getBackground().m.PerkTreeMultipliers)
+		if (myID in _perkTree.getActor().getBackground().m.PerkTreeMultipliers)
 		{
-			local mult = _perkTree.getBackground().m.PerkTreeMultipliers[myID];
+			local mult = _perkTree.getActor().getBackground().m.PerkTreeMultipliers[myID];
 			if (chance < 0 || mult < 0) return 100;
 			else chance *= mult;
 		}
 
-		foreach (trait in _perkTree.getBackground().getContainer().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait))
+		foreach (trait in _perkTree.getActor().getSkills().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait))
 		{
 			if (myID in trait.m.PerkTreeMultipliers)
 			{

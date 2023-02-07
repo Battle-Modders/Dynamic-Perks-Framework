@@ -25,7 +25,7 @@
 
 		if (!player.hasPerk(_perkId))
 		{
-			local reqTier = player.getBackground().getPerkTree().getPerkTier(_perkId);
+			local reqTier = player.getPerkTree().getPerkTier(_perkId);
 
 			if (player.getPerkTier() >= reqTier)
 			{
