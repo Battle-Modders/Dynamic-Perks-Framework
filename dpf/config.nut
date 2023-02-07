@@ -18,7 +18,7 @@ local findById = ::Const.Perks.findById;
 {
 	if (::DPF.PerkTooltipEntityID != null)
 	{
-		return ::Tactical.getEntityByID(::DPF.PerkTooltipEntityID).getBackground().getPerkTree().getPerk(_id);
+		return ::Tactical.getEntityByID(::DPF.PerkTooltipEntityID).getPerkTree().getPerk(_id);
 	}
 
 	return findById(_id);

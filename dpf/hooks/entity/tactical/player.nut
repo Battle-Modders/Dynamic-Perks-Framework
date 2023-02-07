@@ -1,5 +1,11 @@
 ::mods_hookExactClass("entity/tactical/player", function (o) {
+	o.m.PerkTree <- null;
 	o.m.PerkTier <- ::DPF.Const.DefaultPerkTier;
+
+	o.getPerkTree <- function()
+	{
+		return this.m.PerkTree;
+	}
 
 	o.getPerkTier <- function()
 	{
@@ -18,10 +24,10 @@
 
 	o.isPerkUnlockable = function( _id )
 	{
-		if (this.getPerkTier() < this.getBackground().getPerkTree().getPerkTier(_id))
+		if (this.getPerkTier() < this.getPerkTree().getPerkTier(_id))
 			return false;
 
-		local perk = this.getBackground().getPerkTree().getPerk(_id);
+		local perk = this.getPerkTree().getPerk(_id);
 		if ((::MSU.isIn("verifyPrerequisites", perk, true)) && !perk.verifyPrerequisites(this, [])) // TODO: Efficiency issue: passing an empty array every time
 			return false;
 
@@ -70,6 +76,7 @@
 	{
 		onSerialize(_out);
 		_out.writeU8(this.m.PerkTier);
+		this.m.PerkTree.onSerialize(_out);
 	}
 
 	local onDeserialize = o.onDeserialize;
@@ -77,6 +84,9 @@
 	{
 		onDeserialize(_in);
 		this.m.PerkTier = _in.readU8();
+		this.m.PerkTree = ::new(::DPF.Class.PerkTree);
+		this.m.PerkTree.setActor(this);
+		this.m.PerkTree.onDeserialize(_in);
 	}
 });
 
@@ -86,7 +96,9 @@
 		o.setStartValuesEx = function( _backgrounds, _addTraits = true )
 		{
 			setStartValuesEx(_backgrounds, _addTraits);
-			this.getBackground().getPerkTree().build();
+			this.m.PerkTree = this.getBackground().m.PerkTree;
+			this.m.PerkTree.setActor(this);
+			this.m.PerkTree.build();
 		}
 	});
 });
