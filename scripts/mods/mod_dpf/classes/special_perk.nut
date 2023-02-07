@@ -100,7 +100,7 @@ this.special_perk <- {
 			{
 				if (_perkTree.getActor().getTalents()[attribute] == 0) continue;
 
-				foreach (id, mult in ::DynamicPerks.Perks.TalentMultipliers.findByAttribute(attribute))
+				foreach (id, mult in ::DynamicPerks.TalentMultipliers.findByAttribute(attribute))
 				{
 					chance *= mult * _perkTree.getActor().getTalents()[attribute];
 				}
@@ -111,7 +111,7 @@ this.special_perk <- {
 		{
 			foreach (perkGroupID in _perkTree.m.Exclude)
 			{
-				local perkGroup = ::DynamicPerks.Perks.PerkGroups.findById(perkGroupID);
+				local perkGroup = ::DynamicPerks.PerkGroups.findById(perkGroupID);
 				if (this.m.PerkID in perkGroup.m.PerkTreeMultipliers)
 				{
 					chance *= perkGroup.m.PerkTreeMultipliers[this.m.PerkID];

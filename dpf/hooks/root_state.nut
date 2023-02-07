@@ -3,7 +3,7 @@
 	o.onInit = function(){
 		onInit();
 		local tooltipImageKeywords = {};
-		foreach (perkGroup in ::DynamicPerks.Perks.PerkGroups.getAll())
+		foreach (perkGroup in ::DynamicPerks.PerkGroups.getAll())
 		{
 			if (perkGroup.getIcon() == "")
 				continue;

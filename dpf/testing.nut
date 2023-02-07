@@ -7,7 +7,7 @@
 	IconDisabled = "ui/perks/perk_33_sw.png"
 };
 
-::DynamicPerks.Perks.PerkGroups.add(::new(::DynamicPerks.Class.PerkGroup).init("TestPerkGroup", "TestPerkGroup", ["test perk group"], [
+::DynamicPerks.PerkGroups.add(::new(::DynamicPerks.Class.PerkGroup).init("TestPerkGroup", "TestPerkGroup", ["test perk group"], [
 	["perk.reach_advantage"],
 	["perk.test"]
 ]));
@@ -18,15 +18,15 @@ local dynamicMap = {
 	]
 };
 
-::DynamicPerks.Perks.PerkGroupCategories.add(::new(::DynamicPerks.Class.PerkGroupCollection).init("Weapon", "Weapon", "Has an aptitude for", 1, [
+::DynamicPerks.PerkGroupCategories.add(::new(::DynamicPerks.Class.PerkGroupCollection).init("Weapon", "Weapon", "Has an aptitude for", 1, [
 	"TestPerkGroup"
 ]));
 
-::DynamicPerks.Perks.PerkGroupCategories.add(::new(::DynamicPerks.Class.PerkGroupCollection).init("Style", "Style", "Likes using"));
+::DynamicPerks.PerkGroupCategories.add(::new(::DynamicPerks.Class.PerkGroupCollection).init("Style", "Style", "Likes using"));
 
 ::DynamicPerks.MyPerkGroupCollections <- {};
-::DynamicPerks.Perks.PerkGroupCategories["RangedWeapon"] <- ::new(::DynamicPerks.Class.PerkGroupCollection).init("RangedWeapon", "RangedWeapon");
-::DynamicPerks.Perks.PerkGroupCategories["MeleeWeapon"] <- ::new(::DynamicPerks.Class.PerkGroupCollection).init("MeleeWeapon", "MeleeWeapon");
+::DynamicPerks.PerkGroupCategories["RangedWeapon"] <- ::new(::DynamicPerks.Class.PerkGroupCollection).init("RangedWeapon", "RangedWeapon");
+::DynamicPerks.PerkGroupCategories["MeleeWeapon"] <- ::new(::DynamicPerks.Class.PerkGroupCollection).init("MeleeWeapon", "MeleeWeapon");
 
 ::mods_hookNewObject("skills/backgrounds/companion_1h_background", function(o) {
 	o.m.PerkTree = ::new(::DynamicPerks.Class.PerkTree).init(null, {});
@@ -56,7 +56,7 @@ local dynamicMap = {
 	}
 });
 
-::DynamicPerks.Perks.PerkGroupCategories.findById("Style").getSpecialMultipliers = function( _perkTree ) {
+::DynamicPerks.PerkGroupCategories.findById("Style").getSpecialMultipliers = function( _perkTree ) {
 	local multipliers = {};
 
 	if (_perkTree.numPerkGroupsFromCollection(::DynamicPerks.MyPerkGroupCollections.RangedWeapon) == 0)

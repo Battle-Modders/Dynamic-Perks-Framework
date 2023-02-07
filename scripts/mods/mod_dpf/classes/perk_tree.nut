@@ -47,7 +47,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 	function getSpecialPerkGroupsTooltip( _flavored = true )
 	{
 		local ret = "";
-		foreach (group in ::DynamicPerks.Perks.PerkGroups.getByType(::DynamicPerks.Class.SpecialPerkGroup))
+		foreach (group in ::DynamicPerks.PerkGroups.getByType(::DynamicPerks.Class.SpecialPerkGroup))
 		{
 			if (this.hasPerkGroup(group.getID()))
 			{
@@ -61,14 +61,14 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 	function getPerkGroupsTooltip( _flavored = true )
 	{
 		local ret = "";
-		foreach (collection in ::DynamicPerks.Perks.PerkGroupCategories.getOrdered())
+		foreach (collection in ::DynamicPerks.PerkGroupCategories.getOrdered())
 		{
 			local text = "";
 			foreach (groupID in collection.getGroups())
 			{
 				if (this.hasPerkGroup(groupID))
 				{
-					local str = _flavored ? ::MSU.Array.rand(::DynamicPerks.Perks.PerkGroups.findById(groupID).getFlavorText()) : ::DynamicPerks.Perks.PerkGroups.findById(groupID).getName();
+					local str = _flavored ? ::MSU.Array.rand(::DynamicPerks.PerkGroups.findById(groupID).getFlavorText()) : ::DynamicPerks.PerkGroups.findById(groupID).getName();
 					if (str != "") text += str + ", ";
 				}
 			}
@@ -100,7 +100,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 	function getPerkGroups()
 	{
 		local ret = [];
-		foreach (collection in ::DynamicPerks.Perks.PerkGroupCategories.getOrdered())
+		foreach (collection in ::DynamicPerks.PerkGroupCategories.getOrdered())
 		{
 			ret.extend(collection.getGroups().filter((@(idx, groupID) this.hasPerkGroup(groupID)).bindenv(this)));
 		}
@@ -109,7 +109,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function addFromDynamicMap()
 	{
-		foreach (collection in ::DynamicPerks.Perks.PerkGroupCategories.getOrdered())
+		foreach (collection in ::DynamicPerks.PerkGroupCategories.getOrdered())
 		{
 			if (collection.getID() in this.m.DynamicMap)
 			{
@@ -139,7 +139,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 					if (id == "DPF_NoPerkGroup")
 						continue;
 
-					local perkGroup = ::DynamicPerks.Perks.PerkGroups.findById(id);
+					local perkGroup = ::DynamicPerks.PerkGroups.findById(id);
 					if (perkGroup == null)
 					{
 						::logError("No perk group with id \'" + id + "\'");
@@ -168,7 +168,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function addSpecialPerkGroups()
 	{
-		foreach (group in ::DynamicPerks.Perks.PerkGroups.getByType(::DynamicPerks.Class.SpecialPerkGroup))
+		foreach (group in ::DynamicPerks.PerkGroups.getByType(::DynamicPerks.Class.SpecialPerkGroup))
 		{
 			if (group.roll(this))
 			{
@@ -370,7 +370,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function hasPerkGroup( _perkGroupID )
 	{
-		foreach (row in ::DynamicPerks.Perks.PerkGroups.findById(_perkGroupID).getTree())
+		foreach (row in ::DynamicPerks.PerkGroups.findById(_perkGroupID).getTree())
 		{
 			foreach (perk in row)
 			{
@@ -398,7 +398,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		local count = 0;
 		foreach (perkGroupID in _perkGroupCollection.getGroups())
 		{
-			foreach (row in ::DynamicPerks.Perks.PerkGroups.findById(perkGroupID).getTree())
+			foreach (row in ::DynamicPerks.PerkGroups.findById(perkGroupID).getTree())
 			{
 				foreach (perkID in row)
 				{
@@ -413,7 +413,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function addPerkGroup( _perkGroupID )
 	{
-		foreach (i, row in ::DynamicPerks.Perks.PerkGroups.findById(_perkGroupID).getTree())
+		foreach (i, row in ::DynamicPerks.PerkGroups.findById(_perkGroupID).getTree())
 		{
 			foreach (perk in row)
 			{
@@ -424,7 +424,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function removePerkGroup( _perkGroupID )
 	{
-		foreach (row in ::DynamicPerks.Perks.PerkGroups.findById(_perkGroupID).getTree())
+		foreach (row in ::DynamicPerks.PerkGroups.findById(_perkGroupID).getTree())
 		{
 			foreach (perk in row)
 			{
@@ -480,7 +480,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 	{
 		foreach (perkGroupID in this.m.Exclude)
 		{
-			foreach (id, mult in ::DynamicPerks.Perks.PerkGroups.findById(perkGroupID).getPerkTreeMultipliers())
+			foreach (id, mult in ::DynamicPerks.PerkGroups.findById(perkGroupID).getPerkTreeMultipliers())
 			{
 				if (!(id in _multipliers)) _multipliers[id] <- mult;
 				else
@@ -519,7 +519,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 			{
 				if (talents[attribute] == 0) continue;
 
-				foreach (id, mult in ::DynamicPerks.Perks.TalentMultipliers.findByAttribute(attribute))
+				foreach (id, mult in ::DynamicPerks.TalentMultipliers.findByAttribute(attribute))
 				{
 					mult = mult < 1 ? mult / talents[attribute] : mult;
 					if (!(id in _multipliers)) _multipliers[id] <- mult;
@@ -578,12 +578,12 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 	function __getWeightedRandomGroupFromCollection( _collectionID, _exclude = null )
 	{
 		local potentialGroups = ::MSU.Class.WeightedContainer();
-		local collection = ::DynamicPerks.Perks.PerkGroupCategories.findById(_collectionID)
+		local collection = ::DynamicPerks.PerkGroupCategories.findById(_collectionID)
 
 		foreach (groupID in collection.getGroups())
 		{
 			if (_exclude != null && _exclude.find(groupID) != null) continue;
-			local group = ::DynamicPerks.Perks.PerkGroups.findById(groupID);
+			local group = ::DynamicPerks.PerkGroups.findById(groupID);
 			potentialGroups.add(group.getID(), group.getSelfMultiplier(this));
 		}
 

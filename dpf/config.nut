@@ -2,17 +2,17 @@
 	DefaultPerkTier = 1,	// A brother that has never spent a perk point has this PerkTier (e.g. after resetting the tree or freshly hiring them)
 };
 
-::DynamicPerks.Perks <- {};
-
-::DynamicPerks.Perks.addPerks <- function( _perks )
-{
-	foreach (perk in _perks)
+::DynamicPerks.Perks <- {
+	function addPerks( _perks )
 	{
-		::Const.Perks.LookupMap[perk.ID] <- perk;
+		foreach (perk in _perks)
+		{
+			::Const.Perks.LookupMap[perk.ID] <- perk;
+		}
 	}
-}
+};
 
-::DynamicPerks.Perks.PerkGroupCategories <- {
+::DynamicPerks.PerkGroupCategories <- {
 	Ordered = [],
 	LookupMap = {},
 
@@ -58,7 +58,7 @@
 	{
 		if (this.findById(_id) == null)
 		{
-			::logError("::DynamicPerks.Perks.PerkGroupCategories.remove -- no collection with ID \'" + _id + "\'");
+			::logError("::DynamicPerks.PerkGroupCategories.remove -- no collection with ID \'" + _id + "\'");
 			return null;
 		}
 
@@ -73,7 +73,7 @@
 	}
 }
 
-::DynamicPerks.Perks.PerkGroups <- {
+::DynamicPerks.PerkGroups <- {
 	LookupMap = {},
 
 	function getAll()
@@ -116,7 +116,7 @@
 	}
 };
 
-::DynamicPerks.Perks.TalentMultipliers <- {
+::DynamicPerks.TalentMultipliers <- {
 	Multipliers = {},
 
 	function getAll()
@@ -153,25 +153,25 @@
 
 foreach (attribute in ::Const.Attributes)
 {
-	if (attribute != ::Const.Attributes.COUNT) ::DynamicPerks.Perks.TalentMultipliers.Multipliers[attribute] <- {};
+	if (attribute != ::Const.Attributes.COUNT) ::DynamicPerks.TalentMultipliers.Multipliers[attribute] <- {};
 }
 
-::DynamicPerks.Perks.DefaultPerkTreeTemplate <- array(::Const.Perks.Perks.len());
+::DynamicPerks.DefaultPerkTreeTemplate <- array(::Const.Perks.Perks.len());
 
 foreach (i, row in ::Const.Perks.Perks)
 {
-	::DynamicPerks.Perks.DefaultPerkTreeTemplate[i] = array(row.len());
+	::DynamicPerks.DefaultPerkTreeTemplate[i] = array(row.len());
 	foreach (j, perk in row)
 	{
-		::DynamicPerks.Perks.DefaultPerkTreeTemplate[i][j] = perk.ID;
+		::DynamicPerks.DefaultPerkTreeTemplate[i][j] = perk.ID;
 	}
 }
 
-::DynamicPerks.Perks.addPerkGroupToTooltips <- function( _perkID = null, _groups = null )
+::DynamicPerks.addPerkGroupToTooltips <- function( _perkID = null, _groups = null )
 {
 	local map = {};
 
-	foreach (group in ::DynamicPerks.Perks.PerkGroups.getAll())
+	foreach (group in ::DynamicPerks.PerkGroups.getAll())
 	{
 		foreach (row in group.getTree())
 		{
