@@ -463,15 +463,18 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		}
 	}
 
-	function addBackgroundMultipliers( _multipliers )
+	function addSkillMultipliers( _multipliers )
 	{
-		foreach (id, mult in this.getActor().getBackground().getPerkTreeMultipliers())
+		foreach (skill in this.getActor().getSkills().m.Skills)
 		{
-			if (!(id in _multipliers)) _multipliers[id] <- mult;
-			else
+			foreach (id, mult in skill.getPerkTreeMultipliers())
 			{
-				if (mult < 0 || _multipliers[id] < 0) _multipliers[id] = -1;
-				else _multipliers[id] *= mult;
+				if (!(id in _multipliers)) _multipliers[id] <- mult;
+				else
+				{
+					if (mult < 0 || _multipliers[id] < 0) _multipliers[id] = -1;
+					else _multipliers[id] *= mult;
+				}
 			}
 		}
 	}
@@ -533,30 +536,13 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		}
 	}
 
-	function addTraitMultipliers( _multipliers )
-	{
-		foreach (trait in this.getActor().getSkills().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait))
-		{
-			foreach (id, mult in trait.getPerkTreeMultipliers())
-			{
-				if (!(id in _multipliers)) _multipliers[id] <- mult;
-				else
-				{
-					if (mult < 0 || _multipliers[id] < 0) _multipliers[id] = -1;
-					else _multipliers[id] *= mult;
-				}
-			}
-		}
-	}
-
 	function getAllMultipliers()
 	{
 		local ret = {};
-		this.addBackgroundMultipliers(ret);
+		this.addSkillMultipliers(ret);
 		this.addPerkGroupMultipliers(ret);
 		this.addItemMultipliers(ret);
 		this.addTalentMultipliers(ret);
-		this.addTraitMultipliers(ret);
 		return ret;
 	}
 

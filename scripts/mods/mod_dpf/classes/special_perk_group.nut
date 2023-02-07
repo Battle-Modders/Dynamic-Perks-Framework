@@ -28,18 +28,12 @@ this.special_perk_group <- ::inherit(::DynamicPerks.Class.PerkGroup, {
 
 		local myID = this.getID();
 
-		if (myID in _perkTree.getActor().getBackground().m.PerkTreeMultipliers)
+		foreach (skill in _perkTree.getActor().getSkills().m.Skills)
 		{
-			local mult = _perkTree.getActor().getBackground().m.PerkTreeMultipliers[myID];
-			if (chance < 0 || mult < 0) return 100;
-			else chance *= mult;
-		}
-
-		foreach (trait in _perkTree.getActor().getSkills().getSkillsByFunction(@(skill) skill.m.Type == ::Const.SkillType.Trait))
-		{
-			if (myID in trait.m.PerkTreeMultipliers)
+			local multipliers = skill.getPerkTreeMultipliers();
+			if (myID in multipliers)
 			{
-				local mult = trait.m.PerkTreeMultipliers[myID];
+				local mult = multipliers[myID];
 				if (chance < 0 || mult < 0) return 100;
 				else chance *= mult;
 			}
