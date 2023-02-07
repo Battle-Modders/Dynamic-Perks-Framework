@@ -11,16 +11,27 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 	{
 	}
 
-	function init( _template = null, _dynamicMap = null )
+	function init( _options )
 	{
-		if (_template != null)
+		::MSU.requireTable(_options);
+
+		local options = {
+			Template = null,
+			DynamicMap = null
+		};
+		foreach (key, value in _options)
 		{
-			this.setTemplate(_template);
+			if (!(key in options)) throw format("invalid parameter \'%s\'", key);
+			options[key] = value;
+		}
+
+		if (options.Template != null)
+		{
+			this.setTemplate(options.Template);
 			return this;
 		}
 
-		if (_dynamicMap != null) this.m.DynamicMap = _dynamicMap;
-		else _dynamicMap = {};
+		this.m.DynamicMap = options.DynamicMap != null ? options.DynamicMap : {};
 
 		return this;		
 	}
