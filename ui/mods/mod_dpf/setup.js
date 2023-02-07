@@ -1,4 +1,4 @@
 var DynamicPerks = {
-	ID : "mod_dpf",
+	ID : "mod_dynamic_perks",
 	Hooks : {}
 }

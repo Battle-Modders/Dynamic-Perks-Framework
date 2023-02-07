@@ -1,6 +1,6 @@
 ::DynamicPerks <- {
 	Version = "0.1.0",
-	ID = "mod_dpf",
+	ID = "mod_dynamic_perks",
 	Name = "Dynamic Perks Framework (DPF)",
 };
 
