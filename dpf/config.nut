@@ -1,10 +1,10 @@
-::DPF.Const <- {
+::DynamicPerks.Const <- {
 	DefaultPerkTier = 1,	// A brother that has never spent a perk point has this PerkTier (e.g. after resetting the tree or freshly hiring them)
 };
 
-::DPF.Perks <- {};
+::DynamicPerks.Perks <- {};
 
-::DPF.Perks.addPerks <- function( _perks )
+::DynamicPerks.Perks.addPerks <- function( _perks )
 {
 	foreach (perk in _perks)
 	{
@@ -12,19 +12,19 @@
 	}
 }
 
-::DPF.PerkTooltipEntityID <- null;
+::DynamicPerks.PerkTooltipEntityID <- null;
 local findById = ::Const.Perks.findById;
 ::Const.Perks.findById = function( _id )
 {
-	if (::DPF.PerkTooltipEntityID != null)
+	if (::DynamicPerks.PerkTooltipEntityID != null)
 	{
-		return ::Tactical.getEntityByID(::DPF.PerkTooltipEntityID).getPerkTree().getPerk(_id);
+		return ::Tactical.getEntityByID(::DynamicPerks.PerkTooltipEntityID).getPerkTree().getPerk(_id);
 	}
 
 	return findById(_id);
 }
 
-::DPF.Perks.PerkGroupCategories <- {
+::DynamicPerks.Perks.PerkGroupCategories <- {
 	Ordered = [],
 	LookupMap = {},
 
@@ -70,7 +70,7 @@ local findById = ::Const.Perks.findById;
 	{
 		if (this.findById(_id) == null)
 		{
-			::logError("::DPF.Perks.PerkGroupCategories.remove -- no collection with ID \'" + _id + "\'");
+			::logError("::DynamicPerks.Perks.PerkGroupCategories.remove -- no collection with ID \'" + _id + "\'");
 			return null;
 		}
 
@@ -85,7 +85,7 @@ local findById = ::Const.Perks.findById;
 	}
 }
 
-::DPF.Perks.PerkGroups <- {
+::DynamicPerks.Perks.PerkGroups <- {
 	LookupMap = {},
 
 	function getAll()
@@ -128,7 +128,7 @@ local findById = ::Const.Perks.findById;
 	}
 };
 
-::DPF.Perks.TalentMultipliers <- {
+::DynamicPerks.Perks.TalentMultipliers <- {
 	Multipliers = {},
 
 	function getAll()
@@ -165,25 +165,25 @@ local findById = ::Const.Perks.findById;
 
 foreach (attribute in ::Const.Attributes)
 {
-	if (attribute != ::Const.Attributes.COUNT) ::DPF.Perks.TalentMultipliers.Multipliers[attribute] <- {};
+	if (attribute != ::Const.Attributes.COUNT) ::DynamicPerks.Perks.TalentMultipliers.Multipliers[attribute] <- {};
 }
 
-::DPF.Perks.DefaultPerkTreeTemplate <- array(::Const.Perks.Perks.len());
+::DynamicPerks.Perks.DefaultPerkTreeTemplate <- array(::Const.Perks.Perks.len());
 
 foreach (i, row in ::Const.Perks.Perks)
 {
-	::DPF.Perks.DefaultPerkTreeTemplate[i] = array(row.len());
+	::DynamicPerks.Perks.DefaultPerkTreeTemplate[i] = array(row.len());
 	foreach (j, perk in row)
 	{
-		::DPF.Perks.DefaultPerkTreeTemplate[i][j] = perk.ID;
+		::DynamicPerks.Perks.DefaultPerkTreeTemplate[i][j] = perk.ID;
 	}
 }
 
-::DPF.Perks.addPerkGroupToTooltips <- function( _perkID = null, _groups = null )
+::DynamicPerks.Perks.addPerkGroupToTooltips <- function( _perkID = null, _groups = null )
 {
 	local map = {};
 
-	foreach (group in ::DPF.Perks.PerkGroups.getAll())
+	foreach (group in ::DynamicPerks.Perks.PerkGroups.getAll())
 	{
 		foreach (row in group.getTree())
 		{

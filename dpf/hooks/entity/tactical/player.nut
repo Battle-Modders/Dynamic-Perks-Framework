@@ -1,6 +1,6 @@
 ::mods_hookExactClass("entity/tactical/player", function (o) {
 	o.m.PerkTree <- null;
-	o.m.PerkTier <- ::DPF.Const.DefaultPerkTier;
+	o.m.PerkTier <- ::DynamicPerks.Const.DefaultPerkTier;
 
 	o.getPerkTree <- function()
 	{
@@ -19,7 +19,7 @@
 
 	o.resetPerkTier <- function()
 	{
-		this.setPerkTier(::DPF.Const.DefaultPerkTier + this.getPerkPointsSpent());
+		this.setPerkTier(::DynamicPerks.Const.DefaultPerkTier + this.getPerkPointsSpent());
 	}
 
 	o.isPerkUnlockable = function( _id )
@@ -84,7 +84,7 @@
 	{
 		onDeserialize(_in);
 		this.m.PerkTier = _in.readU8();
-		this.m.PerkTree = ::new(::DPF.Class.PerkTree);
+		this.m.PerkTree = ::new(::DynamicPerks.Class.PerkTree);
 		this.m.PerkTree.setActor(this);
 		this.m.PerkTree.onDeserialize(_in);
 	}

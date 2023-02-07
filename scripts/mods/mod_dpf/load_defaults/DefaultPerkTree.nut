@@ -1,2 +1,2 @@
-::DPF.Perks.DefaultPerkTree <- ::new(::DPF.Class.PerkTree).init({Template = ::DPF.Perks.DefaultPerkTreeTemplate});
-::DPF.Perks.DefaultPerkTree.build();
+::DynamicPerks.Perks.DefaultPerkTree <- ::new(::DynamicPerks.Class.PerkTree).init({Template = ::DynamicPerks.Perks.DefaultPerkTreeTemplate});
+::DynamicPerks.Perks.DefaultPerkTree.build();

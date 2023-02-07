@@ -1,4 +1,4 @@
-::DPF.Class <- {
+::DynamicPerks.Class <- {
 	PerkGroup = "scripts/mods/mod_dpf/classes/perk_group",
 	PerkGroupCollection = "scripts/mods/mod_dpf/classes/perk_group_collection",
 	PerkTree = "scripts/mods/mod_dpf/classes/perk_tree",

@@ -7,7 +7,7 @@
 	IconDisabled = "ui/perks/perk_33_sw.png"
 };
 
-::DPF.Perks.PerkGroups.add(::new(::DPF.Class.PerkGroup).init("TestPerkGroup", "TestPerkGroup", ["test perk group"], [
+::DynamicPerks.Perks.PerkGroups.add(::new(::DynamicPerks.Class.PerkGroup).init("TestPerkGroup", "TestPerkGroup", ["test perk group"], [
 	["perk.reach_advantage"],
 	["perk.test"]
 ]));
@@ -18,18 +18,18 @@ local dynamicMap = {
 	]
 };
 
-::DPF.Perks.PerkGroupCategories.add(::new(::DPF.Class.PerkGroupCollection).init("Weapon", "Weapon", "Has an aptitude for", 1, [
+::DynamicPerks.Perks.PerkGroupCategories.add(::new(::DynamicPerks.Class.PerkGroupCollection).init("Weapon", "Weapon", "Has an aptitude for", 1, [
 	"TestPerkGroup"
 ]));
 
-::DPF.Perks.PerkGroupCategories.add(::new(::DPF.Class.PerkGroupCollection).init("Style", "Style", "Likes using"));
+::DynamicPerks.Perks.PerkGroupCategories.add(::new(::DynamicPerks.Class.PerkGroupCollection).init("Style", "Style", "Likes using"));
 
-::DPF.MyPerkGroupCollections <- {};
-::DPF.Perks.PerkGroupCategories["RangedWeapon"] <- ::new(::DPF.Class.PerkGroupCollection).init("RangedWeapon", "RangedWeapon");
-::DPF.Perks.PerkGroupCategories["MeleeWeapon"] <- ::new(::DPF.Class.PerkGroupCollection).init("MeleeWeapon", "MeleeWeapon");
+::DynamicPerks.MyPerkGroupCollections <- {};
+::DynamicPerks.Perks.PerkGroupCategories["RangedWeapon"] <- ::new(::DynamicPerks.Class.PerkGroupCollection).init("RangedWeapon", "RangedWeapon");
+::DynamicPerks.Perks.PerkGroupCategories["MeleeWeapon"] <- ::new(::DynamicPerks.Class.PerkGroupCollection).init("MeleeWeapon", "MeleeWeapon");
 
 ::mods_hookNewObject("skills/backgrounds/companion_1h_background", function(o) {
-	o.m.PerkTree = ::new(::DPF.Class.PerkTree).init(null, {});
+	o.m.PerkTree = ::new(::DynamicPerks.Class.PerkTree).init(null, {});
 	o.onBuildPerkTree <- function()
 	{
 		this.getPerkTree().addPerk("perk.duelist", 5);
@@ -56,15 +56,15 @@ local dynamicMap = {
 	}
 });
 
-::DPF.Perks.PerkGroupCategories.findById("Style").getSpecialMultipliers = function( _perkTree ) {
+::DynamicPerks.Perks.PerkGroupCategories.findById("Style").getSpecialMultipliers = function( _perkTree ) {
 	local multipliers = {};
 
-	if (_perkTree.numPerkGroupsFromCollection(::DPF.MyPerkGroupCollections.RangedWeapon) == 0)
+	if (_perkTree.numPerkGroupsFromCollection(::DynamicPerks.MyPerkGroupCollections.RangedWeapon) == 0)
 	{
 		multipliers["RangedStyle"] <- 0;
 	}
 
-	if (_perkTree.numPerkGroupsFromCollection(::DPF.MyPerkGroupCollections.MeleeWeapon) == 0)
+	if (_perkTree.numPerkGroupsFromCollection(::DynamicPerks.MyPerkGroupCollections.MeleeWeapon) == 0)
 	{
 		multipliers["OneHandedStyle"] <- 0;
 		multipliers["OneHandedStyle"] <- 0;

@@ -54,7 +54,7 @@ this.perk_group_collection <- ::inherit(::MSU.BBClass.Empty, {
 	::MSU.requireArray(_groups);
 		foreach (groupID in _groups)
 		{
-			if (::DPF.Perks.PerkGroups.findById(groupID) == null)
+			if (::DynamicPerks.Perks.PerkGroups.findById(groupID) == null)
 			{
 				::logError(groupID + " is not a valid perk_group ID");
 				throw ::MSU.Exception.InvalidType(groupID);
@@ -120,6 +120,6 @@ this.perk_group_collection <- ::inherit(::MSU.BBClass.Empty, {
 
 	function getRandomPerk( _exclude = null )
 	{
-		return ::DPF.PerkGroups.findById(this.getRandomGroup()).getRandomPerk(null, _exclude);
+		return ::DynamicPerks.PerkGroups.findById(this.getRandomGroup()).getRandomPerk(null, _exclude);
 	}
 });

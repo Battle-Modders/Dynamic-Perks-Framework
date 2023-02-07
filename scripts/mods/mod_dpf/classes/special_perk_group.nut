@@ -1,4 +1,4 @@
-this.special_perk_group <- ::inherit(::DPF.Class.PerkGroup, {
+this.special_perk_group <- ::inherit(::DynamicPerks.Class.PerkGroup, {
 	m = {
 		Chance = null
 	},
@@ -51,7 +51,7 @@ this.special_perk_group <- ::inherit(::DPF.Class.PerkGroup, {
 			{
 				if (_perkTree.getActor().getTalents()[attribute] == 0) continue;
 
-				local mults = ::DPF.Perks.TalentMultipliers.findByAttribute(attribute);
+				local mults = ::DynamicPerks.Perks.TalentMultipliers.findByAttribute(attribute);
 				if (myID in mults)
 				{
 					local mult = mults[myID];
@@ -63,7 +63,7 @@ this.special_perk_group <- ::inherit(::DPF.Class.PerkGroup, {
 
 		foreach (perkGroupID in _perkTree.getPerkGroups())
 		{
-			local perkGroup = ::DPF.Perks.PerkGroups.findById(perkGroupID);
+			local perkGroup = ::DynamicPerks.Perks.PerkGroups.findById(perkGroupID);
 			if (myID in perkGroup.m.PerkTreeMultipliers)
 			{
 				local mult = perkGroup.m.PerkTreeMultipliers[myID];
