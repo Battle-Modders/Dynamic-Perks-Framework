@@ -86,7 +86,7 @@ DynamicPerks.GenericPerkGroupsModule.prototype.addPerkGroupDIV = function(_perkG
 	_perkGroup.Image = $('<img class="perk-image-layer"/>')
 		.attr('src', Path.GFX + _perkGroup.Icon)
 		.appendTo(_perkGroup.Container)
-		.bindTooltip({ contentType: 'msu-generic', modId: "mod_dynamic_perks", elementId: tooltipID });
+		.bindTooltip({ contentType: 'msu-generic', modId: DynamicPerks.ID, elementId: tooltipID });
 
 }
 
