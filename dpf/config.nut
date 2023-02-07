@@ -12,18 +12,6 @@
 	}
 }
 
-::DynamicPerks.PerkTooltipEntityID <- null;
-local findById = ::Const.Perks.findById;
-::Const.Perks.findById = function( _id )
-{
-	if (::DynamicPerks.PerkTooltipEntityID != null)
-	{
-		return ::Tactical.getEntityByID(::DynamicPerks.PerkTooltipEntityID).getPerkTree().getPerk(_id);
-	}
-
-	return findById(_id);
-}
-
 ::DynamicPerks.Perks.PerkGroupCategories <- {
 	Ordered = [],
 	LookupMap = {},
