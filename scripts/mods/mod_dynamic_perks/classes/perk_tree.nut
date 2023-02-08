@@ -133,10 +133,10 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 							throw ::MSU.Exception.InvalidType("perkGroupContainer");
 					}
 
-					if (id == "DPF_RandomPerkGroup")
+					if (id == "DynamicPerks_RandomPerkGroup")
 						id = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
 
-					if (id == "DPF_NoPerkGroup")
+					if (id == "DynamicPerks_NoPerkGroup")
 						continue;
 
 					local perkGroup = ::DynamicPerks.PerkGroups.findById(id);
@@ -157,7 +157,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 			for (local i = (collection.getID() in this.m.DynamicMap) ? this.m.DynamicMap[collection.getID()].len() : 0; i < min; i++)
 			{
 				local perkGroupID = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
-				if (perkGroupID != "DPF_NoPerkGroup")
+				if (perkGroupID != "DynamicPerks_NoPerkGroup")
 				{
 					this.m.Exclude.push(perkGroupID);
 					this.addPerkGroup(perkGroupID);
@@ -580,6 +580,6 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 		local groupID = potentialGroups.roll();
 
-		return groupID != null ? groupID : "DPF_NoPerkGroup";
+		return groupID != null ? groupID : "DynamicPerks_NoPerkGroup";
 	}
 });
