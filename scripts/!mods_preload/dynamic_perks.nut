@@ -2,12 +2,16 @@
 	Version = "0.1.0",
 	ID = "mod_dynamic_perks",
 	Name = "Dynamic Perks Framework (DPF)",
+	GitHubURL = "https://github.com/Battle-Modders/Dynamic-Perks-Framework"
 };
 
 ::mods_registerMod(::DynamicPerks.ID, ::DynamicPerks.Version, ::DynamicPerks.Name);
 ::mods_queue(::DynamicPerks.ID, "mod_msu", function() {
 
 	::DynamicPerks.Mod <- ::MSU.Class.Mod(::DynamicPerks.ID, ::DynamicPerks.Version, ::DynamicPerks.Name);
+
+	::DynamicPerks.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHub, ::DynamicPerks.GitHubURL);
+	::DynamicPerks.Mod.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHub);
 
 	::include("dynamic_perks/load.nut");
 	::mods_registerJS("mod_dynamic_perks/setup.js");
