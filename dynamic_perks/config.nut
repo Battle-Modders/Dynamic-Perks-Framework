@@ -167,6 +167,18 @@ foreach (i, row in ::Const.Perks.Perks)
 	}
 }
 
+::DynamicPerks.DefaultPerkTree <- null;
+::DynamicPerks.getDefaultPerkTree <- function()
+{
+	if (this.DefaultPerkTree == null)
+	{
+		this.DefaultPerkTree = ::new(::DynamicPerks.Class.PerkTree).init({Template = ::DynamicPerks.DefaultPerkTreeTemplate})
+		this.DefaultPerkTree.build();
+	}
+
+	return this.DefaultPerkTree;
+}
+
 ::DynamicPerks.addPerkGroupToTooltips <- function( _perkID = null, _groups = null )
 {
 	local map = {};
