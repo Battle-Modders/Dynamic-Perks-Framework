@@ -5,6 +5,9 @@
 	SpecialPerkGroup = "scripts/mods/mod_dynamic_perks/classes/special_perk_group"
 };
 
-::includeFiles(::IO.enumerateFiles("dynamic_perks/hooks"));
+foreach (file in ::IO.enumerateFiles("dynamic_perks/hooks"))
+{
+	::include(file);
+}
 ::include("dynamic_perks/config.nut");
 ::include("dynamic_perks/dynamic_perks_tooltips.nut");
