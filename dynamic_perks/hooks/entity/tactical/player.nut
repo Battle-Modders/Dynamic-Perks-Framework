@@ -1,5 +1,5 @@
 ::mods_hookExactClass("entity/tactical/player", function (o) {
-	o.m.PerkTree <- null;
+	o.m.PerkTree <- ::DynamicPerks.getDefaultPerkTree();
 	o.m.PerkTier <- ::DynamicPerks.Const.DefaultPerkTier;
 
 	o.getPerkTree <- function()
