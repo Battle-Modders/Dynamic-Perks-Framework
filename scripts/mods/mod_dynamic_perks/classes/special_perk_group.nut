@@ -1,15 +1,16 @@
-this.special_perk_group <- ::inherit(::DynamicPerks.Class.PerkGroup, {
-	m = {
-		Chance = null
-	},
-	function create()
+::DynamicPerks.Class.SpecialPerkGroup <- class extends ::DynamicPerks.Class.PerkGroup
+{
+	Chance = null;
+
+	function __initDefaultOptions()
 	{
-		this.perk_group.create();
+		base.__initDefaultOptions();
+		this.DefaultOptions.Chance <- 0;
 	}
 
 	function getChance()
 	{
-		return this.m.Chance;
+		return this.Chance;
 	}
 
 	function getMultiplier( _perkTree )
@@ -19,7 +20,7 @@ this.special_perk_group <- ::inherit(::DynamicPerks.Class.PerkGroup, {
 
 	function calculateChance( _perkTree )
 	{
-		local chance = this.m.Chance;
+		local chance = this.Chance;
 
 		if (chance < 0) return 100;
 
@@ -58,9 +59,9 @@ this.special_perk_group <- ::inherit(::DynamicPerks.Class.PerkGroup, {
 		foreach (perkGroupID in _perkTree.getPerkGroups())
 		{
 			local perkGroup = ::DynamicPerks.PerkGroups.findById(perkGroupID);
-			if (myID in perkGroup.m.PerkTreeMultipliers)
+			if (myID in perkGroup.getPerkTreeMultipliers())
 			{
-				local mult = perkGroup.m.PerkTreeMultipliers[myID];
+				local mult = perkGroup.getPerkTreeMultipliers()[myID];
 				if (chance < 0 || mult < 0) return 100;
 				else chance *= mult;
 			}
@@ -74,4 +75,4 @@ this.special_perk_group <- ::inherit(::DynamicPerks.Class.PerkGroup, {
 		local chance = this.calculateChance(_perkTree);
 		return ::Math.rand(1, 100) <= chance;
 	}
-});
+};

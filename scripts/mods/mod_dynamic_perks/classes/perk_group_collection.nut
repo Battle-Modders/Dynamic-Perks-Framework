@@ -1,52 +1,70 @@
-this.perk_group_collection <- ::inherit(::MSU.BBClass.Empty, {
-	m = {
-		ID = "perk_group_collection.uninitiatlized",
-		Name = "Uninitialized perk group collection",
-		OrderOfAssignment = 10,
-		Min = 1,
-		TooltipPrefix = "Has perk groups:"
-		Groups = []
-	},
-	function create()
+::DynamicPerks.Class.PerkGroupCollection <- class
+{
+	ID = null;
+	Name = null;
+	OrderOfAssignment = null;
+	Min = null;
+	TooltipPrefix = null
+	Groups = null;
+
+	DefaultOptions = null;
+
+	constructor( _options )
 	{
+		::MSU.requireTable(_options);
+		this.__initDefaultOptions();
+
+		foreach (key, value in _options)
+		{
+			if (!(key in this.DefaultOptions)) throw format("invalid parameter \'%s\'", key);
+			this.DefaultOptions[key] = value;
+		}
+
+		foreach (key, value in this.DefaultOptions)
+		{
+			this[key] = value;
+		}
+
+		this.DefaultOptions = null;
 	}
 
-	function init( _id, _name = null, _tooltipPrefix = null, _min = null, _groups = null )
+	function __initDefaultOptions()
 	{
-		this.setID(_id);
-		this.setName(_name != null ? _name : _id);
-		if (_tooltipPrefix != null) this.setTooltipPrefix(_tooltipPrefix);
-		if (_min != null) this.setMin(_min);
-		if (_groups != null) this.setGroups(_groups);
-
-		return this;
+		this.DefaultOptions = {
+			ID = "",
+			Name = "",
+			OrderOfAssignment = 10,
+			Min = 1,
+			TooltipPrefix = "Has perk groups:"
+			Groups = []
+		};
 	}
 
 	function getName()
 	{
-		return this.m.Name;
+		return this.Name;
 	}
 
 	function setName( _name )
 	{
 		::MSU.requireString(_name);
-		this.m.Name = _name;
+		this.Name = _name;
 	}
 
 	function getID()
 	{
-		return this.m.ID;
+		return this.ID;
 	}
 
 	function setID( _id )
 	{
 		::MSU.requireString(_id);
-		this.m.ID = _id;
+		this.ID = _id;
 	}
 
 	function getGroups()
 	{
-		return this.m.Groups;
+		return this.Groups;
 	}
 
 	function setGroups( _groups )
@@ -60,51 +78,51 @@ this.perk_group_collection <- ::inherit(::MSU.BBClass.Empty, {
 				throw ::MSU.Exception.InvalidType(groupID);
 			}
 		}
-		this.m.Groups = _groups;
+		this.Groups = _groups;
 	}
 
 	function getMin()
 	{
-		return this.m.Min;
+		return this.Min;
 	}
 
 	function setMin( _min )
 	{
 		::MSU.requireInt(_min);
-		this.m.Min = _min;
+		this.Min = _min;
 	}
 
 	function getTooltipPrefix()
 	{
-		return this.m.TooltipPrefix;
+		return this.TooltipPrefix;
 	}
 
 	function setTooltipPrefix( _text )
 	{
 		::MSU.requireString(_text);
-		this.m.TooltipPrefix = _text;
+		this.TooltipPrefix = _text;
 	}
 
 	function getOrderOfAssignment()
 	{
-		return this.m.OrderOfAssignment;
+		return this.OrderOfAssignment;
 	}
 
 	function setOrderOfAssignment( _order )
 	{
 		::MSU.requireOneFromTypes(["integer", "float"], _order);
-		this.m.OrderOfAssignment = _order;
+		this.OrderOfAssignment = _order;
 	}
 
 	function addPerkGroup( _group )
 	{
-		if (this.m.Groups.find(_group) != null) this.m.Groups.push(_group);
+		if (this.Groups.find(_group) != null) this.Groups.push(_group);
 	}
 
 	function removePerkGroup( _group )
 	{
-		local idx = this.m.Groups.find(_group);
-		if (idx != null) return this.m.Groups.remove(idx);
+		local idx = this.Groups.find(_group);
+		if (idx != null) return this.Groups.remove(idx);
 	}
 
 	function getRandomGroup( _exclude = null )
@@ -112,14 +130,14 @@ this.perk_group_collection <- ::inherit(::MSU.BBClass.Empty, {
 		if (_exclude != null)
 		{
 			::MSU.requireArray(_exclude);
-			return ::MSU.Array.rand(this.m.Groups.filter(@(idx, groupID) _exclude.find(groupID) == null));
+			return ::MSU.Array.rand(this.Groups.filter(@(idx, groupID) _exclude.find(groupID) == null));
 		}
 
-		return ::MSU.Array.rand(this.m.Groups);
+		return ::MSU.Array.rand(this.Groups);
 	}
 
 	function getRandomPerk( _exclude = null )
 	{
 		return ::DynamicPerks.PerkGroups.findById(this.getRandomGroup()).getRandomPerk(null, _exclude);
 	}
-});
+};

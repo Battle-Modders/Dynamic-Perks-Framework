@@ -36,7 +36,7 @@
 
 	function sort()
 	{
-		this.Ordered.sort(@(collection1, collection2) collection1.m.OrderOfAssignment <=> collection2.m.OrderOfAssignment);
+		this.Ordered.sort(@(collection1, collection2) collection1.getOrderOfAssignment() <=> collection2.getOrderOfAssignment());
 	}
 
 	function printOrderToLog()
@@ -48,6 +48,7 @@
 
 	function add( _collection )
 	{
+		::MSU.requireInstanceOf(::DynamicPerks.Class.PerkGroupCollection, _collection);
 		if (this.findById(_collection.getID()) != null) throw ::MSU.Exception.DuplicateKey(_collection.getID());
 
 		this.LookupMap[_collection.getID()] <- _collection;
@@ -88,19 +89,12 @@
 
 	function getByType( _filter )
 	{
-		_filter = split(_filter, "/").top();
-		switch (_filter)
-		{
-			case "perk_group":
-				return ::MSU.Table.filter(this.LookupMap, @(_, value) value.ClassName == _filter);
-
-			default:
-				return ::MSU.Table.filter(this.LookupMap, @(_, value) value.SuperName == _filter);
-		}
+		return ::MSU.Table.filter(this.LookupMap, @(_, value) value.getclass() == _filter);
 	}
 
 	function add( _perkGroup )
 	{
+		::MSU.requireInstanceOf(::DynamicPerks.Class.PerkGroup, _collection);
 		if (_perkGroup.getID() in this.LookupMap) throw ::MSU.Exception.DuplicateKey(_perkGroup.getID());
 		this.LookupMap[_perkGroup.getID()] <- _perkGroup;
 	}

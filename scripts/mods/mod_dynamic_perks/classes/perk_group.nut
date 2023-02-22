@@ -1,31 +1,47 @@
-this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
-	m = {
-		ID = "not_initialized",
-		Name = "Not initialized Perk Group",
-		Description = "",
-		Icon = "",
-		FlavorText = ["Not initialized perk group"], // TODO: Should it be named FlavorTexts ?
-		PerkTreeMultipliers = {},
-		Trees = {
-			"default": []
-		}
-	},
-	function create()
+::DynamicPerks.Class.PerkGroup <- class
+{
+	ID = null;
+	Name = null;
+	Description = null;
+	Icon = null;
+	FlavorText = null;
+	PerkTreeMultipliers = null;
+	Trees = null;
+
+	DefaultOptions = null;
+
+	constructor( _options )
 	{
+		::MSU.requireTable(_options);
+		this.__initDefaultOptions();
+
+		foreach (key, value in _options)
+		{
+			if (!(key in this.DefaultOptions)) throw format("invalid parameter \'%s\'", key);
+			this.DefaultOptions[key] = value;
+		}
+
+		foreach (key, value in this.DefaultOptions)
+		{
+			this[key] = value;
+		}
+
+		this.DefaultOptions = null;
 	}
 
-	function init( _id, _name, _flavorText, _tree, _multipliers = null )
+	function __initDefaultOptions()
 	{
-		::MSU.requireString(_id);
-
-		this.m.ID = _id;
-		this.setName(_name);
-		this.setFlavorText(_flavorText);
-		this.setTree(_tree);
-
-		if (_multipliers != null) this.setMultipliers(_multipliers);
-
-		return this;
+		this.DefaultOptions = {
+			ID = "",
+			Name = "",
+			Description = "",
+			Icon = "",
+			FlavorText = [""], // TODO: Should it be named FlavorTexts ?
+			PerkTreeMultipliers = {},
+			Trees = {
+				"default": []
+			}
+		};
 	}
 
 	function getTooltip()
@@ -70,33 +86,33 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 
 	function getID()
 	{
-		return this.m.ID;
+		return this.ID;
 	}
 
 	function getName()
 	{
-		return this.m.Name;
+		return this.Name;
 	}
 
 	function setName( _name )
 	{
 		::MSU.requireString(_name);
-		this.m.Name = _name;
+		this.Name = _name;
 	}
 
 	function getDescription()
 	{
-		return this.m.Description;
+		return this.Description;
 	}
 
 	function getIcon()
 	{
-		return this.m.Icon;
+		return this.Icon;
 	}
 
 	function getFlavorText()
 	{
-		return this.m.FlavorText;
+		return this.FlavorText;
 	}
 
 	function setFlavorText( _flavorText )
@@ -106,7 +122,7 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		{
 			::MSU.requireString(text);
 		}
-		this.m.FlavorText = _flavorText;
+		this.FlavorText = _flavorText;
 	}
 
 	function addFlavorText( _flavorText )
@@ -114,7 +130,7 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		switch (typeof _flavorText)
 		{
 			case "string":
-				this.m.FlavorText.push(_flavorText);
+				this.FlavorText.push(_flavorText);
 				break;
 
 			case "array":
@@ -122,7 +138,7 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 				{
 					::MSU.requireString(text);
 				}
-				this.m.FlavorText.extend(_flavorText);
+				this.FlavorText.extend(_flavorText);
 				break;
 
 			default:
@@ -132,12 +148,12 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 
 	function getTrees()
 	{
-		return this.m.Trees;
+		return this.Trees;
 	}
 
 	function getTree( _id = "default" )
 	{
-		return this.m.Trees[_id];
+		return this.Trees[_id];
 	}
 
 	function setTree( _tree, _id = "default" )
@@ -153,7 +169,7 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 			}
 		}
 
-		this.m.Trees[_id] <- _tree;
+		this.Trees[_id] <- _tree;
 	}
 
 	function toUIData()
@@ -168,12 +184,12 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 
 	function getRandomTree()
 	{
-		return ::MSU.Table.randValue(this.m.Trees);
+		return ::MSU.Table.randValue(this.Trees);
 	}
 
 	function getPerkTreeMultipliers()
 	{
-		return this.m.PerkTreeMultipliers;
+		return this.PerkTreeMultipliers;
 	}
 
 	function setMultipliers( _multipliers )
@@ -183,7 +199,7 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		{
 			this.__validateMultiplier(key, mult);
 		}
-		this.m.PerkTreeMultipliers = _multipliers;
+		this.PerkTreeMultipliers = _multipliers;
 	}
 
 	function getSelfMultiplier( _perkTree )
@@ -194,12 +210,12 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 	function addMultiplier( _id, _mult )
 	{
 		this.__validateMultiplier(_id, _mult);
-		if (_id in this.m.PerkTreeMultipliers)
+		if (_id in this.PerkTreeMultipliers)
 		{
-			::logWarning("The perk group " + this.getID() + " already contains a multiplier of " + this.m.PerkTreeMultipliers[_id] + " for " + _id + ". Overwriting it with " + _mult);
+			::logWarning("The perk group " + this.getID() + " already contains a multiplier of " + this.PerkTreeMultipliers[_id] + " for " + _id + ". Overwriting it with " + _mult);
 		}
 
-		this.m.PerkTreeMultipliers[_id] <- _mult;
+		this.PerkTreeMultipliers[_id] <- _mult;
 	}
 
 	function removeMultiplier( _id )
@@ -210,9 +226,9 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 			throw ::MSU.Exception.InvalidValue(_id);
 		}
 
-		if (_id in this.m.PerkTreeMultipliers)
+		if (_id in this.PerkTreeMultipliers)
 		{
-			delete this.m.PerkTreeMultipliers[_id];
+			delete this.PerkTreeMultipliers[_id];
 		}
 	}
 
@@ -235,7 +251,7 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 
 	function findPerk( _id )
 	{
-		foreach (row in this.m.Tree)
+		foreach (row in this.Tree)
 		{
 			foreach (perk in row)
 			{
@@ -255,12 +271,12 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 			return;
 		}
 
-		this.m.Tree[_tier-1].push(_id);
+		this.Tree[_tier-1].push(_id);
 	}
 
 	function removePerk( _id )
 	{
-		foreach (row in this.m.Tree)
+		foreach (row in this.Tree)
 		{
 			foreach (i, perk in row)
 			{
@@ -274,14 +290,14 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		local perks = [];
 		if (_tier != null)
 		{
-			foreach (perk in this.m.Tree[tier-1])
+			foreach (perk in this.Tree[tier-1])
 			{
 				if (_exclude == null || _exclude.find(perk) == null) perks.push(perk);
 			}
 		}
 		else
 		{
-			foreach (row in this.m.Tree)
+			foreach (row in this.Tree)
 			{
 				foreach (perk in row)
 				{
@@ -292,4 +308,4 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 
 		return ::MSU.Array.rand(perks);
 	}
-});
+};
