@@ -193,7 +193,6 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		}
 
 		this.m.Exclude = null;
-		this.m.DynamicMap = null;
 
 		if (!::MSU.isNull(this.getActor())) this.getActor().getBackground().onBuildPerkTree();
 	}
