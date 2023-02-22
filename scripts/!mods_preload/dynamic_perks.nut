@@ -2,7 +2,12 @@
 	Version = "0.1.0",
 	ID = "mod_dynamic_perks",
 	Name = "Dynamic Perks Framework (DPF)",
-	GitHubURL = "https://github.com/Battle-Modders/Dynamic-Perks-Framework"
+	GitHubURL = "https://github.com/Battle-Modders/Dynamic-Perks-Framework",
+	Class = {
+		PerkGroup = "scripts/mods/mod_dynamic_perks/classes/perk_group",
+		PerkGroupCollection = "scripts/mods/mod_dynamic_perks/classes/perk_group_collection",
+		SpecialPerkGroup = "scripts/mods/mod_dynamic_perks/classes/special_perk_group"
+	}
 };
 
 ::mods_registerMod(::DynamicPerks.ID, ::DynamicPerks.Version, ::DynamicPerks.Name);
@@ -12,6 +17,11 @@
 
 	::DynamicPerks.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHub, ::DynamicPerks.GitHubURL);
 	::DynamicPerks.Mod.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHub);
+
+	foreach (file in this.IO.enumerateFiles("scripts/mods/mod_dynamic_perks/classes"))
+	{
+		::include(file);
+	}
 
 	::include("dynamic_perks/load.nut");
 	::mods_registerJS("mod_dynamic_perks/setup.js");

@@ -172,7 +172,7 @@ foreach (i, row in ::Const.Perks.Perks)
 {
 	if (this.DefaultPerkTree == null)
 	{
-		this.DefaultPerkTree = ::new(::DynamicPerks.Class.PerkTree).init({Template = ::DynamicPerks.DefaultPerkTreeTemplate})
+		this.DefaultPerkTree = ::DynamicPerks.Class.PerkTree({Template = ::DynamicPerks.DefaultPerkTreeTemplate});
 		this.DefaultPerkTree.build();
 	}
 

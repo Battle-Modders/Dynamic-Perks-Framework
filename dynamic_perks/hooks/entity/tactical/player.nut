@@ -1,5 +1,5 @@
 ::mods_hookExactClass("entity/tactical/player", function (o) {
-	o.m.PerkTree <- ::DynamicPerks.getDefaultPerkTree();
+	o.m.PerkTree <- ::DynamicPerks.getDefaultPerkTree()
 	o.m.PerkTier <- ::DynamicPerks.Const.DefaultPerkTier;
 
 	o.getPerkTree <- function()
@@ -84,7 +84,7 @@
 	{
 		onDeserialize(_in);
 		this.m.PerkTier = _in.readU8();
-		this.m.PerkTree = ::new(::DynamicPerks.Class.PerkTree);
+		this.m.PerkTree = ::DynamicPerks.Class.PerkTree();
 		this.m.PerkTree.setActor(this);
 		this.m.PerkTree.onDeserialize(_in);
 	}

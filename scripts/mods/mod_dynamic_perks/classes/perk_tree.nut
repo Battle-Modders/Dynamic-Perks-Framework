@@ -1,39 +1,46 @@
-this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
-	m = {
-		Tree = [],
-		Template = null,
-		DynamicMap = null,
-		Actor = null,
-		Exclude = [],
-		PerkLookupMap = {}
-	},
-	function create()
+::DynamicPerks.Class.PerkTree <- class
+{
+	Tree = null;
+	Template = null;
+	DynamicMap = null;
+	Actor = null;
+	Exclude = null;
+	PerkLookupMap = null;
+
+	DefaultOptions = null;
+
+	constructor( _options = null )
 	{
+		if (_options != null) ::MSU.requireTable(_options);
+		else _options = {};
+		this.__initDefaultOptions();
+
+		foreach (key, value in _options)
+		{
+			if (!(key in this.DefaultOptions)) throw format("invalid parameter \'%s\'", key);
+			this.DefaultOptions[key] = value;
+		}
+
+		this.Tree = [];
+		this.Exclude = [];
+		this.PerkLookupMap = {};
+
+		if (this.DefaultOptions.Template != null)
+		{
+			this.setTemplate(this.DefaultOptions.Template);
+		}
+
+		this.DynamicMap = this.DefaultOptions.DynamicMap != null ? this.DefaultOptions.DynamicMap : {};
+
+		this.DefaultOptions = null;
 	}
 
-	function init( _options )
+	function __initDefaultOptions()
 	{
-		::MSU.requireTable(_options);
-
-		local options = {
+		this.DefaultOptions = {
 			Template = null,
 			DynamicMap = null
 		};
-		foreach (key, value in _options)
-		{
-			if (!(key in options)) throw format("invalid parameter \'%s\'", key);
-			options[key] = value;
-		}
-
-		if (options.Template != null)
-		{
-			this.setTemplate(options.Template);
-			return this;
-		}
-
-		this.m.DynamicMap = options.DynamicMap != null ? options.DynamicMap : {};
-
-		return this;		
 	}
 
 	function getTooltip( _flavored = true )
@@ -85,7 +92,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 	function getPerksTooltip()
 	{
 		local ret = "";
-		foreach (row in this.m.Tree)
+		foreach (row in this.Tree)
 		{
 			foreach (perk in row)
 			{
@@ -111,9 +118,9 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 	{
 		foreach (collection in ::DynamicPerks.PerkGroupCategories.getOrdered())
 		{
-			if (collection.getID() in this.m.DynamicMap)
+			if (collection.getID() in this.DynamicMap)
 			{
-				foreach (perkGroupContainer in this.m.DynamicMap[collection.getID()])
+				foreach (perkGroupContainer in this.DynamicMap[collection.getID()])
 				{
 					local id;
 
@@ -134,7 +141,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 					}
 
 					if (id == "DynamicPerks_RandomPerkGroup")
-						id = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
+						id = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.Exclude);
 
 					if (id == "DynamicPerks_NoPerkGroup")
 						continue;
@@ -146,7 +153,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 						continue;
 					}
 
-					this.m.Exclude.push(id);
+					this.Exclude.push(id);
 					this.addPerkGroup(id);
 				}
 			}
@@ -154,12 +161,12 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 			local min = this.getActor().getBackground().getCollectionMin(collection.getID());
 			if (min == null) min = collection.getMin();
 
-			for (local i = (collection.getID() in this.m.DynamicMap) ? this.m.DynamicMap[collection.getID()].len() : 0; i < min; i++)
+			for (local i = (collection.getID() in this.DynamicMap) ? this.DynamicMap[collection.getID()].len() : 0; i < min; i++)
 			{
-				local perkGroupID = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
+				local perkGroupID = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.Exclude);
 				if (perkGroupID != "DynamicPerks_NoPerkGroup")
 				{
-					this.m.Exclude.push(perkGroupID);
+					this.Exclude.push(perkGroupID);
 					this.addPerkGroup(perkGroupID);
 				}
 			}
@@ -181,18 +188,18 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 	{
 		this.clear();
 
-		this.m.Exclude = [];
+		this.Exclude = [];
 
-		if (this.m.Template != null)
+		if (this.Template != null)
 		{
-			this.buildFromTemplate(this.m.Template);
+			this.buildFromTemplate(this.Template);
 		}
 		else
 		{
 			this.buildFromDynamicMap();
 		}
 
-		this.m.Exclude = null;
+		this.Exclude = null;
 
 		if (!::MSU.isNull(this.getActor())) this.getActor().getBackground().onBuildPerkTree();
 	}
@@ -219,8 +226,8 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function toTemplate()
 	{
-		local ret = array(this.m.Tree.len());
-		foreach (i, row in this.m.Tree)
+		local ret = array(this.Tree.len());
+		foreach (i, row in this.Tree)
 		{
 			ret[i] = array(row.len());
 			foreach (j, perk in row)
@@ -233,8 +240,8 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function toUIData()
 	{
-		local ret = array(this.m.Tree.len());
-		foreach (i, row in this.m.Tree)
+		local ret = array(this.Tree.len());
+		foreach (i, row in this.Tree)
 		{
 			ret[i] = array(row.len());
 			foreach (j, perk in row)
@@ -254,43 +261,43 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function hasPerk( _id )
 	{
-		return _id in this.m.PerkLookupMap;
+		return _id in this.PerkLookupMap;
 	}
 
 	function getPerk( _id )
 	{
-		return this.m.PerkLookupMap[_id];
+		return this.PerkLookupMap[_id];
 	}
 
 	function getPerks()
 	{
-		return this.m.PerkLookupMap;
+		return this.PerkLookupMap;
 	}
 
 	function getPerkTier( _id )
 	{
-		return this.m.PerkLookupMap[_id].Row + 1;
+		return this.PerkLookupMap[_id].Row + 1;
 	}
 
 	function getTree()
 	{
-		return this.m.Tree;
+		return this.Tree;
 	}
 
 	function getActor()
 	{
-		return this.m.Actor;
+		return this.Actor;
 	}
 
 	function setActor( _actor )
 	{
 		if (!::MSU.isKindOf(_actor, "player")) throw ::MSU.Exception.InvalidType(_actor);
-		this.m.Actor = ::MSU.asWeakTableRef(_actor);
+		this.Actor = ::MSU.asWeakTableRef(_actor);
 	}
 
 	function getTemplate()
 	{
-		return this.m.Template;
+		return this.Template;
 	}
 
 	function setTemplate( _template )
@@ -311,7 +318,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 			}
 		}
 
-		this.m.Template = _template;
+		this.Template = _template;
 	}
 
 	function merge( _other, _rebuild = true )
@@ -333,8 +340,8 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function clear()
 	{
-		this.m.Tree.clear();
-		this.m.PerkLookupMap.clear();
+		this.Tree.clear();
+		this.PerkLookupMap.clear();
 	}
 
 	function addPerk( _perkID, _tier = 1 )
@@ -346,25 +353,25 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 			Unlocks = _tier - 1,
 		}.setdelegate(::Const.Perks.findById(_perkID));
 
-		this.m.PerkLookupMap[_perkID] <- perk;
+		this.PerkLookupMap[_perkID] <- perk;
 
-		while (this.m.Tree.len() < _tier)
+		while (this.Tree.len() < _tier)
 		{
-			this.m.Tree.push([]);
+			this.Tree.push([]);
 		}
-		this.m.Tree[_tier - 1].push(perk);
+		this.Tree[_tier - 1].push(perk);
 	}
 
 	function removePerk( _perkID )
 	{
-		foreach (row in this.m.Tree)
+		foreach (row in this.Tree)
 		{
 			foreach (i, perk in row)
 			{
 				if (perk.ID == _perkID) row.remove(i);
 			}
 		}
-		delete this.m.PerkLookupMap[_perkID];
+		delete this.PerkLookupMap[_perkID];
 	}
 
 	function hasPerkGroup( _perkGroupID )
@@ -434,8 +441,8 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function onSerialize( _out )
 	{
-		_out.writeU8(this.m.Tree.len());
-		foreach (row in this.m.Tree)
+		_out.writeU8(this.Tree.len());
+		foreach (row in this.Tree)
 		{
 			_out.writeU8(row.len());
 			foreach (perk in row)
@@ -447,12 +454,12 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function onDeserialize( _in )
 	{
-		this.m.Tree = array(_in.readU8());
-		for (local i = 0; i < this.m.Tree.len(); i++)
+		this.Tree = array(_in.readU8());
+		for (local i = 0; i < this.Tree.len(); i++)
 		{
-			this.m.Tree[i] = [];
+			this.Tree[i] = [];
 		}
-		for (local i = 0; i < this.m.Tree.len(); i++)
+		for (local i = 0; i < this.Tree.len(); i++)
 		{
 			local len = _in.readU8();
 			for (local j = 0; j < len; j++)
@@ -480,7 +487,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function addPerkGroupMultipliers( _multipliers )
 	{
-		foreach (perkGroupID in this.m.Exclude)
+		foreach (perkGroupID in this.Exclude)
 		{
 			foreach (id, mult in ::DynamicPerks.PerkGroups.findById(perkGroupID).getPerkTreeMultipliers())
 			{
@@ -581,4 +588,4 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 		return groupID != null ? groupID : "DynamicPerks_NoPerkGroup";
 	}
-});
+};
