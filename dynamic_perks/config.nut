@@ -185,6 +185,8 @@ foreach (i, row in ::Const.Perks.Perks)
 
 	foreach (group in ::DynamicPerks.PerkGroups.getAll())
 	{
+		if (!group.m.IsIncludedInPerkTooltips) continue;
+
 		foreach (row in group.getTree())
 		{
 			foreach (perkID in row)

@@ -3,6 +3,7 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		ID = "not_initialized",
 		Name = "Not initialized Perk Group",
 		Description = "",
+		IsIncludedInPerkTooltips = true,
 		Icon = "",
 		FlavorText = ["Not initialized perk group"], // TODO: Should it be named FlavorTexts ?
 		PerkTreeMultipliers = {},
