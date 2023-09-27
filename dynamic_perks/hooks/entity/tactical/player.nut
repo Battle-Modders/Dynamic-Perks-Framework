@@ -1,28 +1,28 @@
-::mods_hookExactClass("entity/tactical/player", function (o) {
-	o.m.PerkTree <- ::DynamicPerks.getDefaultPerkTree();
-	o.m.PerkTier <- ::DynamicPerks.Const.DefaultPerkTier;
+::DynamicPerks.HooksMod.hook("scripts/entity/tactical/player", function(q) {
+	q.m.PerkTree <- ::DynamicPerks.getDefaultPerkTree();
+	q.m.PerkTier <- ::DynamicPerks.Const.DefaultPerkTier;
 
-	o.getPerkTree <- function()
+	q.getPerkTree <- function()
 	{
 		return this.m.PerkTree;
 	}
 
-	o.getPerkTier <- function()
+	q.getPerkTier <- function()
 	{
 		return this.m.PerkTier;
 	}
 
-	o.setPerkTier <- function( _perkTier )
+	q.setPerkTier <- function( _perkTier )
 	{
 		this.m.PerkTier = _perkTier;
 	}
 
-	o.resetPerkTier <- function()
+	q.resetPerkTier <- function()
 	{
 		this.setPerkTier(::DynamicPerks.Const.DefaultPerkTier + this.getPerkPointsSpent());
 	}
 
-	o.isPerkUnlockable = function( _id )
+	q.isPerkUnlockable = @(__original) function( _id )
 	{
 		if (this.getPerkTier() < this.getPerkTree().getPerkTier(_id))
 			return false;
@@ -34,15 +34,14 @@
 		return true;
 	}
 
-	local unlockPerk = o.unlockPerk;
-	o.unlockPerk = function( _id )
+	q.unlockPerk = @(__original) function( _id )
 	{
-		local ret = unlockPerk( _id );
+		local ret = __original( _id );
 		if (ret) this.setPerkTier(this.getPerkTier() + 1);
 		return ret;
 	}
 
-	o.resetPerks <- function()
+	q.resetPerks <- function()
 	{
 		// Get all items that are adding skills to this character and unequip them to remove those skills
 		// Necessary, as some items may add perks
@@ -71,18 +70,16 @@
 		}
 	}
 
-	local onSerialize = o.onSerialize;
-	o.onSerialize = function( _out )
+	q.onSerialize = @(__original) function( _out )
 	{
-		onSerialize(_out);
+		__original(_out);
 		_out.writeU8(this.m.PerkTier);
 		this.m.PerkTree.onSerialize(_out);
 	}
 
-	local onDeserialize = o.onDeserialize;
-	o.onDeserialize = function( _in )
+	q.onDeserialize = @(__original) function( _in )
 	{
-		onDeserialize(_in);
+		__original(_in);
 		// TEMPORARY: This is to fix an issue in Reforged with the Weapon Master perk.
 		// The permanent fix is to do PerkTree serialization before original onDeserialize function
 		// But that will break saves, so we do this for now.
@@ -98,12 +95,11 @@
 	}
 });
 
-::MSU.EndQueue.add(function() {
-	::mods_hookExactClass("entity/tactical/player", function(o) {
-		local setStartValuesEx = o.setStartValuesEx;
-		o.setStartValuesEx = function( _backgrounds, _addTraits = true )
+::DynamicPerks.VeryLateBucket.push(function() {
+	::DynamicPerks.HooksMod.hook("scripts/entity/tactical/player", function(q) {
+		q.setStartValuesEx = @(__original) function( _backgrounds, _addTraits = true )
 		{
-			setStartValuesEx(_backgrounds, _addTraits);
+			__original(_backgrounds, _addTraits);
 			this.m.PerkTree = this.getBackground().m.PerkTree;
 			this.m.PerkTree.setActor(this);
 			this.m.PerkTree.build();

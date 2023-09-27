@@ -1,30 +1,26 @@
-::mods_hookBaseClass("skills/skill", function (o) {
-	o = o[o.SuperName];
+::DynamicPerks.HooksMod.hook("scripts/skills/skill", function (q) {
+	q.m.IsRefundable <- true;
+	q.m.PerkTreeMultipliers <- {};
 
-	o.m.IsRefundable <- true;
-	o.m.PerkTreeMultipliers <- {};
-
-	o.isRefundable <- function()
+	q.isRefundable <- function()
 	{
 		return this.m.IsRefundable;
 	}
 
-	o.getPerkTreeMultipliers <- function()
+	q.getPerkTreeMultipliers <- function()
 	{
 		return this.m.PerkTreeMultipliers;
 	}
 
-	local onSerialize = o.onSerialize;
-	o.onSerialize = function( _out )
+	q.onSerialize = @(__original) function( _out )
 	{
-		onSerialize(_out);
+		__original(_out);
 		_out.writeBool(this.m.IsRefundable);
 	}
 
-	local onDeserialize = o.onDeserialize;
-	o.onDeserialize = function( _in )
+	q.onDeserialize = @(__original) function( _in )
 	{
-		onDeserialize(_in);
+		__original(_in);
 		this.m.IsRefundable = _in.readBool();
 	}
 });

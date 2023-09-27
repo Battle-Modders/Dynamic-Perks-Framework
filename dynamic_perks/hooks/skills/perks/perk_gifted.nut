@@ -1,8 +1,7 @@
-::mods_hookExactClass("skills/perks/perk_gifted", function (o) {
-	local create = o.create;
-	o.create = function()
+::DynamicPerks.HooksMod.hook("scripts/skills/perks/perk_gifted", function(q) {
+	q.create = @(__original) function()
 	{
-		create();
+		__original();
 		this.m.IsRefundable = false;
 	}
 });

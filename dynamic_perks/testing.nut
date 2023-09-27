@@ -28,17 +28,16 @@ local dynamicMap = {
 ::DynamicPerks.PerkGroupCategories["RangedWeapon"] <- ::new(::DynamicPerks.Class.PerkGroupCollection).init("RangedWeapon", "RangedWeapon");
 ::DynamicPerks.PerkGroupCategories["MeleeWeapon"] <- ::new(::DynamicPerks.Class.PerkGroupCollection).init("MeleeWeapon", "MeleeWeapon");
 
-::mods_hookNewObject("skills/backgrounds/companion_1h_background", function(o) {
-	o.m.PerkTree = ::new(::DynamicPerks.Class.PerkTree).init(null, {});
-	o.onBuildPerkTree <- function()
+::DynamicPerks.HooksMod.hook("scripts/skills/backgrounds/companion_1h_background", function(q) {
+	q.m.PerkTree = ::new(::DynamicPerks.Class.PerkTree).init(null, {});
+	q.onBuildPerkTree <- function()
 	{
 		this.getPerkTree().addPerk("perk.duelist", 5);
 	}
 
-	local getTooltip = o.getTooltip;
-	o.getTooltip <- function()
+	q.getTooltip <- @(__original) function()
 	{
-		local ret = getTooltip();
+		local ret = __original();
 		ret.push({
 			id = 7,
 			type = "text",

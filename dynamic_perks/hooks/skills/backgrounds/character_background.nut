@@ -1,12 +1,11 @@
-::mods_hookExactClass("skills/backgrounds/character_background", function (o) {
-	o.m.PerkTreeMultipliers <- {};
-	o.m.PerkTree <- ::new(::DynamicPerks.Class.PerkTree).init({Template = ::DynamicPerks.DefaultPerkTreeTemplate});
+::DynamicPerks.HooksMod.hook("scripts/skills/backgrounds/character_background", function(q) {
+	q.m.PerkTree <- ::new(::DynamicPerks.Class.PerkTree).init({Template = ::DynamicPerks.DefaultPerkTreeTemplate});
 
-	o.onBuildPerkTree <- function()
+	q.onBuildPerkTree <- function()
 	{
 	}
 
-	o.getCollectionMin <- function( _collectionID )
+	q.getCollectionMin <- function( _collectionID )
 	{
 	}
 });

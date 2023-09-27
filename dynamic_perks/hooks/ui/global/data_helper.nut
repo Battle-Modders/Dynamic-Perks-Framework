@@ -1,8 +1,7 @@
-::mods_hookNewObject("ui/global/data_helper", function (o) {
-	local convertEntityToUIData = o.convertEntityToUIData;
-	o.convertEntityToUIData = function( _entity, _activeEntity )
+::DynamicPerks.HooksMod.hook("scripts/ui/global/data_helper", function(q) {
+	q.convertEntityToUIData = @(__original) function( _entity, _activeEntity )
 	{
-		local result = convertEntityToUIData(_entity, _activeEntity);
+		local result = __original(_entity, _activeEntity);
 		if (_entity != null)
 		{
 			local perkTree = _entity.getPerkTree();

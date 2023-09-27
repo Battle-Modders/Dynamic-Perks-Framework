@@ -1,9 +1,7 @@
-::mods_hookBaseClass("items/item", function (o) {
-	o = o[o.SuperName];
+::DynamicPerks.HooksMod.hook("scripts/items/item", function(q) {
+	q.m.PerkTreeMultipliers <- {};
 
-	o.m.PerkTreeMultipliers <- {};
-
-	o.getPerkTreeMultipliers <- function()
+	q.getPerkTreeMultipliers <- function()
 	{
 		return this.m.PerkTreeMultipliers;
 	}

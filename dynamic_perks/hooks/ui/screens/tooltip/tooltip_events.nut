@@ -1,6 +1,5 @@
-::mods_hookNewObjectOnce("ui/screens/tooltip/tooltip_events", function (o) {
-	local general_queryUIPerkTooltipData = o.general_queryUIPerkTooltipData;
-	o.general_queryUIPerkTooltipData = function( _entityId, _perkId )
+::DynamicPerks.HooksMod.hook("scripts/ui/screens/tooltip/tooltip_events", function(q) {
+	q.general_queryUIPerkTooltipData = @(__original) function( _entityId, _perkId )
 	{
 		local perk = ::Const.Perks.findById(_perkId);
 		if (perk == null)

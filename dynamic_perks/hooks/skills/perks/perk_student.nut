@@ -1,5 +1,5 @@
-::mods_hookExactClass("skills/perks/perk_student", function (o) {
-	o.onUpdateLevel <- function()
+::DynamicPerks.HooksMod.hook("scripts/skills/perks/perk_student", function(q) {
+	q.onUpdateLevel <- function()
 	{
 		if (this.getContainer().getActor().getLevel() == 11)
 		{
