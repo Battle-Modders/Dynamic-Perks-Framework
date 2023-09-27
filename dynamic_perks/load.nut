@@ -11,3 +11,8 @@ foreach (file in ::IO.enumerateFiles("dynamic_perks/hooks"))
 }
 ::include("dynamic_perks/config.nut");
 ::include("dynamic_perks/dynamic_perks_tooltips.nut");
+
+::mods_registerJS("mod_dynamic_perks/dynamic_perks_js_connection.js");
+::include("dynamic_perks/ui/dynamic_perks_js_connection");
+::DynamicPerks.UI.JSConnection <- ::new("dynamic_perks/ui/dynamic_perks_js_connection");
+::MSU.UI.registerConnection(::DynamicPerks.UI.JSConnection);

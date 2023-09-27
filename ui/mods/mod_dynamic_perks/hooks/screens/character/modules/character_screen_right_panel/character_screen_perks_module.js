@@ -126,3 +126,32 @@ CharacterScreenPerksModule.prototype.isPerkUnlockable = function (_perk)
 
 	return false;
 };
+
+DynamicPerks.Hooks.CharacterScreenPerksModule_attachEventHandler = CharacterScreenPerksModule.prototype.attachEventHandler;
+CharacterScreenPerksModule.prototype.attachEventHandler = function (_perk)
+{
+	DynamicPerks.Hooks.CharacterScreenPerksModule_attachEventHandler.call(this, _perk);
+	var self = this;
+	_perk.Container.on('mouseenter focus' + CharacterScreenIdentifier.KeyEvent.PerksModuleNamespace, null, this, function (_event)
+	{
+		var groupPerkIDs = DynamicPerks.PerkToGroupPerksMap[_perk.ID];
+		for (var row = 0; row < self.mPerkTree.length; row++)
+		{
+			for (var column = 0; column < self.mPerkTree[row].length; column++)
+			{
+				var perk = self.mPerkTree[row][column];
+				var id = perk.ID;
+
+				for (var i = 0; i < groupPerkIDs.length; i++)
+				{
+					if (groupPerkIDs[i] == id)
+					{
+						console.error(id + " is the same as group perk id " + groupPerkIDs[i]);
+						var selectionLayer = $(self.mPerkTree[row][column]).find('.selection-image-layer:first');
+						selectionLayer.removeClass('display-none').addClass('display-block');
+					}
+				}
+			}
+		}
+	});
+}

@@ -3,7 +3,8 @@
 	ID = "mod_dynamic_perks",
 	Name = "Dynamic Perks Framework (DPF)",
 	GitHubURL = "https://github.com/Battle-Modders/Dynamic-Perks-Framework",
-	VeryLateBucket = []
+	VeryLateBucket = [],
+	UI = {}
 };
 
 ::DynamicPerks.HooksMod <- ::Hooks.register(::DynamicPerks.ID, ::DynamicPerks.Version, ::DynamicPerks.Name);

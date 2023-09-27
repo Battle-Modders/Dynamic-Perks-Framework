@@ -195,7 +195,7 @@ foreach (i, row in ::Const.Perks.Perks)
 					{
 						map[perkID] <- [];
 					}
-					map[perkID].push(group.getName());
+					map[perkID].push(group);
 				}
 			}
 
@@ -213,18 +213,20 @@ foreach (i, row in ::Const.Perks.Perks)
 		local perk = ::Const.Perks.findById(perkID);
 		local desc = perk.Tooltip;
 
+		::DynamicPerks.UI.JSConnection.updatePerkToGroupPerksMap(perkID, groups);
+
 		if (groups.len() == 1)
 		{
-			mid += groups[0] + " ";
+			mid += groups[0].getName() + " ";
 		}
 		else
 		{
 			for (local i = 0; i < groups.len() - 2; i++)
 			{
-				 mid += groups[i] + ", ";
+				 mid += groups[i].getName() + ", ";
 			}
-			mid += groups[groups.len()-2] + " or ";
-			mid += groups[groups.len()-1] + " ";
+			mid += groups[groups.len()-2].getName() + " or ";
+			mid += groups[groups.len()-1].getName() + " ";
 			ap = "perk groups[/color]";
 		}
 
