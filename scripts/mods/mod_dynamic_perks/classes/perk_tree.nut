@@ -5,7 +5,8 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		DynamicMap = null,
 		Actor = null,
 		Exclude = [],
-		PerkLookupMap = {}
+		PerkLookupMap = {},
+		MaxWidth = 13
 	},
 	function create()
 	{
@@ -337,7 +338,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		this.m.PerkLookupMap.clear();
 	}
 
-	function addPerk( _perkID, _tier = 1 )
+	function addPerk( _perkID, _tier = 1, _ignoreMaxWidth = false )
 	{
 		if (this.hasPerk(_perkID)) return;
 
@@ -352,7 +353,29 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		{
 			this.m.Tree.push([]);
 		}
-		this.m.Tree[_tier - 1].push(perk);
+
+		local row = _tier - 1;
+		if (!_ignoreMaxWidth)
+		{
+			local distance = 1;
+			while (this.m.Tree[row].len() >= this.m.MaxWidth)
+			{
+				row = _tier - 1;
+				if (row + distance < this.m.Tree.len() && this.m.Tree[row + distance].len() < this.m.MaxWidth)
+				{
+					row += distance;
+					break;
+				}
+				if (row - distance >= 0 && this.m.Tree[row - distance].len() < this.m.MaxWidth)
+				{
+					row -= distance;
+					break;
+				}
+				distance++;
+			}
+		}
+
+		this.m.Tree[row].push(perk);
 	}
 
 	function removePerk( _perkID )
