@@ -1,5 +1,5 @@
 ::DynamicPerks <- {
-	Version = "0.2.0",
+	Version = "0.2.1",
 	ID = "mod_dynamic_perks",
 	Name = "Dynamic Perks Framework (DPF)",
 	GitHubURL = "https://github.com/Battle-Modders/Dynamic-Perks-Framework",
