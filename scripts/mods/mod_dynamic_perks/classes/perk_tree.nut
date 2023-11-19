@@ -355,12 +355,11 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		}
 
 		local row = _tier - 1;
-		if (!_ignoreMaxWidth)
+		if (!_ignoreMaxWidth && this.m.Tree[row].len() >= this.m.MaxWidth)
 		{
 			local distance = 1;
-			while (this.m.Tree[row].len() >= this.m.MaxWidth)
+			while (row + distance < this.m.Tree.len() || row - distance >= 0)
 			{
-				row = _tier - 1;
 				if (row + distance < this.m.Tree.len() && this.m.Tree[row + distance].len() < this.m.MaxWidth)
 				{
 					row += distance;
