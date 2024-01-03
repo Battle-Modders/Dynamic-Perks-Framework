@@ -273,6 +273,20 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		}
 	}
 
+	function replacePerk( _oldPerk, _newPerk )
+	{
+		if (this.hasPerk(_oldPerk))
+		{
+			local tier = this.removePerk(_oldPerk);
+			this.addPerk(_newPerk, tier);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	function getRandomPerk( _tier = null, _exclude = null )
 	{
 		local perks = [];
