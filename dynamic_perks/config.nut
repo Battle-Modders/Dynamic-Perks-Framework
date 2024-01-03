@@ -210,9 +210,6 @@ foreach (i, row in ::Const.Perks.Perks)
 		local mid = "";
 		local ap = "perk group[/color]";
 
-		local perk = ::Const.Perks.findById(perkID);
-		local desc = perk.Tooltip;
-
 		if (groups.len() == 1)
 		{
 			mid += groups[0] + " ";
@@ -228,37 +225,16 @@ foreach (i, row in ::Const.Perks.Perks)
 			ap = "perk groups[/color]";
 		}
 
-		if (desc.find(pre) == null)
+		local perk = ::Const.Perks.findById(perkID);
+		local index = perk.Tooltip.find(pre);
+		if (index == null)
 		{
 			perk.Tooltip += "\n\n" + pre + mid + ap;
 		}
 		else
 		{
-			local strArray = split(desc, "[");
-
-			strArray.pop();
-			strArray.apply(@(a) a += "[" );
-
-			strArray[strArray.len()-1] = "color=#0b0084]From the " + mid + ap;
-
-			if (strArray[0].find("color=") != null)
-			{
-				strArray[0] = "[" + strArray[0];
-			}
-
-			local ret = "";
-			foreach (s in strArray)
-			{
-				ret += s;
-			}
-
-			if (ret.find("\n\n" + pre) == null)
-			{
-				local prefix = ret.find("\n" + pre) == null ? "\n\n" : "\n";
-				ret = ::MSU.String.replace(ret, pre, prefix + pre);
-			}
-
-			perk.Tooltip += text;
+			perk.Tooltip = perk.Tooltip.slice(0, index);
+			perk.Tooltip += pre + mid + ap;
 		}
 	}
 }
