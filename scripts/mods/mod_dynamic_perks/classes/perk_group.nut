@@ -228,60 +228,62 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		}
 	}
 
-	function hasPerk( _id )
+	function hasPerk( _perkId, _treeId = "default" )
 	{
-		return this.findPerk(_id) != null;
+		return this.findPerk(_perkId, _treeId) != null;
 	}
 
-	function findPerk( _id )
+	function findPerk( _perkId, _treeId = "default" )
 	{
-		foreach (row in this.m.Tree)
+		foreach (row in this.getTree(_treeId))
 		{
 			foreach (perk in row)
 			{
-				if (perk == _id) return row;
+				if (perk == _perkId) return row;
 			}
 		}
 	}
 
-	function addPerk( _id, _tier )
+	function addPerk( _perkId, _tier, _treeId = "default" )
 	{
-		if (::Const.Perks.findById(_id) == null) throw ::MSU.Exception.InvalidValue(_id);
+		if (::Const.Perks.findById(_perkId) == null) throw ::MSU.Exception.InvalidValue(_perkId);
 
-		local row = this.findPerk(_id);
+		local row = this.findPerk(_perkId, _treeId);
 		if (row != null)
 		{
-			::logWarning("Perk " + _id + " already exists in perk group " + this.getID() + " at tier " + (row + 1));
+			::logWarning("Perk " + _perkId + " already exists in perk group " + this.getID() + " at tier " + (row + 1));
 			return;
 		}
 
-		this.m.Tree[_tier-1].push(_id);
+		this.getTree(_treeId)[_tier-1].push(_perkId);
 	}
 
-	function removePerk( _id )
+	function removePerk( _perkId, _treeId = "default" )
 	{
-		foreach (row in this.m.Tree)
+		foreach (row in this.getTree(_treeId))
 		{
 			foreach (i, perk in row)
 			{
-				if (perk == _id) return row.remove(i);
+				if (perk == _perkId) return row.remove(i);
 			}
 		}
 	}
 
-	function getRandomPerk( _tier = null, _exclude = null )
+	function getRandomPerk( _tier = null, _exclude = null, _treeId = "default" )
 	{
 		local perks = [];
+
+		local tree = this.getTree(_treeId);
 		if (_tier != null)
 		{
-			foreach (perk in this.m.Tree[tier-1])
+			foreach (perk in tree[tier-1])
 			{
 				if (_exclude == null || _exclude.find(perk) == null) perks.push(perk);
 			}
 		}
 		else
 		{
-			foreach (row in this.m.Tree)
+			foreach (row in tree)
 			{
 				foreach (perk in row)
 				{
