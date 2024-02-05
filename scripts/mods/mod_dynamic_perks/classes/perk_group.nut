@@ -235,7 +235,7 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 
 	function findPerk( _id )
 	{
-		foreach (row in this.m.Tree)
+		foreach (row in this.getTree())
 		{
 			foreach (perk in row)
 			{
@@ -255,12 +255,12 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 			return;
 		}
 
-		this.m.Tree[_tier-1].push(_id);
+		this.getTree()[_tier-1].push(_id);
 	}
 
 	function removePerk( _id )
 	{
-		foreach (row in this.m.Tree)
+		foreach (row in this.getTree())
 		{
 			foreach (i, perk in row)
 			{
@@ -274,14 +274,14 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		local perks = [];
 		if (_tier != null)
 		{
-			foreach (perk in this.m.Tree[tier-1])
+			foreach (perk in this.getTree()[tier-1])
 			{
 				if (_exclude == null || _exclude.find(perk) == null) perks.push(perk);
 			}
 		}
 		else
 		{
-			foreach (row in this.m.Tree)
+			foreach (row in this.getTree())
 			{
 				foreach (perk in row)
 				{
