@@ -340,12 +340,19 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function addPerk( _perkID, _tier = 1, _ignoreMaxWidth = false )
 	{
+		local perkDef = ::Const.Perks.findById(_perkID);
+		if (perkDef == null)
+		{
+			::DynamicPerks.Mod.Debug.printError("No perk with ID: " + _perkID);
+			return;
+		}
+
 		if (this.hasPerk(_perkID)) return;
 
 		local perk = {
 			Row = _tier - 1,
 			Unlocks = _tier - 1,
-		}.setdelegate(::Const.Perks.findById(_perkID));
+		}.setdelegate(perkDef);
 
 		this.m.PerkLookupMap[_perkID] <- perk;
 
