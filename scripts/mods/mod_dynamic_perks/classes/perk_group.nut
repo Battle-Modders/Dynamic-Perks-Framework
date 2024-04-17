@@ -196,7 +196,7 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		this.__validateMultiplier(_id, _mult);
 		if (_id in this.m.PerkTreeMultipliers)
 		{
-			::logWarning("The perk group " + this.getID() + " already contains a multiplier of " + this.m.PerkTreeMultipliers[_id] + " for " + _id + ". Overwriting it with " + _mult);
+			::DynamicPerks.Mod.Debug.printWarning("The perk group " + this.getID() + " already contains a multiplier of " + this.m.PerkTreeMultipliers[_id] + " for " + _id + ". Overwriting it with " + _mult);
 		}
 
 		this.m.PerkTreeMultipliers[_id] <- _mult;
@@ -206,7 +206,7 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 	{
 		if (::Const.Perks.findById(_id) == null || ::DynamicPerks.PerkGroups.findById(_id) == null)
 		{
-			::logError("_id must be a valid perk ID or perk group ID.");
+			::DynamicPerks.Mod.Debug.printError("_id must be a valid perk ID or perk group ID.");
 			throw ::MSU.Exception.InvalidValue(_id);
 		}
 
@@ -223,7 +223,7 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 
 		if (::Const.Perks.findById(_id) == null || ::DynamicPerks.PerkGroups.findById(_id) == null)
 		{
-			::logError("The key in a multiplier must be a valid perk ID or perk group ID.");
+			::DynamicPerks.Mod.Debug.printError("The key in a multiplier must be a valid perk ID or perk group ID.");
 			throw ::MSU.Exception.InvalidValue(_id);
 		}
 	}
@@ -251,7 +251,7 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		local row = this.findPerk(_id);
 		if (row != null)
 		{
-			::logWarning("Perk " + _id + " already exists in perk group " + this.getID() + " at tier " + (row + 1));
+			::DynamicPerks.Mod.Debug.printWarning("Perk " + _id + " already exists in perk group " + this.getID() + " at tier " + (row + 1));
 			return;
 		}
 

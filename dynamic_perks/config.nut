@@ -58,7 +58,7 @@
 	{
 		if (this.findById(_id) == null)
 		{
-			::logError("::DynamicPerks.PerkGroupCategories.remove -- no collection with ID \'" + _id + "\'");
+			::DynamicPerks.Mod.Debug.printError("no collection with ID \'" + _id + "\'");
 			return null;
 		}
 

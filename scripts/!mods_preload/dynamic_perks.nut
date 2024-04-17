@@ -16,6 +16,8 @@
 	::DynamicPerks.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHub, ::DynamicPerks.GitHubURL);
 	::DynamicPerks.Mod.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHub);
 
+	::DynamicPerks.Mod.Debug.enable();
+
 	::include("dynamic_perks/load.nut");
 	::Hooks.registerJS("ui/mods/mod_dynamic_perks/setup.js");
 	::Hooks.registerJS("ui/mods/mod_dynamic_perks/generic_perks_module.js");

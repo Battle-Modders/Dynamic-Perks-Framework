@@ -56,7 +56,7 @@ this.perk_group_collection <- ::inherit(::MSU.BBClass.Empty, {
 		{
 			if (::DynamicPerks.PerkGroups.findById(groupID) == null)
 			{
-				::logError(groupID + " is not a valid perk_group ID");
+				::DynamicPerks.Mod.Debug.printError(groupID + " is not a valid perk_group ID");
 				throw ::MSU.Exception.InvalidType(groupID);
 			}
 		}

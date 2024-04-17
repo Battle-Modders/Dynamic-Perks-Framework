@@ -130,7 +130,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 							break;
 
 						default:
-							::logError("perkGroupContainer must either be a valid perk group id or an instance of the MSU WeightedContainer class");
+							::DynamicPerks.Mod.Debug.printError("perkGroupContainer must either be a valid perk group id or an instance of the MSU WeightedContainer class");
 							throw ::MSU.Exception.InvalidType("perkGroupContainer");
 					}
 
@@ -143,7 +143,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 					local perkGroup = ::DynamicPerks.PerkGroups.findById(id);
 					if (perkGroup == null)
 					{
-						::logError("No perk group with id \'" + id + "\'");
+						::DynamicPerks.Mod.Debug.printError("No perk group with id \'" + id + "\'");
 						continue;
 					}
 
@@ -305,7 +305,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 				{
 					if (::Const.Perks.findById(perkID) == null)
 					{
-						::logError(perkID + " is not a valid perk ID.");
+						::DynamicPerks.Mod.Debug.printError(perkID + " is not a valid perk ID.");
 						throw ::MSU.Exception.InvalidValue(perkID);
 					}
 				}
