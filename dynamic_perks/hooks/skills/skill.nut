@@ -4,7 +4,7 @@
 
 	q.isRefundable <- function()
 	{
-		return this.m.IsRefundable;
+		return this.m.IsRefundable && this.m.IsSerialized;
 	}
 
 	q.getPerkTreeMultipliers <- function()
