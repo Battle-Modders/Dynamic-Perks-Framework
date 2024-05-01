@@ -135,7 +135,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 					}
 
 					if (id == "DynamicPerks_RandomPerkGroup")
-						id = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
+						id = this.__getWeightedRandomGroupFromCollection(collection, this.m.Exclude);
 
 					if (id == "DynamicPerks_NoPerkGroup")
 						continue;
@@ -157,7 +157,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 			for (local i = (collection.getID() in this.m.DynamicMap) ? this.m.DynamicMap[collection.getID()].len() : 0; i < min; i++)
 			{
-				local perkGroupID = this.__getWeightedRandomGroupFromCollection(collection.getID(), this.m.Exclude);
+				local perkGroupID = this.__getWeightedRandomGroupFromCollection(collection, this.m.Exclude);
 				if (perkGroupID != "DynamicPerks_NoPerkGroup")
 				{
 					this.m.Exclude.push(perkGroupID);
@@ -589,12 +589,11 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		}
 	}
 
-	function __getWeightedRandomGroupFromCollection( _collectionID, _exclude = null )
+	function __getWeightedRandomGroupFromCollection( _collection, _exclude = null )
 	{
 		local potentialGroups = ::MSU.Class.WeightedContainer();
-		local collection = ::DynamicPerks.PerkGroupCategories.findById(_collectionID)
 
-		foreach (groupID in collection.getGroups())
+		foreach (groupID in _collection.getGroups())
 		{
 			if (_exclude != null && _exclude.find(groupID) != null) continue;
 			local group = ::DynamicPerks.PerkGroups.findById(groupID);
