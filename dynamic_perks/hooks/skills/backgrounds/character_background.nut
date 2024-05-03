@@ -5,7 +5,7 @@
 	{
 	}
 
-	q.getCollectionMin <- function( _collectionID )
+	q.getPerkGroupCollectionMin <- function( _collection )
 	{
 	}
 });

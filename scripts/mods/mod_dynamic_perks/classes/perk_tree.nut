@@ -152,7 +152,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 				}
 			}
 
-			local min = this.getActor().getBackground().getCollectionMin(collection.getID());
+			local min = this.getActor().getBackground().getPerkGroupCollectionMin(collection);
 			if (min == null) min = collection.getMin();
 
 			for (local i = (collection.getID() in this.m.DynamicMap) ? this.m.DynamicMap[collection.getID()].len() : 0; i < min; i++)
