@@ -72,26 +72,18 @@
 
 	q.onSerialize = @(__original) function( _out )
 	{
-		__original(_out);
 		_out.writeU8(this.m.PerkTier);
 		this.m.PerkTree.onSerialize(_out);
+		__original(_out);
 	}
 
 	q.onDeserialize = @(__original) function( _in )
 	{
-		__original(_in);
-		// TEMPORARY: This is to fix an issue in Reforged with the Weapon Master perk.
-		// The permanent fix is to do PerkTree serialization before original onDeserialize function
-		// But that will break saves, so we do this for now.
-		local weapon = this.getMainhandItem();
-		if (weapon != null) this.getItems().unequip(weapon);
-
 		this.m.PerkTier = _in.readU8();
 		this.m.PerkTree = ::new(::DynamicPerks.Class.PerkTree);
 		this.m.PerkTree.setActor(this);
 		this.m.PerkTree.onDeserialize(_in);
-
-		if (weapon != null) this.getItems().equip(weapon);
+		__original(_in);
 	}
 });
 
