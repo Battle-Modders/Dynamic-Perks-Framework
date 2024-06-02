@@ -75,10 +75,10 @@ CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
 	});
 }
 
-DynamicPerks.Hooks.attachEventHandler = CharacterScreenPerksModule.prototype.removePerksEventHandler;
+DynamicPerks.Hooks.removePerksEventHandler = CharacterScreenPerksModule.prototype.removePerksEventHandler;
 CharacterScreenPerksModule.prototype.removePerksEventHandler = function (_perkTree)
 {
-	DynamicPerks.Hooks.attachEventHandler.call(this, _perkTree);
+	DynamicPerks.Hooks.removePerksEventHandler.call(this, _perkTree);
 	for (var row = 0; row < _perkTree.length; ++row)
 	{
 		for (var i = 0; i < _perkTree[row].length; ++i)
