@@ -28,10 +28,8 @@
 	::Hooks.registerJS("ui/mods/mod_dynamic_perks/generic_perkgroups_module.js");
 	::Hooks.registerCSS("ui/mods/mod_dynamic_perks/generic_perkgroups_module.css");
 
-	foreach(file in this.IO.enumerateFiles("ui/mods/mod_dynamic_perks/hooks"))
-	{
-		::Hooks.registerJS(file + ".js");
-	}
+	::Hooks.registerJS("ui/mods/mod_dynamic_perks/hooks/screens/character/modules/character_screen_right_panel/character_screen_perks_module.js");
+	::Hooks.registerCSS("ui/mods/mod_dynamic_perks/hooks/screens/character/modules/character_screen_right_panel/character_screen_perks_module.css");
 });
 
 ::DynamicPerks.HooksMod.queue(">mod_msu", function() {

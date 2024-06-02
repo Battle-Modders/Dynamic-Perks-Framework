@@ -11,3 +11,5 @@ foreach (file in ::IO.enumerateFiles("dynamic_perks/hooks"))
 }
 ::include("dynamic_perks/config.nut");
 ::include("dynamic_perks/dynamic_perks_tooltips.nut");
+::include("dynamic_perks/mod_settings.nut");
+::include("dynamic_perks/keybinds.nut");

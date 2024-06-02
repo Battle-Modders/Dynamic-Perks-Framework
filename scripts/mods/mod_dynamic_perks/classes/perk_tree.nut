@@ -234,6 +234,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 	function toUIData()
 	{
+		local self = this;
 		local ret = array(this.m.Tree.len());
 		foreach (i, row in this.m.Tree)
 		{
@@ -246,7 +247,8 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 					Icon = perk.Icon,
 					Row = perk.Row,
 					Tooltip = perk.Tooltip,
-					Name = perk.Name
+					Name = perk.Name,
+					PerkGroupIDs = perk.PerkGroupIDs.filter(@(_, _id) self.hasPerkGroup(_id))
 				}
 			}
 		}
