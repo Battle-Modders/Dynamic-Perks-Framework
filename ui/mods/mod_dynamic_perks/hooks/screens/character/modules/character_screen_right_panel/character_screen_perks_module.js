@@ -21,6 +21,9 @@ CharacterScreenPerksModule.prototype.initPerkTree = function (_perkTree, _perksU
 		for (var i = 0; i < _perkTree[row].length; ++i)
 		{
 			var perk = _perkTree[row][i];
+			var perkGroupOverlay = $('<div class="dynamicperks-image-overlay"/>');
+			perk.Container.append(perkGroupOverlay);
+			perk.Container.attr("dynamicperksperkgroupid", perk.PerkGroupID);
 			var imageLayer = perk.Container.find('.perk-image-layer:first')
 			if (row >= perkTier)
 			{
@@ -51,6 +54,37 @@ CharacterScreenPerksModule.prototype.initPerkTree = function (_perkTree, _perksU
 					break;
 				}
 			}
+		}
+	}
+};
+
+DynamicPerks.Hooks.attachEventHandler = CharacterScreenPerksModule.prototype.attachEventHandler;
+CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
+{
+	DynamicPerks.Hooks.attachEventHandler.call(this, _perk);
+	var self = this;
+
+	_perk.Container.on('mouseenter.dynamicperks focus.dynamicperks' + CharacterScreenIdentifier.KeyEvent.PerksModuleNamespace, null, this, function (_event)
+	{
+		self.mContainer.find("[dynamicperksperkgroupid='" + _perk.PerkGroupID + "'] .dynamicperks-image-overlay").css("border", "2px solid rgba(" + MSU.getSettingValue("mod_dynamic_perks", "pergroup_highlight_color") + ")");
+	});
+
+	_perk.Container.on('mouseleave.dynamicperks blur.dynamicperks' + CharacterScreenIdentifier.KeyEvent.PerksModuleNamespace, null, this, function (_event)
+	{
+		self.mContainer.find("[dynamicperksperkgroupid='" + _perk.PerkGroupID + "'] .dynamicperks-image-overlay").css("border", "none");
+	});
+}
+
+DynamicPerks.Hooks.attachEventHandler = CharacterScreenPerksModule.prototype.removePerksEventHandler;
+CharacterScreenPerksModule.prototype.removePerksEventHandler = function (_perkTree)
+{
+	DynamicPerks.Hooks.attachEventHandler.call(this, _perkTree);
+	for (var row = 0; row < _perkTree.length; ++row)
+	{
+		for (var i = 0; i < _perkTree[row].length; ++i)
+		{
+			var perk = _perkTree[row][i];
+			perk.Container.off("dynamicperks");
 		}
 	}
 };

@@ -232,6 +232,17 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		return ret;
 	}
 
+	function getPerkGroupID(_perkID)
+	{
+		foreach (perkGroupID, perkGroup in ::DynamicPerks.PerkGroups.getAll())
+		{
+			if (this.hasPerkGroup(perkGroupID) && perkGroup.hasPerk(_perkID)) {
+				return perkGroupID;
+			}
+		}
+		return "";
+	}
+
 	function toUIData()
 	{
 		local ret = array(this.m.Tree.len());
@@ -246,7 +257,8 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 					Icon = perk.Icon,
 					Row = perk.Row,
 					Tooltip = perk.Tooltip,
-					Name = perk.Name
+					Name = perk.Name,
+					PerkGroupID = this.getPerkGroupID(perk.ID)
 				}
 			}
 		}
