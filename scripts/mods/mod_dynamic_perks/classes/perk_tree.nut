@@ -240,7 +240,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 				return perkGroupID;
 			}
 		}
-		return "";
+		return null;
 	}
 
 	function toUIData()
