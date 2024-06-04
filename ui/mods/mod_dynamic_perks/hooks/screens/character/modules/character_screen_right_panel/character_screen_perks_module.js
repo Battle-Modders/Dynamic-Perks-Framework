@@ -1,15 +1,32 @@
-DynamicPerks.Hooks.loadPerkTreesWithBrotherData = CharacterScreenPerksModule.prototype.loadPerkTreesWithBrotherData;
+DynamicPerks.Hooks.CharacterScreenPerksModule_createDIV = CharacterScreenPerksModule.prototype.createDIV;
+CharacterScreenPerksModule.prototype.createDIV = function (_parentDiv)
+{
+	DynamicPerks.Hooks.CharacterScreenPerksModule_createDIV.call(this, _parentDiv);
+	this.mPerkGroups = {};
+	this.mPerkGroupColors = ["rgba(255,234,125,0.5)", "blue", "red", "green", "purple", "orange", "teal", "cyan"];
+}
+
+DynamicPerks.Hooks.CharacterScreenPerksModule_destroyDIV = CharacterScreenPerksModule.prototype.destroyDIV;
+CharacterScreenPerksModule.prototype.destroyDIV = function ()
+{
+	DynamicPerks.Hooks.CharacterScreenPerksModule_destroyDIV.call(this);
+	this.mPerkGroups = {};
+}
+
+DynamicPerks.Hooks.CharacterScreenPerksModule_loadPerkTreesWithBrotherData = CharacterScreenPerksModule.prototype.loadPerkTreesWithBrotherData;
 CharacterScreenPerksModule.prototype.loadPerkTreesWithBrotherData = function (_brother)
 {
 	this.resetPerkTree(this.mPerkTree);
 	this.onPerkTreeLoaded(null, _brother.perkTree);
-	DynamicPerks.Hooks.loadPerkTreesWithBrotherData.call(this, _brother);
+	DynamicPerks.Hooks.CharacterScreenPerksModule_loadPerkTreesWithBrotherData.call(this, _brother);
 };
 
 CharacterScreenPerksModule.prototype.initPerkTree = function (_perkTree, _perksUnlocked)
 {
+	var self = this;
 	var perkTier = this.mDataSource.getBrotherPerkTier(this.mDataSource.getSelectedBrother());
 	var lockedPerks = this.mDataSource.getLockedPerks(this.mDataSource.getSelectedBrother());
+	this.mPerkGroups = {};
 
 	for (var row = 0; row < this.mPerkRows.length; ++row)
 	{
@@ -23,7 +40,15 @@ CharacterScreenPerksModule.prototype.initPerkTree = function (_perkTree, _perksU
 			var perk = _perkTree[row][i];
 			var perkGroupOverlay = $('<div class="dynamicperks-image-overlay"/>');
 			perk.Container.append(perkGroupOverlay);
-			perk.Container.attr("dynamicperksperkgroupid", perk.PerkGroupID || "");
+			perk.PerkGroupOverlay = perkGroupOverlay;
+			$.each(perk.PerkGroupIDs, function(_idx, _id){
+				if (_id in self.mPerkGroups) {
+					self.mPerkGroups[_id].push(perk);
+				}
+				else {
+					self.mPerkGroups[_id] = [perk];
+				}
+			})
 			var imageLayer = perk.Container.find('.perk-image-layer:first')
 			if (row >= perkTier)
 			{
@@ -58,33 +83,40 @@ CharacterScreenPerksModule.prototype.initPerkTree = function (_perkTree, _perksU
 	}
 };
 
-DynamicPerks.Hooks.attachEventHandler = CharacterScreenPerksModule.prototype.attachEventHandler;
+DynamicPerks.Hooks.CharacterScreenPerksModule_attachEventHandler = CharacterScreenPerksModule.prototype.attachEventHandler;
 CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
 {
-	DynamicPerks.Hooks.attachEventHandler.call(this, _perk);
+	DynamicPerks.Hooks.CharacterScreenPerksModule_attachEventHandler.call(this, _perk);
 	var self = this;
 
 	_perk.Container.on('mouseenter.dynamicperks focus.dynamicperks' + CharacterScreenIdentifier.KeyEvent.PerksModuleNamespace, null, this, function (_event)
 	{
-		if (_perk.PerkGroupID !== null)
-		{
-			self.mContainer.find("[dynamicperksperkgroupid='" + _perk.PerkGroupID + "'] .dynamicperks-image-overlay").css("border", "2px solid rgba(" + MSU.getSettingValue("mod_dynamic_perks", "pergroup_highlight_color") + ")");
-		}
+		if (!MSU.getSettingValue("mod_dynamic_perks", "pergroup_highlight")) return;
+
+		$.each(_perk.PerkGroupIDs, function(_idx, _id){
+			$.each(self.mPerkGroups[_id], function(_, _innerPerk){
+				if (_perk ==_innerPerk) return;
+				_innerPerk.PerkGroupOverlay.css("border", "2px solid " + self.mPerkGroupColors[_idx]);
+			})
+		})
 	});
 
 	_perk.Container.on('mouseleave.dynamicperks blur.dynamicperks' + CharacterScreenIdentifier.KeyEvent.PerksModuleNamespace, null, this, function (_event)
 	{
-		if (_perk.PerkGroupID !== null)
-		{
-			self.mContainer.find("[dynamicperksperkgroupid='" + _perk.PerkGroupID + "'] .dynamicperks-image-overlay").css("border", "none");
-		}
+		if (!MSU.getSettingValue("mod_dynamic_perks", "pergroup_highlight")) return;
+
+		$.each(_perk.PerkGroupIDs, function(_idx, _id){
+			$.each(self.mPerkGroups[_id], function(_, _perk){
+				_perk.PerkGroupOverlay.css("border", "none");
+			})
+		})
 	});
 }
 
-DynamicPerks.Hooks.removePerksEventHandler = CharacterScreenPerksModule.prototype.removePerksEventHandler;
+DynamicPerks.Hooks.CharacterScreenPerksModule_removePerksEventHandler = CharacterScreenPerksModule.prototype.removePerksEventHandler;
 CharacterScreenPerksModule.prototype.removePerksEventHandler = function (_perkTree)
 {
-	DynamicPerks.Hooks.removePerksEventHandler.call(this, _perkTree);
+	DynamicPerks.Hooks.CharacterScreenPerksModule_removePerksEventHandler.call(this, _perkTree);
 	for (var row = 0; row < _perkTree.length; ++row)
 	{
 		for (var i = 0; i < _perkTree[row].length; ++i)
