@@ -91,7 +91,7 @@ CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
 
 	_perk.Container.on('mouseenter.dynamicperks focus.dynamicperks' + CharacterScreenIdentifier.KeyEvent.PerksModuleNamespace, null, this, function (_event)
 	{
-		if (!MSU.getSettingValue("mod_dynamic_perks", "pergroup_highlight")) return;
+		if (!MSU.getSettingValue("mod_dynamic_perks", "PerkTree_HighlightPerkGroups")) return;
 
 		$.each(_perk.PerkGroupIDs, function(_idx, _id){
 			$.each(self.mPerkGroups[_id], function(_, _innerPerk){
@@ -103,7 +103,7 @@ CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
 
 	_perk.Container.on('mouseleave.dynamicperks blur.dynamicperks' + CharacterScreenIdentifier.KeyEvent.PerksModuleNamespace, null, this, function (_event)
 	{
-		if (!MSU.getSettingValue("mod_dynamic_perks", "pergroup_highlight")) return;
+		if (!MSU.getSettingValue("mod_dynamic_perks", "PerkTree_HighlightPerkGroups")) return;
 
 		$.each(_perk.PerkGroupIDs, function(_idx, _id){
 			$.each(self.mPerkGroups[_id], function(_, _perk){

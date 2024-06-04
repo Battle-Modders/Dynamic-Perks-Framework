@@ -237,8 +237,9 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		local ret = [];
 		foreach (perkGroupID, perkGroup in ::DynamicPerks.PerkGroups.getAll())
 		{
-			if (this.hasPerkGroup(perkGroupID) && perkGroup.hasPerk(_perkID)) {
-				ret.append(perkGroupID);
+			if (this.hasPerkGroup(perkGroupID) && perkGroup.hasPerk(_perkID))
+			{
+				ret.push(perkGroupID);
 			}
 		}
 		return ret;

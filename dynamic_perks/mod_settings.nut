@@ -1,2 +1,2 @@
 local generalPage = ::DynamicPerks.Mod.ModSettings.addPage("General");
-generalPage.addBooleanSetting("pergroup_highlight", true, "Perk group highlighting", "Enable perk group highlighting in the perks screen.");
+generalPage.addBooleanSetting("PerkTree_HighlightPerkGroups", true, "Perk Group Highlighting", "Highlight perks belonging to the same perk group when hovering over a perk in a character\'s perk tree.");
