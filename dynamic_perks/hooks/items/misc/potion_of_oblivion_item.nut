@@ -1,5 +1,5 @@
 ::DynamicPerks.HooksMod.hook("scripts/items/misc/potion_of_oblivion_item", function(q) {
-	q.onUse = @(__original) function( _actor, _item = null )
+	q.onUse = @() function( _actor, _item = null )
 	{
 		::Sound.play("sounds/combat/drink_03.wav", ::Const.Sound.Volume.Inventory);
 
