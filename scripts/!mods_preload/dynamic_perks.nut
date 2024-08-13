@@ -3,7 +3,10 @@
 	ID = "mod_dynamic_perks",
 	Name = "Dynamic Perks Framework (DPF)",
 	GitHubURL = "https://github.com/Battle-Modders/Dynamic-Perks-Framework",
-	VeryLateBucket = []
+	QueueBucket = {
+		VeryLate = [],
+		AfterHooks = []
+	}
 };
 
 ::DynamicPerks.HooksMod <- ::Hooks.register(::DynamicPerks.ID, ::DynamicPerks.Version, ::DynamicPerks.Name);
@@ -32,14 +35,18 @@
 });
 
 ::DynamicPerks.HooksMod.queue(">mod_msu", function() {
-	foreach (func in ::DynamicPerks.VeryLateBucket)
+	foreach (func in ::DynamicPerks.QueueBucket.VeryLate)
 	{
 		func();
 	}
-	::DynamicPerks.VeryLateBucket = null;
 }, ::Hooks.QueueBucket.VeryLate)
 
 ::DynamicPerks.HooksMod.queue(">mod_msu", function() {
+	foreach (func in ::DynamicPerks.QueueBucket.AfterHooks)
+	{
+		func();
+	}
+
 	foreach (perk in ::Const.Perks.LookupMap)
 	{
 		perk.PerkGroupIDs <- [];
@@ -61,4 +68,6 @@
 		}
 	}
 	::DynamicPerks.Mod.Tooltips.setTooltipImageKeywords(tooltipImageKeywords);
+
+	delete ::DynamicPerks.QueueBucket;
 }, ::Hooks.QueueBucket.AfterHooks);

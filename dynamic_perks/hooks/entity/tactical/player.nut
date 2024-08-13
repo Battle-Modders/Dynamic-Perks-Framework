@@ -87,7 +87,7 @@
 	}
 });
 
-::DynamicPerks.VeryLateBucket.push(function() {
+::DynamicPerks.QueueBucket.VeryLate.push(function() {
 	::DynamicPerks.HooksMod.hook("scripts/entity/tactical/player", function(q) {
 		q.setStartValuesEx = @(__original) function( _backgrounds, _addTraits = true )
 		{
