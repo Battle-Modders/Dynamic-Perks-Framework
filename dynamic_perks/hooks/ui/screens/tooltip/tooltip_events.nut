@@ -18,6 +18,20 @@
 			}
 		];
 
+		if (::MSU.isIn("PerkGroupIDs", perk, true))
+		{
+			foreach (perkGroupID in perk.PerkGroupIDs)
+			{
+				local pg = ::DynamicPerks.PerkGroups.findById(perkGroupID);
+				ret.push({
+					id = 3,
+					type = "hint",
+					icon = pg.getIcon(),
+					text = ::DynamicPerks.Mod.Tooltips.parseString(format("[%s|PerkGroup+%s] perk group", pg.getName(), perkGroupID))
+				});
+			}
+		}
+
 		local player = ::Tactical.getEntityByID(_entityId);
 		if (player == null)
 			return ret;
