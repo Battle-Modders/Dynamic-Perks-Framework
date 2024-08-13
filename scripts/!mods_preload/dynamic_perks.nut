@@ -10,7 +10,10 @@
 };
 
 ::DynamicPerks.HooksMod <- ::Hooks.register(::DynamicPerks.ID, ::DynamicPerks.Version, ::DynamicPerks.Name);
-::DynamicPerks.HooksMod.require("mod_msu");
+::DynamicPerks.HooksMod.require([
+	"mod_msu",
+	"mod_nested_tooltips"
+]);
 
 ::DynamicPerks.HooksMod.queue(">mod_msu", function() {
 
