@@ -40,12 +40,25 @@
 }, ::Hooks.QueueBucket.VeryLate)
 
 ::DynamicPerks.HooksMod.queue(">mod_msu", function() {
+	foreach (perk in ::Const.Perks.LookupMap)
+	{
+		perk.PerkGroupIDs <- [];
+	}
+
 	local tooltipImageKeywords = {};
 	foreach (perkGroup in ::DynamicPerks.PerkGroups.getAll())
 	{
-		if (perkGroup.getIcon() == "")
-			continue;
-		tooltipImageKeywords[perkGroup.getIcon()] <- "PerkGroup+" + perkGroup.getID();
+		foreach (row in perkGroup.getTree())
+		{
+			foreach (perkID in row)
+			{
+				::Const.Perks.findById(perkID).PerkGroupIDs.push(perkGroup.getID());
+			}
+		}
+		if (perkGroup.getIcon() != "")
+		{
+			tooltipImageKeywords[perkGroup.getIcon()] <- "PerkGroup+" + perkGroup.getID();
+		}
 	}
 	::DynamicPerks.Mod.Tooltips.setTooltipImageKeywords(tooltipImageKeywords);
 }, ::Hooks.QueueBucket.AfterHooks);
