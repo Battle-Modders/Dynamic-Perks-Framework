@@ -22,7 +22,7 @@
 		this.setPerkTier(::DynamicPerks.Const.DefaultPerkTier + this.getPerkPointsSpent());
 	}
 
-	q.isPerkUnlockable = @(__original) function( _id )
+	q.isPerkUnlockable = @() function( _id )
 	{
 		if (this.getPerkTier() < this.getPerkTree().getPerkTier(_id))
 			return false;
