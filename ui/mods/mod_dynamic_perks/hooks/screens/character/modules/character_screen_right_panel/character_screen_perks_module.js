@@ -70,7 +70,7 @@ CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
 	{
 		_perk.Container.focus();
 	});
-	_perk.Container.on('mouseleave.dynamicperks', null, this, function (_event)
+	_perk.Container.on('mouseleave.dynamicperks keyup.dynamicperks', null, this, function (_event)
 	{
 		if (!MSU.getSettingValue(DynamicPerks.ID, "PerkTree_HighlightPerkGroups")) return;
 
@@ -98,6 +98,10 @@ CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
 			})
 		})
 	});
+	_perk.Container.on('keyup.dynamicperks', null, this, function (_event)
+	{
+		_perk.Image.trigger("mouseenter");
+	})
 };
 
 DynamicPerks.Hooks.CharacterScreenPerksModule_removePerksEventHandler = CharacterScreenPerksModule.prototype.removePerksEventHandler;
