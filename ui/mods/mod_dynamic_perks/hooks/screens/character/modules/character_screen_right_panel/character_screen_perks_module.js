@@ -88,29 +88,25 @@ CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
 {
 	DynamicPerks.Hooks.CharacterScreenPerksModule_attachEventHandler.call(this, _perk);
 	var self = this;
-	var mouseOn = false;
+	_perk.Container.attr('tabindex', 0);
 
-	_perk.Container.on('mouseenter.dynamicperks focus.dynamicperks' + CharacterScreenIdentifier.KeyEvent.PerksModuleNamespace, null, this, function (_event)
+	_perk.Container.on('mouseenter.dynamicperks', null, this, function (_event)
 	{
-		mouseOn = true;
+		_perk.Container.focus();
 	});
-
-	_perk.Container.on('mouseleave.dynamicperks blur.dynamicperks' + CharacterScreenIdentifier.KeyEvent.PerksModuleNamespace, null, this, function (_event)
+	_perk.Container.on('mouseleave.dynamicperks', null, this, function (_event)
 	{
-		mouseOn = false;
 		if (!MSU.getSettingValue(DynamicPerks.ID, "PerkTree_HighlightPerkGroups")) return;
 
-		$.each(_perk.PerkGroupIDs, function(_idx, _id){
-			$.each(self.mPerkGroups[_id], function(_, _perk){
-				_perk.PerkGroupOverlay.css("border", "none");
+		$.each(self.mPerkTree, function(_, _row)
+		{
+			$.each(_row, function(__, _innerPerk){
+				_innerPerk.PerkGroupOverlay.css("border", "none");
 			})
 		})
 	});
-
-	$(document).on('keydown.dynamicperks' + CharacterScreenIdentifier.KeyEvent.PerksModuleNamespace, null, this, function (_event)
+	_perk.Container.on('keydown.dynamicperks', null, this, function (_event)
 	{
-		if (!mouseOn)
-			return;
 		if (!MSU.getSettingValue(DynamicPerks.ID, "PerkTree_HighlightPerkGroups"))
 			return;
 		if (!MSU.Keybinds.isKeybindPressed(DynamicPerks.ID, "PerkTree_HighlightPerkGroups_keybind", _event))
@@ -123,7 +119,7 @@ CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
 			})
 		})
 	});
-}
+};
 
 DynamicPerks.Hooks.CharacterScreenPerksModule_removePerksEventHandler = CharacterScreenPerksModule.prototype.removePerksEventHandler;
 CharacterScreenPerksModule.prototype.removePerksEventHandler = function (_perkTree)
@@ -134,7 +130,7 @@ CharacterScreenPerksModule.prototype.removePerksEventHandler = function (_perkTr
 		for (var i = 0; i < _perkTree[row].length; ++i)
 		{
 			var perk = _perkTree[row][i];
-			perk.Container.off("dynamicperks");
+			perk.Container.off(".dynamicperks");
 		}
 	}
 };
