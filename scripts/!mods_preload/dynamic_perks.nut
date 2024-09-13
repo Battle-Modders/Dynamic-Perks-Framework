@@ -3,6 +3,7 @@
 	ID = "mod_dynamic_perks",
 	Name = "Dynamic Perks Framework (DPF)",
 	GitHubURL = "https://github.com/Battle-Modders/Dynamic-Perks-Framework",
+	NexusModsURL = "https://www.nexusmods.com/battlebrothers/mods/758",
 	QueueBucket = {
 		VeryLate = [],
 		AfterHooks = []
@@ -20,6 +21,7 @@
 	::DynamicPerks.Mod <- ::MSU.Class.Mod(::DynamicPerks.ID, ::DynamicPerks.Version, ::DynamicPerks.Name);
 
 	::DynamicPerks.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHub, ::DynamicPerks.GitHubURL);
+	::DynamicPerks.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.NexusMods, ::DynamicPerks.NexusModsURL);
 	::DynamicPerks.Mod.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHub);
 
 	::DynamicPerks.Mod.Debug.enable();
