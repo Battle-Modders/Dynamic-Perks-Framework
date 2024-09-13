@@ -62,13 +62,39 @@ CharacterScreenPerksModule.prototype.initPerkTree = function (_perkTree, _perksU
 DynamicPerks.Hooks.CharacterScreenPerksModule_attachEventHandler = CharacterScreenPerksModule.prototype.attachEventHandler;
 CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
 {
+	// Event handlers to highlight the perk groups belonging to the perk, and shade the perks which don't
 	DynamicPerks.Hooks.CharacterScreenPerksModule_attachEventHandler.call(this, _perk);
 	var self = this;
+	// make sure that keybinds work on the perk, doesnt work without tabindex and focus() as it's not an input type element
 	_perk.Container.attr('tabindex', 0);
-
 	_perk.Container.on('mouseenter.dynamicperks', null, this, function (_event)
 	{
 		_perk.Container.focus();
+	});
+	_perk.Container.on('mouseleave.dynamicperks', null, this, function (_event)
+	{
+		_perk.Container.blur();
+	});
+
+	// show and hide the borders around related perk groups
+	_perk.Container.on('keydown.dynamicperks', null, this, function (_event)
+	{
+		if (!MSU.getSettingValue(DynamicPerks.ID, "PerkTree_HighlightPerkGroups"))
+			return;
+		if (!MSU.Keybinds.isKeybindPressed(DynamicPerks.ID, "PerkTree_HighlightPerkGroups_keybind", _event))
+			return;
+		Screens.Tooltip.getModule('TooltipModule').hideTooltip(); // hide tooltip so it doesn't overlap
+		_perk.PerkGroupOverlay.css("border", "4px solid white");
+
+		// could be more efficient but there's no noticeable performance impact
+		$.each(_perk.PerkGroupIDs, function(_idx, _id){
+			$.each(self.mPerkTree, function(_, _row){
+				$.each(_row, function(__, _innerPerk){
+					if (_perk ==_innerPerk || _innerPerk.PerkGroupIDs.indexOf(_id) == -1) return;
+					_innerPerk.PerkGroupOverlay.css("border", "4px solid " + DynamicPerks.PerkGroupColors[_idx]);
+				})
+			})
+		})
 	});
 	_perk.Container.on('mouseleave.dynamicperks keyup.dynamicperks', null, this, function (_event)
 	{
@@ -81,23 +107,9 @@ CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
 			})
 		})
 	});
-	_perk.Container.on('keydown.dynamicperks', null, this, function (_event)
-	{
-		if (!MSU.getSettingValue(DynamicPerks.ID, "PerkTree_HighlightPerkGroups"))
-			return;
-		if (!MSU.Keybinds.isKeybindPressed(DynamicPerks.ID, "PerkTree_HighlightPerkGroups_keybind", _event))
-			return;
-		Screens.Tooltip.getModule('TooltipModule').hideTooltip();
-		// this iterates through the perks once for each perkgroup, but honestly it's not very many perks and this allows us to cut out a bunch of code
-		$.each(_perk.PerkGroupIDs, function(_idx, _id){
-			$.each(self.mPerkTree, function(_, _row){
-				$.each(_row, function(__, _innerPerk){
-					if (_perk ==_innerPerk || _innerPerk.PerkGroupIDs.indexOf(_id) == -1) return;
-					_innerPerk.PerkGroupOverlay.css("border", "2px solid " + DynamicPerks.PerkGroupColors[_idx]);
-				})
-			})
-		})
-	});
+
+
+	// re-show tooltip
 	_perk.Container.on('keyup.dynamicperks', null, this, function (_event)
 	{
 		_perk.Image.trigger("mouseenter");
