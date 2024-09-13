@@ -1,18 +1,3 @@
-DynamicPerks.Hooks.CharacterScreenPerksModule_createDIV = CharacterScreenPerksModule.prototype.createDIV;
-CharacterScreenPerksModule.prototype.createDIV = function (_parentDiv)
-{
-	DynamicPerks.Hooks.CharacterScreenPerksModule_createDIV.call(this, _parentDiv);
-	this.mPerkGroups = {};
-	this.mPerkGroupColors = ["rgba(255,234,125,0.5)", "blue", "red", "green", "purple", "orange", "teal", "cyan"];
-}
-
-DynamicPerks.Hooks.CharacterScreenPerksModule_destroyDIV = CharacterScreenPerksModule.prototype.destroyDIV;
-CharacterScreenPerksModule.prototype.destroyDIV = function ()
-{
-	DynamicPerks.Hooks.CharacterScreenPerksModule_destroyDIV.call(this);
-	this.mPerkGroups = {};
-}
-
 DynamicPerks.Hooks.CharacterScreenPerksModule_loadPerkTreesWithBrotherData = CharacterScreenPerksModule.prototype.loadPerkTreesWithBrotherData;
 CharacterScreenPerksModule.prototype.loadPerkTreesWithBrotherData = function (_brother)
 {
@@ -26,7 +11,6 @@ CharacterScreenPerksModule.prototype.initPerkTree = function (_perkTree, _perksU
 	var self = this;
 	var perkTier = this.mDataSource.getBrotherPerkTier(this.mDataSource.getSelectedBrother());
 	var lockedPerks = this.mDataSource.getLockedPerks(this.mDataSource.getSelectedBrother());
-	this.mPerkGroups = {};
 
 	for (var row = 0; row < this.mPerkRows.length; ++row)
 	{
@@ -41,14 +25,6 @@ CharacterScreenPerksModule.prototype.initPerkTree = function (_perkTree, _perksU
 			var perkGroupOverlay = $('<div class="dynamicperks-image-overlay"/>');
 			perk.Container.append(perkGroupOverlay);
 			perk.PerkGroupOverlay = perkGroupOverlay;
-			$.each(perk.PerkGroupIDs, function(_idx, _id){
-				if (_id in self.mPerkGroups) {
-					self.mPerkGroups[_id].push(perk);
-				}
-				else {
-					self.mPerkGroups[_id] = [perk];
-				}
-			})
 			var imageLayer = perk.Container.find('.perk-image-layer:first')
 			if (row >= perkTier)
 			{
@@ -112,10 +88,13 @@ CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
 		if (!MSU.Keybinds.isKeybindPressed(DynamicPerks.ID, "PerkTree_HighlightPerkGroups_keybind", _event))
 			return;
 		Screens.Tooltip.getModule('TooltipModule').hideTooltip();
+		// this iterates through the perks once for each perkgroup, but honestly it's not very many perks and this allows us to cut out a bunch of code
 		$.each(_perk.PerkGroupIDs, function(_idx, _id){
-			$.each(self.mPerkGroups[_id], function(_, _innerPerk){
-				if (_perk ==_innerPerk) return;
-				_innerPerk.PerkGroupOverlay.css("border", "2px solid " + self.mPerkGroupColors[_idx]);
+			$.each(self.mPerkTree, function(_, _row){
+				$.each(_row, function(__, _innerPerk){
+					if (_perk ==_innerPerk || _innerPerk.PerkGroupIDs.indexOf(_id) == -1) return;
+					_innerPerk.PerkGroupOverlay.css("border", "2px solid " + DynamicPerks.PerkGroupColors[_idx]);
+				})
 			})
 		})
 	});
