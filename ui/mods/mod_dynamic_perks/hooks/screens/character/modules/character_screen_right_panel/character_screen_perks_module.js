@@ -66,7 +66,7 @@ CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
 	DynamicPerks.Hooks.CharacterScreenPerksModule_attachEventHandler.call(this, _perk);
 	var self = this;
 	// make sure that keybinds work on the perk, doesnt work without tabindex and focus() as it's not an input type element
-	_perk.Container.attr('tabindex', 0);
+	_perk.Container.attr('tabindex', -1);
 	_perk.Container.on('mouseenter.dynamicperks', null, this, function (_event)
 	{
 		_perk.Container.focus();
