@@ -29,7 +29,7 @@
 	justify-content: center;
 	border-bottom: 1px solid rgba(0,0,0,0.4);
 }
-.generic-perkgroups-module .generic-perkgroups-content-container .perks-row .l-perk-container
+.generic-perkgroups-module .generic-perkgroups-content-container .perks-row .dpf-l-perk-container
 {
 	max-width: 4rem;
 	min-width: 3rem;
@@ -38,11 +38,11 @@
 	justify-content: center;
 	align-items: center;
 }
-.generic-perkgroups-module .generic-perkgroups-content-container .perks-row .l-perk-container .perk-image-layer
+.generic-perkgroups-module .generic-perkgroups-content-container .perks-row .dpf-l-perk-container .dpf-perk-image-layer
 {
 	width: 90%;
 }
-.generic-perkgroups-module .generic-perkgroups-content-container .perks-row .l-perk-container .perk-image-layer > img
+.generic-perkgroups-module .generic-perkgroups-content-container .perks-row .dpf-l-perk-container .dpf-perk-image-layer > img
 {
 	max-width: 100%;
 	width: auto;

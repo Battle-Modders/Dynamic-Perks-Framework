@@ -51,14 +51,14 @@ DynamicPerks.GenericPerksModule.prototype.createPerkTreeDIV = function (_perkTre
 			var perk = _perkTree[row][i];
 			perk.Unlocked = true;
 
-			perk.Container = $('<div class="l-perk-container"/>');
+			perk.Container = $('<div class="dpf-l-perk-container"/>');
 			rowDIV.append(perk.Container);
 
 			var perkSelectionImage = $('<img class="selection-image-layer display-none"/>');
 			perkSelectionImage.attr('src', Path.GFX + Asset.PERK_SELECTION_FRAME);
 			perk.Container.append(perkSelectionImage);
 
-			perk.Image = $('<img class="perk-image-layer"/>');
+			perk.Image = $('<img class="dpf-perk-image-layer"/>');
 			perk.Image.attr('src', Path.GFX + perk.Icon);
 			perk.Container.append(perk.Image);
 		}

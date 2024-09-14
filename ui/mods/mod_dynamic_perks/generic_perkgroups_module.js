@@ -79,11 +79,11 @@ DynamicPerks.GenericPerkGroupsModule.prototype.createUnorderdPerkGroupsDIV = fun
 DynamicPerks.GenericPerkGroupsModule.prototype.addPerkGroupDIV = function(_perkGroup, _parentDiv)
 {
 	this.mPerkGroupObjects.push(_perkGroup);
-	_perkGroup.Container = $('<div class="l-perk-container"/>')
+	_perkGroup.Container = $('<div class="dpf-l-perk-container"/>')
 		.appendTo(_parentDiv);
 
 	var tooltipID = "PerkGroup+" + _perkGroup.ID;
-	_perkGroup.Image = $('<img class="perk-image-layer"/>')
+	_perkGroup.Image = $('<img class="dfp-perk-image-layer"/>')
 		.attr('src', Path.GFX + _perkGroup.Icon)
 		.appendTo(_perkGroup.Container)
 		.bindTooltip({ contentType: 'msu-generic', modId: DynamicPerks.ID, elementId: tooltipID });

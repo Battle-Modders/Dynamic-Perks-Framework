@@ -22,10 +22,10 @@ CharacterScreenPerksModule.prototype.initPerkTree = function (_perkTree, _perksU
 		for (var i = 0; i < _perkTree[row].length; ++i)
 		{
 			var perk = _perkTree[row][i];
-			var perkGroupOverlay = $('<div class="dynamicperks-image-overlay"/>');
+			var perkGroupOverlay = $('<div class="dpf-image-overlay"/>');
 			perk.Container.append(perkGroupOverlay);
 			perk.PerkGroupOverlay = perkGroupOverlay;
-			var imageLayer = perk.Container.find('.perk-image-layer:first')
+			var imageLayer = perk.Container.find('.dpf-perk-image-layer:first')
 			if (row >= perkTier)
 			{
 				imageLayer.addClass('is-locked').removeClass('is-unlocked');
@@ -67,17 +67,17 @@ CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
 	var self = this;
 	// make sure that keybinds work on the perk, doesnt work without tabindex and focus() as it's not an input type element
 	_perk.Container.attr('tabindex', -1);
-	_perk.Container.on('mouseenter.dynamicperks', null, this, function (_event)
+	_perk.Container.on('mouseenter.dpf', null, this, function (_event)
 	{
 		_perk.Container.focus();
 	});
-	_perk.Container.on('mouseleave.dynamicperks', null, this, function (_event)
+	_perk.Container.on('mouseleave.dpf', null, this, function (_event)
 	{
 		_perk.Container.blur();
 	});
 
 	// show and hide the borders around related perk groups
-	_perk.Container.on('keydown.dynamicperks', null, this, function (_event)
+	_perk.Container.on('keydown.dpf', null, this, function (_event)
 	{
 		if (!MSU.getSettingValue(DynamicPerks.ID, "PerkTree_HighlightPerkGroups"))
 			return;
@@ -96,7 +96,7 @@ CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
 			})
 		})
 	});
-	_perk.Container.on('mouseleave.dynamicperks keyup.dynamicperks', null, this, function (_event)
+	_perk.Container.on('mouseleave.dpf keyup.dpf', null, this, function (_event)
 	{
 		if (!MSU.getSettingValue(DynamicPerks.ID, "PerkTree_HighlightPerkGroups")) return;
 
@@ -110,7 +110,7 @@ CharacterScreenPerksModule.prototype.attachEventHandler = function(_perk)
 
 
 	// re-show tooltip
-	_perk.Container.on('keyup.dynamicperks', null, this, function (_event)
+	_perk.Container.on('keyup.dpf', null, this, function (_event)
 	{
 		_perk.Image.trigger("mouseenter");
 	})
@@ -125,7 +125,7 @@ CharacterScreenPerksModule.prototype.removePerksEventHandler = function (_perkTr
 		for (var i = 0; i < _perkTree[row].length; ++i)
 		{
 			var perk = _perkTree[row][i];
-			perk.Container.off(".dynamicperks");
+			perk.Container.off(".dpf");
 		}
 	}
 };
