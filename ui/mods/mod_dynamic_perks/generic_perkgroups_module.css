@@ -6,18 +6,11 @@
 .generic-perkgroups-module .generic-perkgroups-content-container
 {
 	width: 100%;
+	height: auto;
 
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-}
-.generic-perkgroups-module .generic-perkgroups-content-container.ordered
-{
-	height: 100%;
-}
-.generic-perkgroups-module .generic-perkgroups-content-container.unordered
-{
-	height: auto;
 }
 .generic-perkgroups-module .generic-perkgroups-content-container .perks-row
 {
