@@ -29,6 +29,11 @@
 	justify-content: center;
 	border-bottom: 1px solid rgba(0,0,0,0.4);
 }
+.generic-perkgroups-module .generic-perkgroups-content-container .perks-row:last-child
+{
+	border-bottom: none;
+}
+
 .generic-perkgroups-module .generic-perkgroups-content-container .perks-row .dpf-l-perk-container
 {
 	max-width: 4rem;
