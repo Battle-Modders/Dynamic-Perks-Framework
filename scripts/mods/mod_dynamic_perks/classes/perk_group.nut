@@ -4,7 +4,6 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		Name = "Not initialized Perk Group",
 		Description = "",
 		Icon = "",
-		FlavorText = ["Not initialized perk group"], // TODO: Should it be named FlavorTexts ?
 		PerkTreeMultipliers = {},
 		Tree = []
 	},
@@ -12,13 +11,12 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 	{
 	}
 
-	function init( _id, _name, _flavorText, _tree, _multipliers = null )
+	function init( _id, _name, _tree, _multipliers = null )
 	{
 		::MSU.requireString(_id);
 
 		this.m.ID = _id;
 		this.setName(_name);
-		this.setFlavorText(_flavorText);
 		this.setTree(_tree);
 
 		if (_multipliers != null) this.setMultipliers(_multipliers);
@@ -90,42 +88,6 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 	function getIcon()
 	{
 		return this.m.Icon;
-	}
-
-	function getFlavorText()
-	{
-		return this.m.FlavorText;
-	}
-
-	function setFlavorText( _flavorText )
-	{
-		::MSU.requireArray(_flavorText);
-		foreach (text in _flavorText)
-		{
-			::MSU.requireString(text);
-		}
-		this.m.FlavorText = _flavorText;
-	}
-
-	function addFlavorText( _flavorText )
-	{
-		switch (typeof _flavorText)
-		{
-			case "string":
-				this.m.FlavorText.push(_flavorText);
-				break;
-
-			case "array":
-				foreach (text in _flavorText)
-				{
-					::MSU.requireString(text);
-				}
-				this.m.FlavorText.extend(_flavorText);
-				break;
-
-			default:
-				throw ::MSU.Exception.InvalidType(_flavorText);
-		}
 	}
 
 	function getTree()

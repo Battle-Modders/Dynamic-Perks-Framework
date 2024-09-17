@@ -2,19 +2,17 @@ this.special_perk <- {
 	m = {
 		PerkID = null,
 		Chance = null,
-		Tier = null,
-		FlavorText = null
+		Tier = null
 	},
 	function create()
 	{
 	}
 
-    function init( _chance, _tier, _perkID, _flavorText, _multiplierFunction = null )
+    function init( _chance, _tier, _perkID, _multiplierFunction = null )
 	{
 		this.setChance(_chance);
 		this.setTier(_tier);
 		this.setPerkID(_perkID);
-		this.setFlavorText(_flavorText);
 		if (_multiplierFunction != null) this.getMultiplier = _multiplierFunction;
 
 		return this;
@@ -62,17 +60,6 @@ this.special_perk <- {
 	{
 		::MSU.requireFunction(_function);
 		this.m.ChanceFunction = _function;
-	}
-
-	function getFlavorText()
-	{
-		return this.m.FlavorText;
-	}
-
-	function setFlavorText( _flavorText )
-	{
-		::MSU.requireString(_flavorText);
-		this.m.FlavorText = _flavorText;
 	}
 
 	function calculateChance( _perkTree )

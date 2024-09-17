@@ -37,67 +37,6 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		return this;		
 	}
 
-	function getTooltip( _flavored = true )
-	{
-		local ret = this.getPerkGroupsTooltip(_flavored);
-		if (ret != "") ret += "\n";
-		ret += this.getSpecialPerkGroupsTooltip(_flavored);
-		return ret;
-	}
-
-	function getSpecialPerkGroupsTooltip( _flavored = true )
-	{
-		local ret = "";
-		foreach (group in ::DynamicPerks.PerkGroups.getByType(::DynamicPerks.Class.SpecialPerkGroup))
-		{
-			if (this.hasPerkGroup(group.getID()))
-			{
-				local str = _flavored ? ::MSU.Array.rand(group.getFlavorText()) : group.getName();
-				if (str != "") ret += ::MSU.Text.color("#000ec1", str) + "\n";
-			}
-		}
-		return ret == "" ? ret : ret.slice(0, -1); // remove \n
-	}
-
-	function getPerkGroupsTooltip( _flavored = true )
-	{
-		local ret = "";
-		foreach (collection in ::DynamicPerks.PerkGroupCategories.getOrdered())
-		{
-			local text = "";
-			foreach (groupID in collection.getGroups())
-			{
-				if (this.hasPerkGroup(groupID))
-				{
-					local str = _flavored ? ::MSU.Array.rand(::DynamicPerks.PerkGroups.findById(groupID).getFlavorText()) : ::DynamicPerks.PerkGroups.findById(groupID).getName();
-					if (str != "") text += str + ", ";
-				}
-			}
-
-			if (text != "")
-			{
-				ret += format("%s%s.\n", _flavored ? collection.getTooltipPrefix() + " " : "", text.slice(0, -2)); // remove ", "
-			}
-		}
-
-		return ret == "" ? ret : ret.slice(0, -1); // remove \n
-	}
-
-	function getPerksTooltip()
-	{
-		local ret = "";
-		foreach (row in this.m.Tree)
-		{
-			foreach (perk in row)
-			{
-				ret += perk.Name + ", ";
-			}
-			ret = ret.slice(0, -2) + "\n";
-		}
-
-		return ret == "" ? ret : ret.slice(0, -2);
-	}
-
 	function getPerkGroups()
 	{
 		local ret = [];
