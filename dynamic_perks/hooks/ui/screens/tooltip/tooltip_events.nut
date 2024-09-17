@@ -23,12 +23,15 @@
 			foreach (perkGroupID in perk.PerkGroupIDs)
 			{
 				local pg = ::DynamicPerks.PerkGroups.findById(perkGroupID);
-				ret.push({
-					id = 3,
-					type = "hint",
-					icon = pg.getIcon(),
-					text = ::DynamicPerks.Mod.Tooltips.parseString(format("[%s|PerkGroup+%s] perk group", pg.getName(), perkGroupID))
-				});
+				if (pg.getName() != "")
+				{
+					ret.push({
+						id = 3,
+						type = "hint",
+						icon = pg.getIcon(),
+						text = ::DynamicPerks.Mod.Tooltips.parseString(format("[%s|PerkGroup+%s] perk group", pg.getName(), perkGroupID))
+					});
+				}
 			}
 		}
 
