@@ -6,9 +6,7 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		Icon = "",
 		FlavorText = ["Not initialized perk group"], // TODO: Should it be named FlavorTexts ?
 		PerkTreeMultipliers = {},
-		Trees = {
-			"default": []
-		}
+		Tree = []
 	},
 	function create()
 	{
@@ -130,20 +128,14 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		}
 	}
 
-	function getTrees()
+	function getTree()
 	{
-		return this.m.Trees;
+		return this.m.Tree;
 	}
 
-	function getTree( _id = "default" )
-	{
-		return this.m.Trees[_id];
-	}
-
-	function setTree( _tree, _id = "default" )
+	function setTree( _tree )
 	{
 		::MSU.requireArray(_tree);
-		::MSU.requireString(_id);
 		foreach (row in _tree)
 		{
 			::MSU.requireArray(row);
@@ -153,7 +145,7 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 			}
 		}
 
-		this.m.Trees[_id] <- _tree;
+		this.m.Tree = _tree;
 	}
 
 	function toUIData()
@@ -164,11 +156,6 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 			Description = this.getDescription(),
 			Icon = this.getIcon()
 		}
-	}
-
-	function getRandomTree()
-	{
-		return ::MSU.Table.randValue(this.m.Trees);
 	}
 
 	function getPerkTreeMultipliers()
