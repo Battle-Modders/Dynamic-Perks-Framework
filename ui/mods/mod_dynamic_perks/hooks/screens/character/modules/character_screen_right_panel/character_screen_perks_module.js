@@ -25,7 +25,7 @@ CharacterScreenPerksModule.prototype.initPerkTree = function (_perkTree, _perksU
 			var perkGroupOverlay = $('<div class="dpf-image-overlay"/>');
 			perk.Container.append(perkGroupOverlay);
 			perk.PerkGroupOverlay = perkGroupOverlay;
-			var imageLayer = perk.Container.find('.dpf-perk-image-layer:first')
+			var imageLayer = perk.Container.find('.perk-image-layer:first')
 			if (row >= perkTier)
 			{
 				imageLayer.addClass('is-locked').removeClass('is-unlocked');
