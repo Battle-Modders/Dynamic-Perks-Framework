@@ -27,7 +27,6 @@ DynamicPerksOverviewScreen.prototype.create = function(_parentDiv)
 
 DynamicPerksOverviewScreen.prototype.createDIV = function(_parentDiv)
 {
-	console.error(_parentDiv.attr("class"))
 	this.mContainer = $("<div class='dpf-overview-screen'/>")
 		.appendTo(_parentDiv);
 	$('<div class="dpf-overview-title title-font-very-big font-bold font-color-title">Dynamic Perks</div>')
@@ -71,7 +70,6 @@ DynamicPerksOverviewScreen.prototype.createFilterBar = function(_container)
     var filterInput = $('<input type="text" class="dpf-filter"/>')
         .appendTo(filterLayout)
         .on("keyup", function(_event){
-        	console.error("keyup " + $(this).val())
             var currentInput = $(this).val().toLowerCase();
             if (currentInput == "")
             {
@@ -95,7 +93,6 @@ DynamicPerksOverviewScreen.prototype.createFilterBar = function(_container)
             	})
             }
             $(".dpf-overview-perks-row").each(function(){
-            	console.error($(this).height())
             	if ($(this).height() == 0)
             		$(this).hide()
             	else $(this).show()
@@ -109,12 +106,21 @@ DynamicPerksOverviewScreen.prototype.createContent = function(_data)
 	this.mPerkGroupCollectionData = _data;
 	$.each(this.mPerkGroupCollectionData, function(_id, _perkGroupCollection)
 	{
-		var perkGroupCollectionContainer = $('<div class="dpf-overview-perk-group-collection-container"/>')
-			.append($("<div class='dpf-overview-perk-group-collection-name title-font-normal font-bold font-color-brother-name'>" + _perkGroupCollection.Name + "</div>"))
-			.appendTo(self.mContentScrollContainer);
-		$.each(_perkGroupCollection.PerkGroups, function(_perkGroupID, _perkGroupData){
-			perkGroupCollectionContainer.append(self.createPerkGroupRow(_perkGroupData));
-		})
+		if (_id == "loose_perks_collection") return;
+		self.createPerkGroupCollection(_perkGroupCollection);
+	})
+	this.createPerkGroupCollection(this.mPerkGroupCollectionData["loose_perks_collection"]);
+}
+
+DynamicPerksOverviewScreen.prototype.createPerkGroupCollection = function(_perkGroupCollection)
+{
+	var self = this;
+	var perkGroupCollectionContainer = $('<div class="dpf-overview-perk-group-collection-container"/>')
+		.append($("<div class='dpf-overview-perk-group-collection-name title-font-normal font-bold font-color-brother-name'>" + _perkGroupCollection.Name + "</div>"))
+		.appendTo(self.mContentScrollContainer);
+	$.each(_perkGroupCollection.PerkGroups, function(_perkGroupID, _perkGroupData){
+
+		perkGroupCollectionContainer.append(self.createPerkGroupRow(_perkGroupData));
 	})
 }
 
@@ -125,10 +131,11 @@ DynamicPerksOverviewScreen.prototype.createPerkGroupRow = function(_perkGroupDat
 	var perks = _perkGroupData.perks;
 
 	var rowDIV = $('<div class="dpf-overview-perks-row"/>');
-	rowDIV.perkGroupCell = $('<div class="dpf-overview-perks-row-cell dpf-overview-perkgroup-cell"/>')
+	rowDIV.attr("data-perkgroupid", perkGroup.ID);
+	var perkGroupCell = $('<div class="dpf-overview-perks-row-cell dpf-overview-perkgroup-cell"/>')
 		.appendTo(rowDIV);
 	perkGroup.Container = $('<div class="dpf-l-perk-container"/>')
-		.appendTo(rowDIV.perkGroupCell);
+		.appendTo(perkGroupCell);
 	var tooltipID = "PerkGroup+" + perkGroup.ID;
 	perkGroup.Image = $('<img class="dfp-perk-image-layer"/>')
 		.attr('src', Path.GFX + perkGroup.Icon)
@@ -138,7 +145,7 @@ DynamicPerksOverviewScreen.prototype.createPerkGroupRow = function(_perkGroupDat
 	rowDIV.cells = [];
 	for (var i = 0; i < 7; i++)
 	{
-		var cell = $('<div class="dpf-overview-perks-row-cell"/>');
+		var cell = $('<div class="dpf-overview-perks-row-cell perk-cell"/>');
 		rowDIV.cells.push(cell);
 		rowDIV.append(cell);
 	}
@@ -162,7 +169,6 @@ DynamicPerksOverviewScreen.prototype.createPerkGroupRow = function(_perkGroupDat
 
 DynamicPerksOverviewScreen.prototype.addPerkToFilterMaps = function(_perk)
 {
-	console.error(_perk.Name)
 	if (_perk.ID in this.mPerkFilterIDMap) this.mPerkFilterIDMap[_perk.ID].push(_perk);
 	else this.mPerkFilterIDMap[_perk.ID] = [_perk];
 
@@ -178,11 +184,21 @@ DynamicPerksOverviewScreen.prototype.show = function(_data)
 	MSUUIScreen.prototype.show.call(this);
 }
 
+MSUUIScreen.prototype.destroyDIV = function ()
+{
+	this.mContainer.empty();
+	this.mContainer.remove();
+	this.mContainer = null;
+	this.mIsFirstLoad = false;
+	this.mPerkFilterIDMap = {};
+	this.mPerkFilterNameMap = {};
+};
+
 DynamicPerksOverviewScreen.prototype.showThing = function()
 {
-	console.error("DynamicPerksOverviewScreen.prototype.showThing")
 	SQ.call(this.mSQHandle, 'show');
 }
+
 
 registerScreen("DynamicPerksOverviewScreen", new DynamicPerksOverviewScreen());
 

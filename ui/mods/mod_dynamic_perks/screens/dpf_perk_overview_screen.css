@@ -11,6 +11,7 @@
 	z-index: 999;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	background-image: url("coui://gfx/mods/msu/skin/generic_background_large_border.png");
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
@@ -40,7 +41,6 @@
 }
 .dpf-overview-perk-group-collection-name
 {
-	border-bottom: 1px solid rgba(219, 149, 0, 0.5);
 	width:100%;
 	display:flex;
 	justify-content: center;
@@ -49,11 +49,16 @@
 .dpf-overview-perks-row
 {
 	display:flex;
-	border-bottom: 4px ridge rgba(0,0,0,0.5);
+   	background-image: url("coui://gfx/ui/skin/custom_background_698_40.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	padding-top:1rem;
+	padding-bottom: 1rem;
 }
-.dpf-overview-perks-row:last-child
+/*if the special loose group, we just want one large cell*/
+.dpf-overview-perks-row[data-perkgroupid="looseperksgroup"] .dpf-overview-perks-row-cell:nth-child(2)
 {
-	border-bottom: none;
+	flex:initial;
 }
 .dpf-overview-perks-row-cell
 {
@@ -75,7 +80,7 @@
 }
 .dpf-overview-perks-row-cell.dpf-overview-perkgroup-cell
 {
-	border-right: 2px solid black;
+	border-right: 2px solid rgba(0, 0, 0, 0.5);
 }
 
 .pullupthing
