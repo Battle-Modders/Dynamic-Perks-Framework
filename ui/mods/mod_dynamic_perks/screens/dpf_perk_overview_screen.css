@@ -5,44 +5,111 @@
 	right: 0;
 	bottom: 0;
 	width: 102.4rem;
-	height: 76.8rem;
+	height: 100%;
 	position: absolute;
 	margin: auto;
-	z-index: 2;
+	z-index: 999;
 	display: flex;
+	flex-direction: column;
+	background-image: url("coui://gfx/mods/msu/skin/generic_background_large_border.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	padding:1rem;
 }
-
-.dpf-overview-module-container
+.dpf-overview-title
 {
 	display:flex;
-	flex-direction:column;
 	justify-content: center;
-	align-items: center;
+	padding-top: 2rem;
+}
+.dpf-overview-content-container
+{
+	height: 80%;
+	width: 100%;
+	overflow: auto
 }
 
-.dpf-overview-perks-container,
-.dpf-overview-perkgroups-container,
+.dpf-overview-perk-group-collection-container
 {
-	height: 100%;
+	padding: 1rem;
 	display:flex;
-	flex-direction:column;
+	flex-direction: column;
+	background-image: url("coui://gfx/mods/msu/skin/generic_background_large_border.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+}
+.dpf-overview-perk-group-collection-name
+{
+	border-bottom: 1px solid rgba(219, 149, 0, 0.5);
+	width:100%;
+	display:flex;
+	justify-content: center;
+	margin-bottom: 3px;
+}
+.dpf-overview-perks-row
+{
+	display:flex;
+	border-bottom: 4px ridge rgba(0,0,0,0.5);
+}
+.dpf-overview-perks-row:last-child
+{
+	border-bottom: none;
+}
+.dpf-overview-perks-row-cell
+{
+	flex:1;
+	display: flex;
 	justify-content: center;
 	align-items: center;
+	flex-wrap: wrap;
+	border-left: 1px solid rgba(0,0,0,0.4);
+	border-right: 1px solid rgba(0,0,0,0.4);
 }
-.dpf-perks-container .generic-perkgroups-module .generic-perkgroups-content-container.ordered
+.dpf-overview-perks-row-cell:first-child
 {
-	height: auto;
+	border-left: none;
 }
-.perks-screen-perkgroups-container .generic-perkgroups-module .generic-perkgroups-content-container .perks-row .dpf-l-perk-container
+.dpf-overview-perks-row-cell:last-child
 {
-	max-width: 6rem;
-	min-width: 4rem;
+	border-right: none;
+}
+.dpf-overview-perks-row-cell.dpf-overview-perkgroup-cell
+{
+	border-right: 2px solid black;
 }
 
-.flex-row
+.pullupthing
 {
-    width: 100%;
-    display: flex;
-    height: 5rem;
-    align-items:center;
+	z-index: 99999;
+	width: 20rem;
+	height:5rem;
+	background-color: black;
+	color:white;
+	outline: 1px solid white;
+	font-size: 3rem;
+	position: absolute;
+	left:0;
+	top:0;
+}
+
+.dpf-overview-filter-container
+{
+	height:10%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.dpf-overview-footer
+{
+	height:10%;
+}
+.dpf-overview-filter-bar-container
+{
+    flex: 1;
+    height: 2.5rem;
+    color:black;
+}
+.dpf-filter
+{
+	-webkit-user-select: text !important;
 }
