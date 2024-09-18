@@ -58,6 +58,7 @@
 			this.m.PerkPoints++;
 			this.m.PerkPointsSpent--;
 		}
+		this.m.PerkPointsSpent = ::Math.max(0, this.m.PerkPointsSpent);		// If this goes into the negatives because something added refundable perks, then the PerkTier will be negative
 
 		this.resetPerkTier();
 		
