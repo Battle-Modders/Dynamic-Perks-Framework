@@ -80,10 +80,10 @@ DynamicPerks.GenericPerkGroupsModule.prototype.addPerkGroupDIV = function(_perkG
 {
 	this.mPerkGroupObjects.push(_perkGroup);
 	_perkGroup.Container = $('<div class="dpf-l-perk-container"/>')
-		.appendTo(_parentDiv);
+		.appendTo(_parentDiv)
 
 	var tooltipID = "PerkGroup+" + _perkGroup.ID;
-	_perkGroup.Image = $('<img class="dfp-perk-image-layer"/>')
+	_perkGroup.Image = $('<img class="dpf-perk-image-layer"/>')
 		.attr('src', Path.GFX + _perkGroup.Icon)
 		.appendTo(_perkGroup.Container)
 		.bindTooltip({ contentType: 'msu-generic', modId: DynamicPerks.ID, elementId: tooltipID });

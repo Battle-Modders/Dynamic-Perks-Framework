@@ -2,15 +2,16 @@
 {
 	width: 100%;
 	height: 100%;
+	display:flex;
 }
 
  .generic-perks-module .perks-tree
 {
 	width: 100%;
-	height: 100%;
+	height: auto;
 
 	display: flex;
-	flex-wrap: wrap;
+	flex-direction: column;
 	justify-content: center;
 }
 
@@ -43,10 +44,4 @@
  .generic-perks-module .perks-tree .perks-row .dpf-l-perk-container .dpf-perk-image-layer
 {
 	width: 90%;
-}
-
- .generic-perks-module .perks-tree .perks-row .dpf-l-perk-container .dpf-perk-image-layer > img
-{
-	max-width: 100%;
-	width: auto;
 }
