@@ -94,14 +94,3 @@ DynamicPerks.GenericPerksModule.prototype.loadFromData = function (_perkTree, _e
     this.setupPerkTree();
     this.setupPerkTreeTooltips(_entityID);
 };
-
-DynamicPerks.GenericPerksModule.prototype.create = function(_parentDiv)
-{
-    this.createDIV(_parentDiv);
-};
-
-DynamicPerks.GenericPerksModule.prototype.destroy = function()
-{
-    this.destroyDIV();
-};
-

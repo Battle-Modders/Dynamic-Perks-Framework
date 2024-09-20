@@ -9,35 +9,28 @@
 .generic-perkgroups-module .generic-perkgroups-content-container
 {
 	width: 100%;
-	height: auto;
+	height:auto;
 
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	align-items: center;
 }
-
-.generic-perkgroups-module .generic-perkgroups-content-container .perks-row
+.generic-perkgroups-module .perks-row
 {
-	min-height: 3rem;
-	max-height: 6rem;
+	min-height: 0;
+	width: 95%;
 	display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-
+	flex-wrap: wrap;
+	justify-content: center;
 	border-bottom: 1px solid rgba(0,0,0,0.4);
 }
-
-.generic-perkgroups-module .generic-perkgroups-content-container .perks-row:last-child
+.generic-perkgroups-module .perks-row:last-child
 {
 	border-bottom: none;
 }
-
-.generic-perkgroups-module .generic-perkgroups-content-container .perks-row .dpf-l-perk-container
+.generic-perkgroups-module .dpf-l-perk-container
 {
 }
-
-.generic-perkgroups-module .generic-perkgroups-content-container .perks-row .dpf-l-perk-container .dpf-perk-image-layer
+.generic-perkgroups-module .dpf-perk-image-layer
 {
 }
-

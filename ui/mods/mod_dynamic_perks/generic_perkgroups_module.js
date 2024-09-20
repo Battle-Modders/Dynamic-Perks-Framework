@@ -87,7 +87,6 @@ DynamicPerks.GenericPerkGroupsModule.prototype.addPerkGroupDIV = function(_perkG
 		.attr('src', Path.GFX + _perkGroup.Icon)
 		.appendTo(_perkGroup.Container)
 		.bindTooltip({ contentType: 'msu-generic', modId: DynamicPerks.ID, elementId: tooltipID });
-
 }
 
 DynamicPerks.GenericPerkGroupsModule.prototype.setupContainerDiv = function ()
