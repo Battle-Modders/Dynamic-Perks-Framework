@@ -1,6 +1,7 @@
 this.dpf_perk_overview_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	m = {
 		ID = "DynamicPerksOverviewScreen",
+		IsFirstLoad = true,
 	}
 
 	function create() 
@@ -91,6 +92,12 @@ this.dpf_perk_overview_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 
 	function show()
 	{
-		this.ui_screen.show(this.getUIData());
+		if (this.m.IsFirstLoad) {
+			this.ui_screen.show(this.getUIData());
+			this.m.IsFirstLoad = false;
+		}
+		else {
+			this.ui_screen.show(null);
+		}
 	}
 })

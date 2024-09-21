@@ -1,14 +1,7 @@
 var DynamicPerksOverviewScreen = function ()
 {
 	MSUUIScreen.call(this);
-	//	{
-	//      perkGroup::ID = {
-	//	    	perkGroup = perkGroup::UIData,
-	//	    	perks = [perk::UIData, ...]
-	//		}
-	//	}
 	this.mPerkGroupCollectionData = null;
-	this.mIsFirstLoad = true;
 	this.mPerkFilterIDMap = {};
 	this.mPerkFilterNameMap = {};
 };
@@ -28,7 +21,8 @@ DynamicPerksOverviewScreen.prototype.create = function(_parentDiv)
 DynamicPerksOverviewScreen.prototype.createDIV = function(_parentDiv)
 {
 	this.mContainer = $("<div class='dpf-overview-screen'/>")
-		.appendTo(_parentDiv);
+		.appendTo(_parentDiv)
+		.hide();
 	$('<div class="dpf-overview-title title-font-very-big font-bold font-color-title">Dynamic Perks</div>')
 		.appendTo(this.mContainer);
 
@@ -51,12 +45,12 @@ DynamicPerksOverviewScreen.prototype.createDIV = function(_parentDiv)
 		.appendTo(this.mContainer);
 	this.createFilterBar(filterContainer);
 
-	// var footer = $('<div class="dpf-overview-footer"/>')
-	// 	.appendTo(this.mContainer);
-    // this.mLeaveButton = footer.createTextButton("Leave", $.proxy(function()
-	// {
-    //     this.onLeaveButtonPressed();
-    // }, this));
+	var footer = $('<div class="dpf-overview-footer"/>')
+		.appendTo(this.mContainer);
+    this.mLeaveButton = footer.createTextButton("Leave", $.proxy(function()
+	{
+        this.onLeaveButtonPressed();
+    }, this), null, 1);
 };
 
 DynamicPerksOverviewScreen.prototype.createFilterBar = function(_container)
@@ -176,34 +170,74 @@ DynamicPerksOverviewScreen.prototype.addPerkToFilterMaps = function(_perk)
 	else this.mPerkFilterNameMap[_perk.Name] = [_perk];
 }
 
+DynamicPerksOverviewScreen.prototype.onLeaveButtonPressed = function()
+{
+	this.hide();
+}
 
 DynamicPerksOverviewScreen.prototype.show = function(_data)
 {
-	if (this.mIsFirstLoad)
+	if (_data != null)
 		this.createContent(_data);
-	MSUUIScreen.prototype.show.call(this);
+	var self = this;
+	var moveTo = { opacity: 1};
+	var offset = -this.mContainer.width();
+	this.mContainer.velocity("finish", true).velocity(moveTo,
+	{
+		duration: Constants.SCREEN_SLIDE_IN_OUT_DELAY,
+		easing: 'swing',
+		begin: function ()
+		{
+			$(this).show();
+			$(this).css("opacity", 0);
+			self.notifyBackendOnAnimating();
+		},
+		complete: function ()
+		{
+			self.mIsVisible = true;
+			self.notifyBackendOnShown();
+		}
+	});
+	this.onShow();
 }
+
+
+DynamicPerksOverviewScreen.prototype.hide = function ()
+{
+	var self = this;
+	var moveTo = { opacity: 0};
+	var offset = -this.mContainer.width();
+	this.mContainer.velocity("finish", true).velocity(moveTo,
+	{
+		duration: Constants.SCREEN_FADE_IN_OUT_DELAY,
+		easing: 'swing',
+		begin: function()
+		{
+			self.notifyBackendOnAnimating();
+		},
+		complete: function()
+		{
+			$(this).hide();
+			self.notifyBackendOnHidden();
+		}
+	});
+	this.onHide();
+};
+
 
 MSUUIScreen.prototype.destroyDIV = function ()
 {
 	this.mContainer.empty();
 	this.mContainer.remove();
 	this.mContainer = null;
-	this.mIsFirstLoad = false;
 	this.mPerkFilterIDMap = {};
 	this.mPerkFilterNameMap = {};
 };
 
-DynamicPerksOverviewScreen.prototype.showThing = function()
+DynamicPerksOverviewScreen.prototype.notifyBackendToShow = function()
 {
 	SQ.call(this.mSQHandle, 'show');
 }
 
 
 registerScreen("DynamicPerksOverviewScreen", new DynamicPerksOverviewScreen());
-
-var showThing = $("<div class='pullupthing'/>")
-	.appendTo($(document.body));
-showThing.on("click", function(){
-	Screens.DynamicPerksOverviewScreen.showThing();
-})
