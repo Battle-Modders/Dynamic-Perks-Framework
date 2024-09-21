@@ -71,7 +71,14 @@ DynamicPerksOverviewScreen.prototype.createFilterBar = function(_container)
     this.mNameFilterInput = $('<input type="text" class="dpf-filter"/>')
         .appendTo(filterLayout)
         .on("keyup", function(_event){
-            var currentInput = $(this).val().toLowerCase();
+        	var currentInput = $(this).val().toLowerCase();
+        	// remove extra characters that sneak in
+        	currentInput = currentInput.replace(/[\u0127]/g, '');
+        	currentInput = currentInput.replace(/\u0127/g, '');
+        	currentInput = currentInput.replace("", '');
+        	currentInput = currentInput.replace(//g, '');
+        	$(this).val(currentInput);
+
             if (currentInput == "")
             {
             	$(".dpf-l-perk-container").show();
