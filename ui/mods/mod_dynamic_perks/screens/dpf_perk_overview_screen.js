@@ -2,6 +2,13 @@ var DynamicPerksOverviewScreen = function ()
 {
 	MSUUIScreen.call(this);
 	this.mPerkGroupCollectionData = null;
+	this.mContentContainer = null;
+	this.mContentScrollContainer = null;
+	this.mNameFilterInput = null;
+
+	this.mLeaveButton = null;
+
+
 	this.mPerkFilterIDMap = {};
 	this.mPerkFilterNameMap = {};
 };
@@ -61,7 +68,7 @@ DynamicPerksOverviewScreen.prototype.createFilterBar = function(_container)
     	.appendTo(_container);
     var filterLayout = $('<div class="dpf-overview-filter-bar-container"/>')
         .appendTo(_container);
-    var filterInput = $('<input type="text" class="dpf-filter"/>')
+    this.mNameFilterInput = $('<input type="text" class="dpf-filter"/>')
         .appendTo(filterLayout)
         .on("keyup", function(_event){
             var currentInput = $(this).val().toLowerCase();
@@ -195,6 +202,7 @@ DynamicPerksOverviewScreen.prototype.show = function(_data)
 		complete: function ()
 		{
 			self.mIsVisible = true;
+			self.mNameFilterInput.focus();
 			self.notifyBackendOnShown();
 		}
 	});
