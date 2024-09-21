@@ -35,6 +35,11 @@
 
 	::Hooks.registerJS("ui/mods/mod_dynamic_perks/hooks/screens/character/modules/character_screen_right_panel/character_screen_perks_module.js");
 	::Hooks.registerCSS("ui/mods/mod_dynamic_perks/hooks/screens/character/modules/character_screen_right_panel/character_screen_perks_module.css");
+
+	::Hooks.registerJS("ui/mods/mod_dynamic_perks/screens/dpf_perk_overview_screen.js");
+	::Hooks.registerCSS("ui/mods/mod_dynamic_perks/screens/dpf_perk_overview_screen.css");
+	::DynamicPerks.OverviewScreen <- ::new("scripts/ui/screens/dpf_perk_overview_screen");
+	::MSU.UI.registerConnection(::DynamicPerks.OverviewScreen);
 });
 
 ::DynamicPerks.HooksMod.queue(">mod_msu", function() {

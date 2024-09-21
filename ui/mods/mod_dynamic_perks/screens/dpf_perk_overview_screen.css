@@ -1,0 +1,131 @@
+.dpf-overview-screen
+{
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 102.4rem;
+	height: 100%;
+	position: absolute;
+	margin: auto;
+	z-index: 999;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-image: url("coui://gfx/mods/msu/skin/generic_background_large_border.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	padding:1rem;
+}
+.dpf-overview-title
+{
+	display:flex;
+	justify-content: center;
+	padding-top: 1rem;
+}
+.dpf-overview-content-container
+{
+	flex:1;
+	width: 100%;
+	overflow: auto
+}
+
+.dpf-overview-perk-group-collection-container
+{
+	padding: 1rem;
+	display:flex;
+	flex-direction: column;
+	background-image: url("coui://gfx/mods/msu/skin/generic_background_large_border.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+}
+.dpf-overview-perk-group-collection-name
+{
+	width:100%;
+	display:flex;
+	justify-content: center;
+	margin-bottom: 3px;
+}
+.dpf-overview-perks-row
+{
+	display:flex;
+   	background-image: url("coui://gfx/ui/skin/custom_background_698_40.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	padding-top:1rem;
+	padding-bottom: 1rem;
+}
+/*if the special loose group, we just want one large cell*/
+.dpf-overview-perks-row[data-perkgroupid="looseperksgroup"] .dpf-overview-perks-row-cell:nth-child(2)
+{
+	flex:initial;
+}
+.dpf-overview-perks-row-cell
+{
+	flex:1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	border-left: 1px solid rgba(0,0,0,0.4);
+	border-right: 1px solid rgba(0,0,0,0.4);
+}
+.dpf-overview-perks-row-cell:first-child
+{
+	border-left: none;
+}
+.dpf-overview-perks-row-cell:last-child
+{
+	border-right: none;
+}
+.dpf-overview-perks-row-cell.dpf-overview-perkgroup-cell
+{
+	border-right: 2px solid rgba(0, 0, 0, 0.7);
+	background-color: rgba(87, 65, 43, 0.3);
+	margin-left: 7px;
+}
+.dpf-overview-filter-container
+{
+/*	height:10%;*/
+	width:90%;
+	padding: 1rem;
+	justify-self: flex-end;
+
+	display: flex;
+	flex-direction: column;
+/*	align-items: center;*/
+	justify-content: center;
+}
+.dpf-overview-filter-bar-container
+{
+    flex: 1;
+    height: 2.5rem;
+    color:black;
+}
+.dpf-filter
+{
+	-webkit-user-select: text !important;
+	width: 100%;
+}
+.dpf-overview-footer
+{
+	justify-self: flex-end;
+	padding-bottom: 2rem;
+
+	display:flex;
+	align-items: center;
+	justify-content: center;
+}
+.dpf-overview-footer .ui-control
+{
+	height:4.3rem;
+	width: 17.5rem;
+}
+.dpf-show-overview-screen-container
+{
+	width: 4.5rem;
+	height:  4.1rem;
+	position: absolute;
+	right:-4px;
+	bottom: 5rem;
+}

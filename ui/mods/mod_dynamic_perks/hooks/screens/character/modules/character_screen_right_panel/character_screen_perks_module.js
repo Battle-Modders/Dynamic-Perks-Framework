@@ -201,3 +201,19 @@ CharacterScreenPerksModule.prototype.isPerkUnlockable = function (_perk)
 
 	return false;
 };
+
+
+
+// Adds the button to show the overview screen to the perks module.
+DynamicPerks.Hooks.CharacterScreenPerksModule_createDIV = CharacterScreenPerksModule.prototype.createDIV;
+CharacterScreenPerksModule.prototype.createDIV = function (_parentDiv)
+{
+	var self = this;
+	DynamicPerks.Hooks.CharacterScreenPerksModule_createDIV.call(this, _parentDiv);
+	this.mContainer.ShowDpfScreen = $("<div class='dpf-show-overview-screen-container'/>")
+		.appendTo(this.mContainer);
+	this.mContainer.ShowDpfScreen = this.mContainer.ShowDpfScreen.createTextButton("DP", function ()
+	{
+		Screens.DynamicPerksOverviewScreen.notifyBackendToShow();
+	}, '', 6);
+}
