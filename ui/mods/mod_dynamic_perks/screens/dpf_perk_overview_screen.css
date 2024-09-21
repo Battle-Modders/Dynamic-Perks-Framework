@@ -80,7 +80,9 @@
 }
 .dpf-overview-perks-row-cell.dpf-overview-perkgroup-cell
 {
-	border-right: 2px solid rgba(0, 0, 0, 0.5);
+	border-right: 2px solid rgba(0, 0, 0, 0.7);
+	background-color: rgba(87, 65, 43, 0.3);
+	margin-left: 7px;
 }
 .dpf-overview-filter-container
 {
