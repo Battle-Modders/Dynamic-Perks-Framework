@@ -26,6 +26,16 @@
 
 	::DynamicPerks.Mod.Debug.enable();
 
+	::DynamicPerks.Mod.Keybinds.addSQKeybind("CloseOverviewScreen", "escape", ::MSU.Key.State.All,	function()
+		{
+			if (::DynamicPerks.OverviewScreen.isVisible())
+			{
+				::DynamicPerks.OverviewScreen.hide();
+				return true;
+			};
+		}, "Close Overview Screen").setBypassInputDenied(true);
+
+
 	::include("dynamic_perks/load.nut");
 	::Hooks.registerJS("ui/mods/mod_dynamic_perks/setup.js");
 	::Hooks.registerJS("ui/mods/mod_dynamic_perks/generic_perks_module.js");
