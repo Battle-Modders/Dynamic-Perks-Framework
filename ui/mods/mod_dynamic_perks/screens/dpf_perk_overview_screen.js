@@ -119,11 +119,11 @@ DynamicPerksOverviewScreen.prototype.createPerkGroupCollection = function(_perkG
 	var self = this;
 	var perkGroupCollectionContainer = $('<div class="dpf-overview-perk-group-collection-container"/>')
 		.append($("<div class='dpf-overview-perk-group-collection-name title-font-normal font-bold font-color-brother-name'>" + _perkGroupCollection.Name + "</div>"))
-		.appendTo(self.mContentScrollContainer);
-	$.each(_perkGroupCollection.PerkGroups, function(_perkGroupID, _perkGroupData){
-
+	$.each(_perkGroupCollection.PerkGroups, function(_perkGroupID, _perkGroupData)
+	{
 		perkGroupCollectionContainer.append(self.createPerkGroupRow(_perkGroupData));
 	})
+	return perkGroupCollectionContainer;
 }
 
 DynamicPerksOverviewScreen.prototype.createPerkGroupRow = function(_perkGroupData)
@@ -132,18 +132,20 @@ DynamicPerksOverviewScreen.prototype.createPerkGroupRow = function(_perkGroupDat
 	var perkGroup = _perkGroupData.perkGroup;
 	var perks = _perkGroupData.perks;
 
-	var rowDIV = $('<div class="dpf-overview-perks-row"/>');
-	rowDIV.attr("data-perkgroupid", perkGroup.ID);
+	var rowDIV = $('<div class="dpf-overview-perks-row"/>')
+		.attr("data-perkgroupid", perkGroup.ID);
+
 	var perkGroupCell = $('<div class="dpf-overview-perks-row-cell dpf-overview-perkgroup-cell"/>')
 		.appendTo(rowDIV);
-	perkGroup.Container = $('<div class="dpf-l-perk-container"/>')
+
+
+	perkGroup.Container = this.createPerkContainer(perkGroup)
+		.attr("data-perktype", "perkgroup")
 		.appendTo(perkGroupCell);
-	var tooltipID = "PerkGroup+" + perkGroup.ID;
-	perkGroup.Image = $('<img class="dfp-perk-image-layer"/>')
-		.attr('src', Path.GFX + perkGroup.Icon)
-		.appendTo(perkGroup.Container)
-		.bindTooltip({ contentType: 'msu-generic', modId: DynamicPerks.ID, elementId: tooltipID });
-	self.addPerkToFilterMaps(perkGroup);
+
+	perkGroup.Image = this.createPerkImage(perkGroup)
+		.appendTo(perkGroup.Container);
+
 	rowDIV.cells = [];
 	for (var i = 0; i < 7; i++)
 	{
@@ -156,26 +158,31 @@ DynamicPerksOverviewScreen.prototype.createPerkGroupRow = function(_perkGroupDat
 	$.each(perks, function(_i, _tier){
 		$.each(_tier, function(_, _perk)
 		{
-			_perk.Container = $('<div class="dpf-l-perk-container"/>');
-			rowDIV.cells[_i].append(_perk.Container);
+			_perk.Container = self.createPerkContainer(_perk)
+				.attr("data-perktype", "perk")
+				.appendTo(rowDIV.cells[_i]);
 
-			_perk.Image = $('<img class="dpf-perk-image-layer"/>');
-			_perk.Image.attr('src', Path.GFX + _perk.Icon);
-			_perk.Image.bindTooltip({ contentType: 'ui-perk', entityId: null, perkId: _perk.ID });
-			_perk.Container.append(_perk.Image);
-			self.addPerkToFilterMaps(_perk);
+			_perk.Image = self.createPerkImage(_perk)
+				.appendTo(_perk.Container);
 		})
 	})
 	return rowDIV;
 }
 
-DynamicPerksOverviewScreen.prototype.addPerkToFilterMaps = function(_perk)
+DynamicPerksOverviewScreen.prototype.createPerkContainer = function(_perkData)
 {
-	if (_perk.ID in this.mPerkFilterIDMap) this.mPerkFilterIDMap[_perk.ID].push(_perk);
-	else this.mPerkFilterIDMap[_perk.ID] = [_perk];
+	var container = $('<div class="dpf-l-perk-container"/>')
+		.attr("data-perkid", _perkData.ID)
+		.attr("data-perkname", _perkData.Name);
+	return container;
+}
 
-	if (_perk.Name in this.mPerkFilterNameMap) this.mPerkFilterNameMap[_perk.Name].push(_perk);
-	else this.mPerkFilterNameMap[_perk.Name] = [_perk];
+DynamicPerksOverviewScreen.prototype.createPerkImage = function(_perkData)
+{
+	var image = $('<img class="dpf-perk-image-layer"/>');
+	image.attr('src', Path.GFX + _perkData.Icon);
+	image.bindTooltip({ contentType: 'ui-perk', entityId: null, perkId: _perkData.ID });
+	return image;
 }
 
 DynamicPerksOverviewScreen.prototype.onLeaveButtonPressed = function()
