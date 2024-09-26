@@ -96,16 +96,45 @@
 /*	align-items: center;*/
 	justify-content: center;
 }
+.dpf-overview-filter-by-name-row
+{
+	display:flex;
+}
+.dpf-overview-filter-by-name-row  span
+{
+	margin-right: 3rem;
+	display: inline-flex;
+	align-items: center;
+}
+
 .dpf-overview-filter-bar-container
 {
-    flex: 1;
-    height: 2.5rem;
+    width: 30.0rem;
+    height: 4.0rem;
     color:black;
 }
 .dpf-filter
 {
-	-webkit-user-select: text !important;
 	width: 100%;
+	background-color: rgba(0, 0, 0, 0);
+	border: none;
+    outline: none;
+
+	text-shadow: 1px 1px 1px #000;
+
+    -moz-user-select: -moz-text;
+    -webkit-user-select: text;
+    user-select: text;
+
+	background-image: url("coui://gfx/ui/skin/text_input_300x40_inactive.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+}
+.dpf-filter:hover,
+.dpf-filter:focus
+{
+    /*border-color: rgb(129, 50, 24);*/
+    background-image: url("coui://gfx/ui/skin/text_input_300x40_selected.png");
 }
 .dpf-overview-footer
 {

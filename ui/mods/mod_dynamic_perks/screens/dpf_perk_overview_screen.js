@@ -63,12 +63,13 @@ DynamicPerksOverviewScreen.prototype.createDIV = function(_parentDiv)
 DynamicPerksOverviewScreen.prototype.createFilterBar = function(_container)
 {
 	var self = this;
-    var row = $('<div class="dpf-overview-filter-bar-label"/>');
-    var anem = $('<div class="title-font-normal font-color-subtitle">Filter by name</div>')
+    var filterRow = $('<div class="dpf-overview-filter-by-name-row"/>')
     	.appendTo(_container);
+    var name = $('<span class="title-font-normal font-color-subtitle">Filter by name</span>')
+    	.appendTo(filterRow);
     var filterLayout = $('<div class="dpf-overview-filter-bar-container"/>')
-        .appendTo(_container);
-    this.mNameFilterInput = $('<input type="text" class="dpf-filter"/>')
+        .appendTo(filterRow);
+    this.mNameFilterInput = $('<input type="text" class="dpf-filter title-font-big font-bold font-color-brother-name"/>')
         .appendTo(filterLayout)
         .on("keyup", function(_event){
         	var currentInput = $(this).val().toLowerCase();
