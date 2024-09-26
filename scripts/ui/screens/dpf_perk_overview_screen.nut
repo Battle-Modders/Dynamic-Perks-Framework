@@ -12,17 +12,19 @@ this.dpf_perk_overview_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	function getUIData()
 	{
 
-		local ret = {};
-		foreach (idx, category in ::DynamicPerks.PerkGroupCategories.getOrdered())
+		local ret = [];
+		local categories = ::DynamicPerks.PerkGroupCategories.getOrdered();
+		foreach (idx, category in categories)
 		{
-			ret[category.getID()] <- {
+			local catObj = {
 				ID = category.getID(),
 				Name = category.getName(),
 				PerkGroups = {}
 			};
+			ret.push(catObj);
 			foreach (perkGroupID in category.getGroups())
 			{
-				local perkCollectionEntry = ret[category.getID()].PerkGroups;
+				local perkCollectionEntry = catObj.PerkGroups;
 				local perkGroup = ::DynamicPerks.PerkGroups.findById(perkGroupID);
 				local perkTree = ::new(::DynamicPerks.Class.PerkTree);
 				perkTree.addPerkGroup(perkGroupID);
@@ -32,23 +34,23 @@ this.dpf_perk_overview_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 				}
 			}
 		}
-		ret["special"] <- {
+		local specialGroupCollection = {
 			ID = "special",
 			Name = "Special",
 			PerkGroups = {}
 		};
+		ret.push(specialGroupCollection);
 		foreach (perkGroup in ::DynamicPerks.PerkGroups.getByType(::DynamicPerks.Class.SpecialPerkGroup))
 		{
-			local perkCollectionEntry = ret["special"].PerkGroups;
+			local perkCollectionEntry = specialGroupCollection.PerkGroups;
 			local perkTree = ::new(::DynamicPerks.Class.PerkTree);
 			perkTree.addPerkGroup(perkGroup.m.ID);
 			perkCollectionEntry[perkGroup.m.ID] <- {
 				perkGroup = perkGroup.toUIData(),
 				perks = perkTree.toUIData(),
 			}
-
 		}
-		ret["loose_perks_collection"] <- {
+		local loosePerksCollection = {
 			ID = "loose_perks_collection",
 			Name = "Loose Perks",
 			PerkGroups = {
@@ -63,7 +65,8 @@ this.dpf_perk_overview_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 				},
 			}
 		};
-		local looseGroupPerks = ret["loose_perks_collection"].PerkGroups["loose_perks_group"].perks[0];
+		ret.push(loosePerksCollection);
+		local looseGroupPerks = loosePerksCollection.PerkGroups["loose_perks_group"].perks[0];
 		// lol
 		local usedIDs = {};
 		foreach(category in ret)
@@ -86,7 +89,6 @@ this.dpf_perk_overview_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 				looseGroupPerks.append(perk);
 			}
 		}
-		::MSU.Log.printData(ret["loose_perks_collection"], 3, true, 3)
 		return ret;
 	}
 

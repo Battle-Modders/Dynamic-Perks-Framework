@@ -112,12 +112,11 @@ DynamicPerksOverviewScreen.prototype.createContent = function(_data)
 {
 	var self = this;
 	this.mPerkGroupCollectionData = _data;
-	$.each(this.mPerkGroupCollectionData, function(_id, _perkGroupCollection)
+	$.each(this.mPerkGroupCollectionData, function(_, _perkGroupCollection)
 	{
-		if (_id == "loose_perks_collection") return;
-		self.createPerkGroupCollection(_perkGroupCollection);
+		var collectionDiv = self.createPerkGroupCollection(_perkGroupCollection);
+		self.mContentScrollContainer.append(collectionDiv)
 	})
-	this.createPerkGroupCollection(this.mPerkGroupCollectionData["loose_perks_collection"]);
 }
 
 DynamicPerksOverviewScreen.prototype.createPerkGroupCollection = function(_perkGroupCollection)
