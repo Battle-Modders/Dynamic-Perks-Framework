@@ -7,10 +7,6 @@ var DynamicPerksOverviewScreen = function ()
 	this.mNameFilterInput = null;
 
 	this.mLeaveButton = null;
-
-
-	this.mPerkFilterIDMap = {};
-	this.mPerkFilterNameMap = {};
 };
 
 DynamicPerksOverviewScreen.prototype = Object.create(MSUUIScreen.prototype);
@@ -70,43 +66,41 @@ DynamicPerksOverviewScreen.prototype.createFilterBar = function(_container)
     var filterLayout = $('<div class="dpf-overview-filter-bar-container"/>')
         .appendTo(filterRow);
     this.mNameFilterInput = $('<input type="text" class="dpf-filter title-font-big font-bold font-color-brother-name"/>')
-        .appendTo(filterLayout)
-        .on("keyup", function(_event){
-        	var currentInput = $(this).val().toLowerCase();
-        	// remove extra characters that sneak in
-        	currentInput = currentInput.replace(/[\u0127]/g, '');
-        	currentInput = currentInput.replace(/\u0127/g, '');
-        	currentInput = currentInput.replace("", '');
-        	currentInput = currentInput.replace(//g, '');
-        	$(this).val(currentInput);
-
-            if (currentInput == "")
-            {
-            	$(".dpf-l-perk-container").show();
-            }
-            else
-            {
-            	$.each(self.mPerkFilterNameMap, function(_name, _arr){
-            		if (_name.toLowerCase().search(currentInput) == -1)
-            		{
-            			$.each(_arr, function(_, _innerPerk){
-            				_innerPerk.Container.hide();
-            			})
-            		}
-            		else
-            		{
-            			$.each(_arr, function(_, _innerPerk){
-            				_innerPerk.Container.show();
-            			})
-            		}
-            	})
-            }
-            $(".dpf-overview-perks-row").each(function(){
-            	if ($(this).height() == 0)
-            		$(this).hide()
-            	else $(this).show()
+            .appendTo(filterLayout)
+            .on("keyup", function(_event){
+                var currentInput = $(this).val().toLowerCase();
+                // remove extra characters that sneak in
+                currentInput = currentInput.replace(/[\u0127]/g, '');
+                currentInput = currentInput.replace(/\u0127/g, '');
+                currentInput = currentInput.replace("", '');
+                currentInput = currentInput.replace(//g, '');
+                $(this).val(currentInput);
+                if (currentInput == "")
+                {
+                    self.mContentScrollContainer.find(".dpf-l-perk-container").show();
+                    self.mContentScrollContainer.find(".dpf-overview-perks-row").show();
+                }
+                else
+                {
+                    self.mContentScrollContainer.find('.dpf-l-perk-container[data-perktype="perk"]').each(function(){
+                        if ($(this).attr("data-perkname").toLowerCase().search(currentInput) == -1)
+                        {
+                            $(this).hide();
+                        }
+                        else
+                        {
+                            $(this).show();
+                            $(this).parent().parent().show(); // show perk row otherwise it won't reset
+                        }
+                    })
+                    self.mContentScrollContainer.find(".dpf-overview-perks-row").each(function(){
+                        var visibleChildren = $(this).find('.dpf-l-perk-container[data-perktype="perk"]:visible');
+                        if (visibleChildren.length == 0)
+                            $(this).hide()
+                        else $(this).show()
+                    })
+                }
             })
-        })
 }
 
 DynamicPerksOverviewScreen.prototype.createContent = function(_data)
