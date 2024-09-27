@@ -143,8 +143,10 @@ DynamicPerksOverviewScreen.prototype.createPerkGroupRow = function(_perkGroupDat
 		.attr("data-perktype", "perkgroup")
 		.appendTo(perkGroupCell);
 
+	var tooltipID = "PerkGroup+" + perkGroup.ID;
 	perkGroup.Image = this.createPerkImage(perkGroup)
-		.appendTo(perkGroup.Container);
+		.appendTo(perkGroup.Container)
+		.bindTooltip({ contentType: 'msu-generic', modId: DynamicPerks.ID, elementId: tooltipID });
 
 	rowDIV.cells = [];
 	for (var i = 0; i < 7; i++)
@@ -163,7 +165,8 @@ DynamicPerksOverviewScreen.prototype.createPerkGroupRow = function(_perkGroupDat
 				.appendTo(rowDIV.cells[_i]);
 
 			_perk.Image = self.createPerkImage(_perk)
-				.appendTo(_perk.Container);
+				.appendTo(_perk.Container)
+				.bindTooltip({ contentType: 'ui-perk', entityId: null, perkId: _perk.ID });
 		})
 	})
 	return rowDIV;
@@ -181,7 +184,6 @@ DynamicPerksOverviewScreen.prototype.createPerkImage = function(_perkData)
 {
 	var image = $('<img class="dpf-perk-image-layer"/>');
 	image.attr('src', Path.GFX + _perkData.Icon);
-	image.bindTooltip({ contentType: 'ui-perk', entityId: null, perkId: _perkData.ID });
 	return image;
 }
 
