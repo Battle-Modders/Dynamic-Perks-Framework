@@ -12,10 +12,8 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	background-image: url("coui://gfx/mods/msu/skin/generic_background_large_border.png");
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
-	padding:1rem;
+	border: 5px solid transparent;
+	border-image:  url("coui://gfx/mods/msu/skin/generic_background_large_border.png") 50 fill / 1rem / 2rem stretch;
 }
 .dpf-overview-title
 {
@@ -32,12 +30,11 @@
 
 .dpf-overview-perk-group-collection-container
 {
-	padding: 1rem;
 	display:flex;
 	flex-direction: column;
-	background-image: url("coui://gfx/mods/msu/skin/generic_background_large_border.png");
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
+
+	border: 10px solid transparent;
+	border-image:  url("coui://gfx/mods/msu/skin/generic_background_large_border.png") 50 fill stretch;
 }
 .dpf-overview-perk-group-collection-name
 {
