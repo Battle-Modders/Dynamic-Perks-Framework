@@ -98,7 +98,7 @@ this.perk_group_collection <- ::inherit(::MSU.BBClass.Empty, {
 
 	function addPerkGroup( _group )
 	{
-		if (this.m.Groups.find(_group) != null) this.m.Groups.push(_group);
+		if (this.m.Groups.find(_group) == null) this.m.Groups.push(_group);
 	}
 
 	function removePerkGroup( _group )
