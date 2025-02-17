@@ -134,7 +134,15 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 		this.m.Exclude = null;
 
-		if (!::MSU.isNull(this.getActor())) this.getActor().getBackground().onBuildPerkTree();
+		if (!::MSU.isNull(this.getActor()))
+		{
+			this.getActor().getBackground().onBuildPerkTree();
+		}
+
+		if ("Assets" in ::World && !::MSU.isNull(::World.Assets))
+		{
+			::World.Assets.getOrigin().onBuildPerkTree(this);
+		}
 	}
 
 	function buildFromDynamicMap()
