@@ -139,7 +139,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 			this.getActor().getBackground().onBuildPerkTree();
 		}
 
-		if ("Assets" in ::World && !::MSU.isNull(::World.Assets))
+		if ("Assets" in ::World && !::MSU.isNull(::World.Assets) && !::MSU.isNull(::World.Assets.getOrigin()))
 		{
 			::World.Assets.getOrigin().onBuildPerkTree(this);
 		}
