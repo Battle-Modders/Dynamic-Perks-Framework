@@ -501,7 +501,7 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 				foreach (id, mult in ::DynamicPerks.TalentMultipliers.findByAttribute(attribute))
 				{
-					mult = mult < 1 ? mult / talents[attribute] : mult;
+					mult *= talents[attribute];
 					if (!(id in _multipliers)) _multipliers[id] <- mult;
 					else
 					{
