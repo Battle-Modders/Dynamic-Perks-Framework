@@ -440,77 +440,52 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		}
 	}
 
-	function addSkillMultipliers( _multipliers )
+	function getPerkGroupMultiplierSources_All()
 	{
-		foreach (skill in this.getActor().getSkills().m.Skills)
-		{
-			foreach (id, mult in skill.getPerkTreeMultipliers())
-			{
-				if (!(id in _multipliers)) _multipliers[id] <- mult;
-				else
-				{
-					if (mult < 0 || _multipliers[id] < 0) _multipliers[id] = -1;
-					else _multipliers[id] *= mult;
-				}
-			}
-		}
-	}
-
-	function addPerkGroupMultipliers( _multipliers )
-	{
-		foreach (perkGroupID in this.m.Exclude)
-		{
-			foreach (id, mult in ::DynamicPerks.PerkGroups.findById(perkGroupID).getPerkTreeMultipliers())
-			{
-				if (!(id in _multipliers)) _multipliers[id] <- mult;
-				else
-				{
-					if (mult < 0 || _multipliers[id] < 0) _multipliers[id] = -1;
-					else _multipliers[id] *= mult;
-				}
-			}
-		}
-	}
-
-	function addItemMultipliers( _multipliers )
-	{
-		local items = this.getActor().getItems().getAllItems();
-		foreach (item in items)
-		{
-			foreach (id, mult in item.getPerkTreeMultipliers())
-			{
-				if (!(id in _multipliers)) _multipliers[id] <- mult;
-				else
-				{
-					if (mult < 0 || _multipliers[id] < 0) _multipliers[id] = -1;
-					else _multipliers[id] *= mult;
-				}
-			}
-		}
-	}
-
-	function getAllMultipliers()
-	{
-		local ret = {};
-		this.addSkillMultipliers(ret);
-		this.addPerkGroupMultipliers(ret);
-		this.addItemMultipliers(ret);
+		local ret = [];
+		ret.extend(this.getPerkGroupMultiplierSources_Skills());
+		ret.extend(this.getPerkGroupMultiplierSources_PerkGroups());
+		ret.extend(this.getPerkGroupMultiplierSources_Items());
 		return ret;
+	}
+
+	function getPerkGroupMultiplierSources_Skills()
+	{
+		return this.getActor().getSkills().m.Skills;
+	}
+
+	function getPerkGroupMultiplierSources_PerkGroups()
+	{
+		return this.m.Exclude.map(@(_pgID) ::DynamicPerks.PerkGroups.findById(_pgID));
+	}
+
+	function getPerkGroupMultiplierSources_Items()
+	{
+		return this.getActor().getItems().getAllItems();
 	}
 
 	function __applyMultipliers( _perkGroupContainer )
 	{
-		foreach (id, mult in this.getAllMultipliers())
+		local perkTree = this;
+
+		_perkGroupContainer.apply(function( _perkGroupID, _weight )
 		{
-			if (_perkGroupContainer.contains(id))
+			if (_weight == 0 || _weight == -1)
+				return _weight;
+
+			local mult;
+			foreach (source in perkTree.getPerkGroupMultiplierSources_All())
 			{
-				if (mult == 0) _perkGroupContainer.setWeight(id, 0);
-				else
-				{
-					if (_perkGroupContainer.getWeight(id) > 0) _perkGroupContainer.setWeight(id, _perkGroupContainer.getWeight(id) * mult);
-				}
+				mult = source.getPerkGroupMultiplier(_perkGroupID, perkTree);
+				if (mult == null)
+					continue;
+				if (mult == 0 || mult == -1)
+					return mult;
+				_weight *= mult;
 			}
-		}
+
+			return _weight;
+		});
 	}
 
 	function __getWeightedRandomGroupFromCollection( _collection, _exclude = null )

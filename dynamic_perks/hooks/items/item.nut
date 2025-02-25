@@ -1,8 +1,6 @@
 ::DynamicPerks.HooksMod.hook("scripts/items/item", function(q) {
-	q.m.PerkTreeMultipliers <- {};
-
-	q.getPerkTreeMultipliers <- function()
+	q.getPerkGroupMultiplier <- function( _groupID, _perkTree )
 	{
-		return this.m.PerkTreeMultipliers;
+		return 1.0;
 	}
 });

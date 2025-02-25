@@ -4,7 +4,6 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		Name = "Not initialized Perk Group",
 		Description = "",
 		Icon = "",
-		PerkTreeMultipliers = {},
 		Tree = []
 	},
 	function create()
@@ -120,61 +119,14 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		}
 	}
 
-	function getPerkTreeMultipliers()
+	function getPerkGroupMultiplier( _groupID, _perkTree )
 	{
-		return this.m.PerkTreeMultipliers;
-	}
-
-	function setMultipliers( _multipliers )
-	{
-		::MSU.requireTable(_multipliers);
-		foreach (key, mult in _multipliers)
-		{
-			this.__validateMultiplier(key, mult);
-		}
-		this.m.PerkTreeMultipliers = _multipliers;
+		return 1.0;
 	}
 
 	function getSelfMultiplier( _perkTree )
 	{
 		return  1.0;
-	}
-
-	function addMultiplier( _id, _mult )
-	{
-		this.__validateMultiplier(_id, _mult);
-		if (_id in this.m.PerkTreeMultipliers)
-		{
-			::DynamicPerks.Mod.Debug.printWarning("The perk group " + this.getID() + " already contains a multiplier of " + this.m.PerkTreeMultipliers[_id] + " for " + _id + ". Overwriting it with " + _mult);
-		}
-
-		this.m.PerkTreeMultipliers[_id] <- _mult;
-	}
-
-	function removeMultiplier( _id )
-	{
-		if (::Const.Perks.findById(_id) == null || ::DynamicPerks.PerkGroups.findById(_id) == null)
-		{
-			::DynamicPerks.Mod.Debug.printError("_id must be a valid perk ID or perk group ID.");
-			throw ::MSU.Exception.InvalidValue(_id);
-		}
-
-		if (_id in this.m.PerkTreeMultipliers)
-		{
-			delete this.m.PerkTreeMultipliers[_id];
-		}
-	}
-
-	function __validateMultiplier( _id, _mult )
-	{
-		::MSU.requireString(_id);
-		::MSU.requireOneFromTypes(["integer", "float"], _mult);
-
-		if (::Const.Perks.findById(_id) == null || ::DynamicPerks.PerkGroups.findById(_id) == null)
-		{
-			::DynamicPerks.Mod.Debug.printError("The key in a multiplier must be a valid perk ID or perk group ID.");
-			throw ::MSU.Exception.InvalidValue(_id);
-		}
 	}
 
 	function hasPerk( _id )
