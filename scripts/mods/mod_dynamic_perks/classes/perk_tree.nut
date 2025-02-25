@@ -1,4 +1,4 @@
-this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
+this.perk_tree <- {
 	m = {
 		Tree = [],
 		Template = null,
@@ -508,4 +508,4 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 
 		return groupID != null ? groupID : "DynamicPerks_NoPerkGroup";
 	}
-});
+};
