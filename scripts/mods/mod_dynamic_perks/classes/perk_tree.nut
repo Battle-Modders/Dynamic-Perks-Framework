@@ -489,37 +489,12 @@ this.perk_tree <- ::inherit(::MSU.BBClass.Empty, {
 		}
 	}
 
-	function addTalentMultipliers( _multipliers )
-	{
-		if (this.getActor().getTalents().len() > 0)
-		{
-			local talents = this.getActor().getTalents();
-
-			for (local attribute = 0; attribute < this.Const.Attributes.COUNT; attribute++)
-			{
-				if (talents[attribute] == 0) continue;
-
-				foreach (id, mult in ::DynamicPerks.TalentMultipliers.findByAttribute(attribute))
-				{
-					mult *= talents[attribute];
-					if (!(id in _multipliers)) _multipliers[id] <- mult;
-					else
-					{
-						if (mult < 0 || _multipliers[id] < 0) _multipliers[id] = -1;
-						else _multipliers[id] *= mult;
-					}
-				}
-			}
-		}
-	}
-
 	function getAllMultipliers()
 	{
 		local ret = {};
 		this.addSkillMultipliers(ret);
 		this.addPerkGroupMultipliers(ret);
 		this.addItemMultipliers(ret);
-		this.addTalentMultipliers(ret);
 		return ret;
 	}
 

@@ -39,22 +39,6 @@ this.special_perk_group <- ::inherit(::DynamicPerks.Class.PerkGroup, {
 			}
 		}
 
-		if (_perkTree.getActor().getTalents().len() > 0)
-		{
-			for (local attribute = 0; attribute < ::Const.Attributes.COUNT; attribute++)
-			{
-				if (_perkTree.getActor().getTalents()[attribute] == 0) continue;
-
-				local mults = ::DynamicPerks.TalentMultipliers.findByAttribute(attribute);
-				if (myID in mults)
-				{
-					local mult = mults[myID];
-					if (chance < 0 || mult < 0) return 100;
-					else chance *= mult * _perkTree.getActor().getTalents()[attribute];
-				}
-			}
-		}
-
 		foreach (perkGroupID in _perkTree.getPerkGroups())
 		{
 			local perkGroup = ::DynamicPerks.PerkGroups.findById(perkGroupID);

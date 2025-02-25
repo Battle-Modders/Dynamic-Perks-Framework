@@ -116,46 +116,6 @@
 	}
 };
 
-::DynamicPerks.TalentMultipliers <- {
-	Multipliers = {},
-
-	function getAll()
-	{
-		return this.Multipliers;
-	}
-
-	function findByAttribute( _attribute )
-	{
-		if (_attribute in this.Multipliers) return this.Multipliers[_attribute];
-	}
-
-	function add( _attribute, _id, _multiplier )
-	{
-		if (!(_attribute in this.Multipliers)) this.Multipliers[_attribute] <- {};
-		this.Multipliers[_attribute][_id] <- _multiplier;
-	}
-
-	function remove( _attribute, _id )
-	{
-		if ((_attribute in this.Multipliers) && (_id in this.Multipliers[_attribute])) delete this.Multipliers[_attribute][_id];
-	}
-
-	function removeAllForAttribute( _attribute )
-	{
-		if (_attribute in this.Multipliers) delete this.Multipliers[_attribute];
-	}
-
-	function removeAll()
-	{
-		this.Multipliers.clear();
-	}
-};
-
-foreach (attribute in ::Const.Attributes)
-{
-	if (attribute != ::Const.Attributes.COUNT) ::DynamicPerks.TalentMultipliers.Multipliers[attribute] <- {};
-}
-
 ::DynamicPerks.DefaultPerkTreeTemplate <- array(::Const.Perks.Perks.len());
 
 foreach (i, row in ::Const.Perks.Perks)

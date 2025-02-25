@@ -81,19 +81,6 @@ this.special_perk <- {
 			}
 		}
 
-		if (_perkTree.getActor().getTalents().len() > 0)
-		{
-			for (local attribute = 0; attribute < ::Const.Attributes.COUNT; attribute++)
-			{
-				if (_perkTree.getActor().getTalents()[attribute] == 0) continue;
-
-				foreach (id, mult in ::DynamicPerks.TalentMultipliers.findByAttribute(attribute))
-				{
-					chance *= mult * _perkTree.getActor().getTalents()[attribute];
-				}
-			}
-		}
-
 		if (_perkTree.m.Exclude != null)
 		{
 			foreach (perkGroupID in _perkTree.m.Exclude)
