@@ -213,8 +213,26 @@ this.perk_group <- ::inherit(::MSU.BBClass.Empty, {
 		{
 			foreach (i, perk in row)
 			{
-				if (perk == _id) return row.remove(i);
+				if (perk == _id)
+				{
+					row.remove(i);
+					return i + 1;	// We return the tier, which starts at 1 unlike Arrays
+				}
 			}
+		}
+	}
+
+	function replacePerk( _oldPerk, _newPerk )
+	{
+		if (this.hasPerk(_oldPerk))
+		{
+			local tier = this.removePerk(_oldPerk);
+			this.addPerk(_newPerk, tier);
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 
