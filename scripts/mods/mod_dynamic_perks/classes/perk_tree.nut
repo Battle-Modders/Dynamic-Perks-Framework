@@ -354,36 +354,6 @@ this.perk_tree <- {
 		return true;
 	}
 
-	function numPerkGroupsFromCollection( _perkGroupCollection, _exclude = null )
-	{
-		local count = 0;
-		foreach (perkGroupID in _perkGroupCollection.getGroups())
-		{
-			if (_exclude != null && _exclude.find(perkGroupID) != null) continue;
-			if (this.hasPerkGroup(perkGroupID)) count++;
-		}
-
-		return count;
-	}
-
-	function numPerksFromCollection( _perkGroupCollection, _exclude = null )
-	{
-		local count = 0;
-		foreach (perkGroupID in _perkGroupCollection.getGroups())
-		{
-			foreach (row in ::DynamicPerks.PerkGroups.findById(perkGroupID).getTree())
-			{
-				foreach (perkID in row)
-				{
-					if (_exclude != null && _exclude.find(perkID) != null) continue;
-					if (this.hasPerk(perkID)) count++;
-				}
-			}
-		}
-
-		return count;
-	}
-
 	function addPerkGroup( _perkGroupID )
 	{
 		foreach (i, row in ::DynamicPerks.PerkGroups.findById(_perkGroupID).getTree())
