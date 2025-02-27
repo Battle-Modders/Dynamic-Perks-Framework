@@ -64,7 +64,6 @@ this.perk_tree <- {
 							break;
 
 						case "instance":
-							this.__applyMultipliers(perkGroupContainer);
 							id = perkGroupContainer.roll();
 							break;
 
