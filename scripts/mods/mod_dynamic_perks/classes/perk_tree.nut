@@ -334,14 +334,19 @@ this.perk_tree <- {
 
 	function removePerk( _perkID )
 	{
+		delete this.m.PerkLookupMap[_perkID];
+
 		foreach (row in this.m.Tree)
 		{
 			foreach (i, perk in row)
 			{
-				if (perk.ID == _perkID) row.remove(i);
+				if (perk.ID == _perkID)
+				{
+					row.remove(i);
+					return;
+				}
 			}
 		}
-		delete this.m.PerkLookupMap[_perkID];
 	}
 
 	function hasPerkGroup( _perkGroupID )
