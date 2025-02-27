@@ -51,27 +51,19 @@ this.perk_tree <- {
 	{
 		foreach (collection in ::DynamicPerks.PerkGroupCategories.getOrdered())
 		{
+			local forcedGroups = [];
+
 			if (collection.getID() in this.m.DynamicMap)
 			{
-				foreach (perkGroupContainer in this.m.DynamicMap[collection.getID()])
+				forcedGroups = this.m.DynamicMap[collection.getID()];
+				// forcedGroups must be an array or a function that returns an array
+				if (typeof forcedGroups == "function")
 				{
-					local id;
+					forcedGroups = forcedGroups(this);
+				}
 
-					switch (typeof perkGroupContainer)
-					{
-						case "string":
-							id = perkGroupContainer;
-							break;
-
-						case "instance":
-							id = perkGroupContainer.roll();
-							break;
-
-						default:
-							::DynamicPerks.Mod.Debug.printError("perkGroupContainer must either be a valid perk group id or an instance of the MSU WeightedContainer class");
-							throw ::MSU.Exception.InvalidType("perkGroupContainer");
-					}
-
+				foreach (id in forcedGroups)
+				{
 					if (id == "DynamicPerks_RandomPerkGroup")
 						id = this.__getWeightedRandomGroupFromCollection(collection, this.m.Exclude);
 
@@ -93,7 +85,7 @@ this.perk_tree <- {
 			local min = this.getActor().getBackground().getPerkGroupCollectionMin(collection);
 			if (min == null) min = collection.getMin();
 
-			for (local i = (collection.getID() in this.m.DynamicMap) ? this.m.DynamicMap[collection.getID()].len() : 0; i < min; i++)
+			for (local i = forcedGroups.len(); i < min; i++)
 			{
 				local perkGroupID = this.__getWeightedRandomGroupFromCollection(collection, this.m.Exclude);
 				if (perkGroupID != "DynamicPerks_NoPerkGroup")
