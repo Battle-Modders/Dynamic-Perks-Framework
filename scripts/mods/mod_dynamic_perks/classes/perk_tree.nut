@@ -4,7 +4,7 @@ this.perk_tree <- {
 		Template = null,
 		DynamicMap = null,
 		Actor = null,
-		Exclude = [],
+		PerkGroupIDs = [],
 		PerkLookupMap = {},
 		MaxWidth = 13
 	},
@@ -65,7 +65,7 @@ this.perk_tree <- {
 				foreach (id in forcedGroups)
 				{
 					if (id == "DynamicPerks_RandomPerkGroup")
-						id = collection.getWeightedRandomPerkGroup(this, this.m.Exclude);
+						id = collection.getWeightedRandomPerkGroup(this, this.m.PerkGroupIDs);
 
 					if (id == "DynamicPerks_NoPerkGroup")
 						continue;
@@ -77,7 +77,6 @@ this.perk_tree <- {
 						continue;
 					}
 
-					this.m.Exclude.push(id);
 					this.addPerkGroup(id);
 				}
 			}
@@ -87,10 +86,9 @@ this.perk_tree <- {
 
 			for (local i = forcedGroups.len(); i < min; i++)
 			{
-				local perkGroupID = collection.getWeightedRandomPerkGroup(this, this.m.Exclude);
+				local perkGroupID = collection.getWeightedRandomPerkGroup(this, this.m.PerkGroupIDs);
 				if (perkGroupID != "DynamicPerks_NoPerkGroup")
 				{
-					this.m.Exclude.push(perkGroupID);
 					this.addPerkGroup(perkGroupID);
 				}
 			}
@@ -112,7 +110,7 @@ this.perk_tree <- {
 	{
 		this.clear();
 
-		this.m.Exclude = [];
+		this.m.PerkGroupIDs = [];
 
 		if (this.m.Template != null)
 		{
@@ -122,8 +120,6 @@ this.perk_tree <- {
 		{
 			this.buildFromDynamicMap();
 		}
-
-		this.m.Exclude = null;
 
 		if (!::MSU.isNull(this.getActor()))
 		{
@@ -276,6 +272,7 @@ this.perk_tree <- {
 	{
 		this.m.Tree.clear();
 		this.m.PerkLookupMap.clear();
+		this.m.PerkGroupIDs.clear();
 	}
 
 	function addPerk( _perkID, _tier = 1, _ignoreMaxWidth = false )
@@ -322,6 +319,24 @@ this.perk_tree <- {
 		}
 
 		this.m.Tree[row].push(perk);
+
+		foreach (pgID in perk.PerkGroupIDs)
+		{
+			if (!this.hasPerkGroup(pgID))
+			{
+				foreach (row in ::DynamicPerks.PerkGroups.findById(pgID).getTree())
+				{
+					foreach (perkID in row)
+					{
+						if (!this.hasPerk(perkID))
+						{
+							return;
+						}
+					}
+				}
+				this.m.PerkGroupIDs.push(pgID);
+			}
+		}
 	}
 
 	function removePerk( _perkID )
@@ -334,6 +349,10 @@ this.perk_tree <- {
 			{
 				if (perk.ID == _perkID)
 				{
+					foreach (pgID in perk.PerkGroupIDs)
+					{
+						::MSU.Array.removeByValue(this.m.PerkGroupIDs, pgID);
+					}
 					row.remove(i);
 					return;
 				}
@@ -343,19 +362,14 @@ this.perk_tree <- {
 
 	function hasPerkGroup( _perkGroupID )
 	{
-		foreach (row in ::DynamicPerks.PerkGroups.findById(_perkGroupID).getTree())
-		{
-			foreach (perk in row)
-			{
-				if (!this.hasPerk(perk)) return false;
-			}
-		}
-
-		return true;
+		return this.m.PerkGroupIDs.find(_perkGroupID) != null;
 	}
 
 	function addPerkGroup( _perkGroupID )
 	{
+		if (this.m.PerkGroupIDs.find(_perkGroupID) == null)
+			this.m.PerkGroupIDs.push(_perkGroupID);
+
 		foreach (i, row in ::DynamicPerks.PerkGroups.findById(_perkGroupID).getTree())
 		{
 			foreach (perk in row)
@@ -367,6 +381,8 @@ this.perk_tree <- {
 
 	function removePerkGroup( _perkGroupID )
 	{
+		::MSU.Array.removeByValue(this.m.PerkGroupIDs, _perkGroupID);
+
 		foreach (row in ::DynamicPerks.PerkGroups.findById(_perkGroupID).getTree())
 		{
 			foreach (perk in row)
@@ -422,7 +438,7 @@ this.perk_tree <- {
 
 	function getPerkGroupMultiplierSources_PerkGroups()
 	{
-		return this.m.Exclude.map(@(_pgID) ::DynamicPerks.PerkGroups.findById(_pgID));
+		return this.m.PerkGroupIDs.map(@(_pgID) ::DynamicPerks.PerkGroups.findById(_pgID));
 	}
 
 	function getPerkGroupMultiplierSources_Items()
