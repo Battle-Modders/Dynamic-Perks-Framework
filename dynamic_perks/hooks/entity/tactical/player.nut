@@ -1,6 +1,12 @@
 ::DynamicPerks.HooksMod.hook("scripts/entity/tactical/player", function(q) {
-	q.m.PerkTree <- ::DynamicPerks.getDefaultPerkTree();
+	q.m.PerkTree <- null;
 	q.m.PerkTier <- ::DynamicPerks.Const.DefaultPerkTier;
+
+	q.create = @(__original) function()
+	{
+		this.m.PerkTree = ::DynamicPerks.getDefaultPerkTree();
+		__original();
+	}
 
 	q.getPerkTree <- function()
 	{
