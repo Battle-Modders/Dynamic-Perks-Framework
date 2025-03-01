@@ -122,4 +122,27 @@ this.perk_group_collection <- {
 	{
 		return ::DynamicPerks.PerkGroups.findById(this.getRandomGroup()).getRandomPerk(null, _exclude);
 	}
+
+	function getWeightedRandomPerkGroup( _perkTree, _exclude = null )
+	{
+		local potentialGroups = ::MSU.Class.WeightedContainer();
+
+		foreach (groupID in this.getGroups())
+		{
+			if (_exclude == null || _exclude.find(groupID) == null)
+			{
+				local group = ::DynamicPerks.PerkGroups.findById(groupID);
+				potentialGroups.add(group.getID(), group.getSelfMultiplier(_perkTree));
+			}
+		}
+
+		if (potentialGroups.len() != 0)
+		{
+			_perkTree.applyMultipliers(potentialGroups);
+		}
+
+		local groupID = potentialGroups.roll();
+
+		return groupID != null ? groupID : "DynamicPerks_NoPerkGroup";
+	}
 };

@@ -65,7 +65,7 @@ this.perk_tree <- {
 				foreach (id in forcedGroups)
 				{
 					if (id == "DynamicPerks_RandomPerkGroup")
-						id = this.__getWeightedRandomGroupFromCollection(collection, this.m.Exclude);
+						id = collection.getWeightedRandomPerkGroup(this, this.m.Exclude);
 
 					if (id == "DynamicPerks_NoPerkGroup")
 						continue;
@@ -87,7 +87,7 @@ this.perk_tree <- {
 
 			for (local i = forcedGroups.len(); i < min; i++)
 			{
-				local perkGroupID = this.__getWeightedRandomGroupFromCollection(collection, this.m.Exclude);
+				local perkGroupID = collection.getWeightedRandomPerkGroup(this, this.m.Exclude);
 				if (perkGroupID != "DynamicPerks_NoPerkGroup")
 				{
 					this.m.Exclude.push(perkGroupID);
@@ -430,7 +430,7 @@ this.perk_tree <- {
 		return this.getActor().getItems().getAllItems();
 	}
 
-	function __applyMultipliers( _perkGroupContainer )
+	function applyMultipliers( _perkGroupContainer )
 	{
 		local perkTree = this;
 
@@ -452,26 +452,5 @@ this.perk_tree <- {
 
 			return _weight;
 		});
-	}
-
-	function __getWeightedRandomGroupFromCollection( _collection, _exclude = null )
-	{
-		local potentialGroups = ::MSU.Class.WeightedContainer();
-
-		foreach (groupID in _collection.getGroups())
-		{
-			if (_exclude != null && _exclude.find(groupID) != null) continue;
-			local group = ::DynamicPerks.PerkGroups.findById(groupID);
-			potentialGroups.add(group.getID(), group.getSelfMultiplier(this));
-		}
-
-		if (potentialGroups.len() != 0)
-		{
-			this.__applyMultipliers(potentialGroups);
-		}
-
-		local groupID = potentialGroups.roll();
-
-		return groupID != null ? groupID : "DynamicPerks_NoPerkGroup";
 	}
 };
