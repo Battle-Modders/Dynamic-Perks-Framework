@@ -4,18 +4,16 @@ this.perk_group_collection <- {
 		Name = "Uninitialized perk group collection",
 		OrderOfAssignment = 10,
 		Min = 1,
-		TooltipPrefix = "Has perk groups:"
 		Groups = []
 	},
 	function create()
 	{
 	}
 
-	function init( _id, _name = null, _tooltipPrefix = null, _min = null, _groups = null )
+	function init( _id, _name = null, _min = null, _groups = null )
 	{
 		this.setID(_id);
 		this.setName(_name != null ? _name : _id);
-		if (_tooltipPrefix != null) this.setTooltipPrefix(_tooltipPrefix);
 		if (_min != null) this.setMin(_min);
 		if (_groups != null) this.setGroups(_groups);
 
@@ -72,17 +70,6 @@ this.perk_group_collection <- {
 	{
 		::MSU.requireInt(_min);
 		this.m.Min = _min;
-	}
-
-	function getTooltipPrefix()
-	{
-		return this.m.TooltipPrefix;
-	}
-
-	function setTooltipPrefix( _text )
-	{
-		::MSU.requireString(_text);
-		this.m.TooltipPrefix = _text;
 	}
 
 	function getOrderOfAssignment()
