@@ -10,6 +10,17 @@
 			::Const.Perks.LookupMap[perk.ID] <- perk;
 		}
 	}
+
+	function __addPerkGroupToPerkDef( _groupID, _perk )
+	{
+		if (_perk.PerkGroupIDs.find(_groupID) == null)
+			_perk.PerkGroupIDs.push(_groupID);
+	}
+
+	function __removePerkGroupFromPerkDef( _groupID, _perk )
+	{
+		::MSU.Array.removeByValue(_perk.PerkGroupIDs, _groupID);
+	}
 };
 
 ::DynamicPerks.PerkGroupCategories <- {
@@ -103,11 +114,30 @@
 	{
 		if (_perkGroup.getID() in this.LookupMap) throw ::MSU.Exception.DuplicateKey(_perkGroup.getID());
 		this.LookupMap[_perkGroup.getID()] <- _perkGroup;
+
+		foreach (row in _perkGroup.getTree())
+		{
+			foreach (perkID in row)
+			{
+				::DynamicPerks.Perks.__addPerkGroupToPerkDef(_perkGroup.getID(), ::Const.Perks.findById(perkID));
+			}
+		}
 	}
 
 	function remove( _id )
 	{
-		if (_id in this.LookupMap) delete this.LookupMap[_id];
+		local perkGroup = this.findById(_id);
+		if (perkGroup == null)
+			return;
+
+		delete this.LookupMap[_id];
+		foreach (row in perkGroup.getTree())
+		{
+			foreach (perkID in row)
+			{
+				::DynamicPerks.Perks.__removePerkGroupFromPerkDef(_perkGroup.getID(), ::Const.Perks.findById(perkID));
+			}
+		}
 	}
 
 	function removeAll()

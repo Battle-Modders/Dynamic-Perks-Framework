@@ -57,6 +57,11 @@
 	{
 		func();
 	}
+	foreach (perkDef in ::Const.Perks.LookupMap)
+	{
+		// Is populated during ::DynamicPerks.PerkGroups.add/remove and perk_group.addPerk/RemovePerk
+		perkDef.PerkGroupIDs <- [];
+	}
 }, ::Hooks.QueueBucket.VeryLate)
 
 ::DynamicPerks.HooksMod.queue(">mod_msu", function() {
@@ -65,21 +70,9 @@
 		func();
 	}
 
-	foreach (perk in ::Const.Perks.LookupMap)
-	{
-		perk.PerkGroupIDs <- [];
-	}
-
 	local tooltipImageKeywords = {};
 	foreach (perkGroup in ::DynamicPerks.PerkGroups.getAll())
 	{
-		foreach (row in perkGroup.getTree())
-		{
-			foreach (perkID in row)
-			{
-				::Const.Perks.findById(perkID).PerkGroupIDs.push(perkGroup.getID());
-			}
-		}
 		if (perkGroup.getIcon() != "")
 		{
 			tooltipImageKeywords[perkGroup.getIcon()] <- "PerkGroup+" + perkGroup.getID();

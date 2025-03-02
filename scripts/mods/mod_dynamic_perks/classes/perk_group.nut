@@ -157,6 +157,8 @@ this.perk_group <- {
 		}
 
 		this.getTree()[_tier-1].push(_id);
+
+		::DynamicPerks.Perks.__addPerkGroupToPerkDef(this.getID(), ::Const.Perks.findById(_id));
 	}
 
 	function removePerk( _id )
@@ -165,7 +167,11 @@ this.perk_group <- {
 		{
 			foreach (i, perk in row)
 			{
-				if (perk == _id) return row.remove(i);
+				if (perk == _id)
+				{
+					::DynamicPerks.Perks.__removePerkGroupFromPerkDef(this.getID(), ::Const.Perks.findById(_id));
+					return row.remove(i);
+				}
 			}
 		}
 	}
