@@ -19,7 +19,7 @@ this.special_perk_group <- ::inherit(::DynamicPerks.Class.PerkGroup, {
 
 	function calculateChance( _perkTree )
 	{
-		local chance = this.m.Chance;
+		local chance = this.getChance();
 
 		if (chance < 0) return 100;
 
