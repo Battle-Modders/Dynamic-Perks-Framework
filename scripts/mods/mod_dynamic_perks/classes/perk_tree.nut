@@ -284,6 +284,29 @@ this.perk_tree <- {
 			return;
 		}
 
+		foreach (pgID in perkDef.PerkGroupIDs)
+		{
+			if (!this.hasPerkGroup(pgID))
+			{
+				local has = true;
+				foreach (row in ::DynamicPerks.PerkGroups.findById(pgID).getTree())
+				{
+					foreach (perkID in row)
+					{
+						if (perkID != _perkID && !this.hasPerk(perkID))
+						{
+							has = false;
+							break;
+						}
+					}
+					if (!has)
+						break;
+				}
+				if (has)
+					this.m.PerkGroupIDs.push(pgID);
+			}
+		}
+
 		if (this.hasPerk(_perkID)) return;
 
 		local perk = {
@@ -319,24 +342,6 @@ this.perk_tree <- {
 		}
 
 		this.m.Tree[row].push(perk);
-
-		foreach (pgID in perk.PerkGroupIDs)
-		{
-			if (!this.hasPerkGroup(pgID))
-			{
-				foreach (row in ::DynamicPerks.PerkGroups.findById(pgID).getTree())
-				{
-					foreach (perkID in row)
-					{
-						if (!this.hasPerk(perkID))
-						{
-							return;
-						}
-					}
-				}
-				this.m.PerkGroupIDs.push(pgID);
-			}
-		}
 	}
 
 	function removePerk( _perkID )
