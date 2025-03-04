@@ -135,7 +135,7 @@
 		{
 			foreach (perkID in row)
 			{
-				::DynamicPerks.Perks.__removePerkGroupFromPerkDef(_perkGroup.getID(), ::Const.Perks.findById(perkID));
+				::DynamicPerks.Perks.__removePerkGroupFromPerkDef(_id, ::Const.Perks.findById(perkID));
 			}
 		}
 	}
