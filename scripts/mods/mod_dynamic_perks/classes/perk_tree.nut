@@ -433,6 +433,10 @@ this.perk_tree <- {
 		ret.extend(this.getPerkGroupMultiplierSources_Skills());
 		ret.extend(this.getPerkGroupMultiplierSources_PerkGroups());
 		ret.extend(this.getPerkGroupMultiplierSources_Items());
+		if ("Assets" in ::World && !::MSU.isNull(::World.Assets) && !::MSU.isNull(::World.Assets.getOrigin()))
+		{
+			ret.push(::World.Assets.getOrigin());
+		}
 		return ret;
 	}
 
