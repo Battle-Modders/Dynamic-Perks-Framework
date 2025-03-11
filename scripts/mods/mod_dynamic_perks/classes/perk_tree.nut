@@ -457,7 +457,7 @@ this.perk_tree <- {
 
 		_perkGroupContainer.apply(function( _perkGroupID, _weight )
 		{
-			if (_weight == 0 || _weight == -1)
+			if (_weight == -1)
 				return _weight;
 
 			local mult;
@@ -466,7 +466,7 @@ this.perk_tree <- {
 				mult = source.getPerkGroupMultiplier(_perkGroupID, perkTree);
 				if (mult == null)
 					continue;
-				if (mult == 0 || mult == -1)
+				if (mult == -1)
 					return mult;
 				_weight *= mult;
 			}
