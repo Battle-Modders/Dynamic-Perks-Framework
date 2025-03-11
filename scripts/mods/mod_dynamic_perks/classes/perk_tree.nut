@@ -34,7 +34,7 @@ this.perk_tree <- {
 
 		this.m.DynamicMap = options.DynamicMap != null ? options.DynamicMap : {};
 
-		return this;		
+		return this;
 	}
 
 	function getPerkGroups()

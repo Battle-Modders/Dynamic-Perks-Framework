@@ -126,7 +126,7 @@ this.perk_group <- {
 
 	function getSelfMultiplier( _perkTree )
 	{
-		return  1.0;
+		return 1.0;
 	}
 
 	function hasPerk( _id )
