@@ -454,6 +454,7 @@ this.perk_tree <- {
 	function applyMultipliers( _perkGroupContainer )
 	{
 		local perkTree = this;
+		local multiplierSources = this.getPerkGroupMultiplierSources_All();
 
 		_perkGroupContainer.apply(function( _perkGroupID, _weight )
 		{
@@ -461,7 +462,7 @@ this.perk_tree <- {
 				return _weight;
 
 			local mult;
-			foreach (source in perkTree.getPerkGroupMultiplierSources_All())
+			foreach (source in multiplierSources)
 			{
 				mult = source.getPerkGroupMultiplier(_perkGroupID, perkTree);
 				if (mult == null)
