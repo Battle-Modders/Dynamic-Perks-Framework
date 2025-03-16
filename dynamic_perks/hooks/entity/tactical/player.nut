@@ -68,6 +68,14 @@
 
 		this.resetPerkTier();
 
+		local skillsBefore;
+		do
+		{
+			skillsBefore = this.getSkills().m.Skills.len();
+			this.getSkills().collectGarbage(false);
+		}
+		while (this.getSkills().m.Skills.len() < skillsBefore);
+
 		this.getSkills().update();
 
 		// Re-equip the items
