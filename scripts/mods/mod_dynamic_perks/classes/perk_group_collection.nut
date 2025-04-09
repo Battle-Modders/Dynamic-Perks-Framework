@@ -116,6 +116,9 @@ this.perk_group_collection <- {
 
 		foreach (groupID in this.getGroups())
 		{
+			if (_perkTree.hasPerkGroup(groupID))
+				continue;
+
 			if (_exclude == null || _exclude.find(groupID) == null)
 			{
 				local group = ::DynamicPerks.PerkGroups.findById(groupID);

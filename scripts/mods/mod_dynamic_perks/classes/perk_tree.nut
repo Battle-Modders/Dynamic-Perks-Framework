@@ -65,7 +65,7 @@ this.perk_tree <- {
 				foreach (id in forcedGroups)
 				{
 					if (id == "DynamicPerks_RandomPerkGroup")
-						id = collection.getWeightedRandomPerkGroup(this, this.m.PerkGroupIDs);
+						id = collection.getWeightedRandomPerkGroup(this);
 
 					if (id == "DynamicPerks_NoPerkGroup")
 						continue;
@@ -86,7 +86,7 @@ this.perk_tree <- {
 
 			for (local i = forcedGroups.len(); i < min; i++)
 			{
-				local perkGroupID = collection.getWeightedRandomPerkGroup(this, this.m.PerkGroupIDs);
+				local perkGroupID = collection.getWeightedRandomPerkGroup(this);
 				if (perkGroupID != "DynamicPerks_NoPerkGroup")
 				{
 					this.addPerkGroup(perkGroupID);
