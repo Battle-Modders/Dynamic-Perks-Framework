@@ -110,7 +110,7 @@ this.perk_group_collection <- {
 		return ::DynamicPerks.PerkGroups.findById(this.getRandomGroup()).getRandomPerk(null, _exclude);
 	}
 
-	function getWeightedRandomPerkGroup( _perkTree, _exclude = null )
+	function getWeightedRandomPerkGroup( _perkTree, _filterFunc = null )
 	{
 		local potentialGroups = ::MSU.Class.WeightedContainer();
 
@@ -119,7 +119,7 @@ this.perk_group_collection <- {
 			if (_perkTree.hasPerkGroup(groupID))
 				continue;
 
-			if (_exclude == null || _exclude.find(groupID) == null)
+			if (_filterFunc == null || _filterFunc(groupID))
 			{
 				local group = ::DynamicPerks.PerkGroups.findById(groupID);
 				potentialGroups.add(group.getID(), group.getSelfMultiplier(_perkTree));
