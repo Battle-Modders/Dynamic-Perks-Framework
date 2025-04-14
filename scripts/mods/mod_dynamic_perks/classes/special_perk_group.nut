@@ -12,18 +12,13 @@ this.special_perk_group <- ::inherit(::DynamicPerks.Class.PerkGroup, {
 		return this.m.Chance;
 	}
 
-	function getMultiplier( _perkTree )
-	{
-		return 1.0;
-	}
-
 	function calculateChance( _perkTree )
 	{
 		local chance = this.getChance();
 
 		if (chance < 0) return 100;
 
-		chance *= this.getMultiplier(_perkTree);
+		chance *= this.getSelfMultiplier(_perkTree);
 		if (chance < 0) return 100;
 
 		local myID = this.getID();
