@@ -10,15 +10,13 @@ this.perk_group <- {
 	{
 	}
 
-	function init( _id, _name, _tree, _multipliers = null )
+	function init( _id, _name, _tree )
 	{
 		::MSU.requireString(_id);
 
 		this.m.ID = _id;
 		this.setName(_name);
 		this.setTree(_tree);
-
-		if (_multipliers != null) this.setMultipliers(_multipliers);
 
 		return this;
 	}
