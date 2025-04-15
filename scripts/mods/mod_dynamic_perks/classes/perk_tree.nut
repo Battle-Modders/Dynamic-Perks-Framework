@@ -388,11 +388,18 @@ this.perk_tree <- {
 	{
 		::MSU.Array.removeByValue(this.m.PerkGroupIDs, _perkGroupID);
 
+		local perkTree = this;
 		foreach (row in ::DynamicPerks.PerkGroups.findById(_perkGroupID).getTree())
 		{
-			foreach (perk in row)
+			foreach (perkID in row)
 			{
-				this.removePerk(perk);
+				// Only remove perks from this perk tree which are added to this perk tree solely from this perk group (i.e. _perkGroupID).
+				// If the perk additionally belongs to another perk group which is also present in this perk tree then don't remove it,
+				// because that will inadvertently cause that perk group to become incomplete.
+				if (::Const.Perks.findById(perkID).PerkGroupIDs.filter(@(_, _pgID) _pgID != _perkGroupID && perkTree.hasPerkGroup(_pgID)).len() == 0)
+				{
+					this.removePerk(perk);
+				}
 			}
 		}
 	}
