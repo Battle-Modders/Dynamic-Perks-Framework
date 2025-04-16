@@ -33,11 +33,10 @@
 		if (this.getPerkTier() < this.getPerkTree().getPerkTier(_id))
 			return false;
 
-		local perk = this.getPerkTree().getPerk(_id);
-		if ((::MSU.isIn("verifyPrerequisites", perk, true)) && !perk.verifyPrerequisites(this, [])) // TODO: Efficiency issue: passing an empty array every time
-			return false;
-
-		return true;
+		// The tooltip is pointless here but the functions expect it so we pass an empty array
+		local tooltip = [];
+		local ret = this.getPerkTree().getPerk(_id).isUnlockable(this, tooltip);
+		return this.getSkills().isPerkUnlockable(_id, tooltip) && ret;
 	}
 
 	q.unlockPerk = @(__original) function( _id )
