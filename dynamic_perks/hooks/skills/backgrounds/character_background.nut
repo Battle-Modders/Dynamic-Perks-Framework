@@ -1,10 +1,7 @@
 ::DynamicPerks.HooksMod.hook("scripts/skills/backgrounds/character_background", function(q) {
-	q.m.PerkTree <- null;
-
-	q.create = @(__original) function()
+	q.createPerkTreeBlueprint <- function()
 	{
-		this.m.PerkTree = ::new(::DynamicPerks.Class.PerkTree).init({Template = ::DynamicPerks.DefaultPerkTreeTemplate});
-		__original();
+		return ::new(::DynamicPerks.Class.PerkTree).init({Template = ::DynamicPerks.DefaultPerkTreeTemplate});
 	}
 
 	q.onBuildPerkTree <- function()
