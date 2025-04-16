@@ -107,7 +107,7 @@
 		q.setStartValuesEx = @(__original) function( _backgrounds, _addTraits = true )
 		{
 			__original(_backgrounds, _addTraits);
-			this.m.PerkTree = this.getBackground().createPerkTree();
+			this.m.PerkTree = this.getBackground().createPerkTreeBlueprint();
 			this.m.PerkTree.setActor(this);
 			this.m.PerkTree.build();
 		}
