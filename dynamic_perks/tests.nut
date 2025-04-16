@@ -1,53 +1,58 @@
 ::DynamicPerks.Tests <- {
-	function printProbability( _backgroundFilename, _perkGroups, _numRequired = null, _iterations = 300 )
+	function printProbability( _backgroundFilename, _successFunc )
 	{
-		if (_numRequired == null)
-			_numRequired = _perkGroups.len();
+		local bro = this.__getPlayerForProbability();
+		local bg = this.__getBackgroundForProbability(_backgroundFilename);
+		local path = "scripts/skills/backgrounds/" + _backgroundFilename;
 
-		if (_perkGroups.len() == 0)
-			throw "_perkGroups must be an array with at least one element";
+		local new = ::new;
+		::new = @( _script ) _script == path ? bg : new(_script);
 
-		if (_numRequired > _perkGroups.len())
-			throw "_numRequired must be equal to or less than _perkGroups array length";
-
-		local bgArray = [_backgroundFilename];
-		local roster = ::World.getTemporaryRoster();
-		local successes = 0.0;
-		local bro, pT;
-
-		for (local i = 0; i < _iterations; i++)
+		for (local i = 0; i < 300; i++)
 		{
-			bro = roster.create("scripts/entity/tactical/player");
-			bro.setStartValuesEx(bgArray);
+			bro.setStartValuesEx(_backgroundFilename);
+			bro.m.PerkTree = bro.getBackground().createPerkTreeBlueprint();
+			bro.m.PerkTree.setActor(bro);
+			bro.m.PerkTree.build();
 			pT = bro.getPerkTree();
-			foreach (pgID in _perkGroups)
+			if (_successFunc(pT))
 			{
-				if (pT.hasPerkGroup(pgID))
-				{
-					successes++;
-				}
+				successes++;
 			}
-			roster.remove(bro);
 		}
+
+		::new = new;
+
+		::World.getTemporaryRoster().remove(bro);
 
 		::logInfo(successes / _iterations);
 	}
 
-	function printProbability_All( _backgroundFilename, _iterations = 300 )
+	function printProbability_All( _backgroundFilename )
 	{
 		local perkGroupIDs = ::MSU.Table.keys(::DynamicPerks.PerkGroups.getAll());
 		perkGroupIDs.sort(@(_a, _b) _a <=> _b);
 
 		local successes = array(perkGroupIDs.len(), 0.0);
 
-		local bgArray = [_backgroundFilename];
-		local roster = ::World.getTemporaryRoster();
-		local bro, pT;
+		local bro = this.__getPlayerForProbability();
+		local bg = this.__getBackgroundForProbability(_backgroundFilename);
+		local path = "scripts/skills/backgrounds/" + _backgroundFilename;
 
-		for (local i = 0; i < _iterations; i++)
+		local new = ::new;
+		::new = @( _script ) _script == path ? bg : new(_script);
+
+		local pT;
+
+		local bgArray = [_backgroundFilename];
+		local iterations = 300;
+
+		for (local i = 0; i < iterations; i++)
 		{
-			bro = roster.create("scripts/entity/tactical/player");
 			bro.setStartValuesEx(bgArray);
+			bro.m.PerkTree = bro.getBackground().createPerkTreeBlueprint();
+			bro.m.PerkTree.setActor(bro);
+			bro.m.PerkTree.build();
 			pT = bro.getPerkTree();
 			foreach (i, pgID in perkGroupIDs)
 			{
@@ -56,12 +61,56 @@
 					successes[i]++;
 				}
 			}
-			roster.remove(bro);
 		}
+
+		::new = new;
+
+		::World.getTemporaryRoster().remove(bro);
 
 		foreach (i, pgID in perkGroupIDs)
 		{
-			::logInfo(pgID + ": " + (successes[i] / _iterations));
+			::logInfo(pgID + ": " + (successes[i] / iterations));
 		}
 	}
+
+	function __getPlayerForProbability()
+	{
+		local bro = ::World.getTemporaryRoster().create("scripts/entity/tactical/player");
+
+		bro.setTitle = function( _value )
+		{
+		}
+
+		bro.setFaction = function( _f )
+		{
+		}
+
+		bro.fillAttributeLevelUpValues = function( _amount, _maxOnly = false, _minOnly = false )
+		{
+		}
+
+		local setStartValuesEx = bro.setStartValuesEx;
+		bro.setStartValuesEx = function( _backgroundFilename )
+		{
+			this.getSkills().m.Skills.clear();
+			this.getItems().clear();
+			this.m.Talents.clear();
+			this.m.Attributes.clear();
+
+			setStartValuesEx(_backgroundFilename);
+		}
+
+		return bro;
+	}
+
+	function __getBackgroundForProbability( _backgroundFilename )
+	{
+		local bg = ::new("scripts/skills/backgrounds/" + _backgroundFilename);
+		bg.buildDescription = @() null;
+		bg.setAppearance = @() null;
+		bg.buildDescription = @( _isFinal = false ) null;
+		return bg;
+	}
 };
+
+
