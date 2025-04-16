@@ -11,6 +11,11 @@
 		return 1.0;
 	}
 
+	q.isPerkUnlockable <- function( _perkID, _tooltip )
+	{
+		return true;
+	}
+
 	q.onSerialize = @(__original) function( _out )
 	{
 		__original(_out);
