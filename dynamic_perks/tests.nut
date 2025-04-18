@@ -25,7 +25,7 @@
 
 		::World.getTemporaryRoster().remove(bro);
 
-		::logInfo(successes / _iterations);
+		::logInfo(successes / 300);
 	}
 
 	function printProbability_All( _backgroundFilename )
