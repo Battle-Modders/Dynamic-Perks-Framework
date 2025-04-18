@@ -30,8 +30,13 @@
 
 	function printProbability_All( _backgroundFilename )
 	{
-		local perkGroupIDs = ::MSU.Table.keys(::DynamicPerks.PerkGroups.getAll());
-		perkGroupIDs.sort(@(_a, _b) _a <=> _b);
+		local perkGroupIDs = [];
+		foreach (category in ::DynamicPerks.PerkGroupCategories.getOrdered())
+		{
+			local ids = clone category.getGroups();
+			ids.sort();
+			perkGroupIDs.extend(ids);
+		}
 
 		local successes = array(perkGroupIDs.len(), 0.0);
 
