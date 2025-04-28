@@ -37,10 +37,9 @@
 			ids.sort();
 			perkGroupIDs.extend(ids);
 		}
-		foreach (perkGroup in ::DynamicPerks.PerkGroups.getByType("special_perk_group"))
-		{
-			perkGroupIDs.push(perkGroup.getID());
-		}
+		local specialIDs = ::DynamicPerks.PerkGroups.getByType(::DynamicPerks.Class.SpecialPerkGroup).map(@(_pg) _pg.getID());
+		specialIDs.sort();
+		perkGroupIDs.extend(specialIDs);
 
 		local successes = array(perkGroupIDs.len(), 0.0);
 
