@@ -115,11 +115,14 @@
 		if (_perkGroup.getID() in this.LookupMap) throw ::MSU.Exception.DuplicateKey(_perkGroup.getID());
 		this.LookupMap[_perkGroup.getID()] <- _perkGroup;
 
-		foreach (row in _perkGroup.getTree())
+		if (_perkGroup.getName() != "")
 		{
-			foreach (perkID in row)
+			foreach (row in _perkGroup.getTree())
 			{
-				::DynamicPerks.Perks.__addPerkGroupToPerkDef(_perkGroup.getID(), ::Const.Perks.findById(perkID));
+				foreach (perkID in row)
+				{
+					::DynamicPerks.Perks.__addPerkGroupToPerkDef(_perkGroup.getID(), ::Const.Perks.findById(perkID));
+				}
 			}
 		}
 	}
