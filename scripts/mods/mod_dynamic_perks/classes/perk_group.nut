@@ -156,7 +156,8 @@ this.perk_group <- {
 
 		this.getTree()[_tier-1].push(_id);
 
-		::DynamicPerks.Perks.__addPerkGroupToPerkDef(this.getID(), ::Const.Perks.findById(_id));
+		if (this.getName() != "")
+			::DynamicPerks.Perks.__addPerkGroupToPerkDef(this.getID(), ::Const.Perks.findById(_id));
 	}
 
 	function removePerk( _id )
