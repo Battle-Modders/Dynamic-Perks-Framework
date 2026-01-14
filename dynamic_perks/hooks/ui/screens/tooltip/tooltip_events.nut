@@ -74,7 +74,8 @@
 				});
 			}
 
-			if (::MSU.isIn("verifyPrerequisites", perk, true)) perk.verifyPrerequisites(player, ret);
+			perk.isUnlockable(player, ret);
+			player.getSkills().isPerkUnlockable(_perkId, ret);
 		}
 
 		return ret;

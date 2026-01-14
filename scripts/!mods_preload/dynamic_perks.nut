@@ -57,10 +57,19 @@
 	{
 		func();
 	}
+
+	// Default function added to all perkDefs which don't have it defined
+	local isUnlockable = @( _player, _tooltip ) true;
+
 	foreach (perkDef in ::Const.Perks.LookupMap)
 	{
 		// Is populated during ::DynamicPerks.PerkGroups.add/remove and perk_group.addPerk/RemovePerk
 		perkDef.PerkGroupIDs <- [];
+
+		if (!::MSU.isIn("isUnlockable", perkDef, true))
+		{
+			perkDef.isUnlockable <- isUnlockable;
+		}
 	}
 }, ::Hooks.QueueBucket.VeryLate)
 
