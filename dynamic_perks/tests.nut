@@ -16,8 +16,102 @@
 	// Results depend on the current campaign origin, because the origin is a perk group multiplier source.
 	function printProbability_All( _backgroundFilename, _iterations = 1000 )
 	{
-		// A perk group can be listed in several categories (and a special perk group in a category), so each ID is
-		// listed only once: under the first category in order of assignment that contains it.
+		local sections = this.__getPerkGroupSections();
+		local perkGroupIDs = this.__getPerkGroupIDs(sections);
+		local result = this.__simulatePerkGroups(_backgroundFilename, _iterations, perkGroupIDs);
+		local probabilities = {};
+		foreach (i, pgID in perkGroupIDs)
+		{
+			probabilities[pgID] <- result.Probabilities[i];
+		}
+
+		::logInfo(this.__getHeader(_backgroundFilename, _iterations, result.Elapsed) + " (" + this.__getMarginText(_iterations) + ")");
+		foreach (section in sections)
+		{
+			if (section.IDs.len() == 0)
+				continue;
+
+			local mean = 0.0;
+			foreach (pgID in section.IDs)
+			{
+				mean += probabilities[pgID];
+			}
+			::logInfo(format("== %s (mean number of groups: %.2f)", section.Name, mean));
+
+			foreach (pgID in section.IDs)
+			{
+				::logInfo(format("%s: %.1f%%", pgID, 100.0 * probabilities[pgID]));
+			}
+		}
+	}
+
+	// Simulates every background that builds its perk tree from a DynamicMap and logs one CSV line per background,
+	// prefixed with "DPF_CSV;" so the lines can be extracted from log.html. Columns: background, then the probability
+	// (0-1) of every perk group, in the same order as printProbability_All. Backgrounds that throw are logged and skipped.
+	// This blocks the game for a long time: about (number of backgrounds * _iterations * 2.5-6 ms).
+	// Results depend on the current campaign origin, because the origin is a perk group multiplier source.
+	function printProbability_AllBackgrounds( _iterations = 1000 )
+	{
+		local perkGroupIDs = this.__getPerkGroupIDs(this.__getPerkGroupSections());
+		local backgrounds = this.__getDynamicBackgrounds();
+		local startTime = ::Time.getExactTime();
+
+		::logInfo(format("Perk group probabilities of %i backgrounds: %i bros each, origin %s (%s)", backgrounds.len(), _iterations, this.__getOriginID(), this.__getMarginText(_iterations)));
+		::logInfo("DPF_CSV;background;" + perkGroupIDs.reduce(@(_a, _b) _a + ";" + _b));
+
+		local failed = 0;
+		foreach (filename in backgrounds)
+		{
+			try
+			{
+				local result = this.__simulatePerkGroups(filename, _iterations, perkGroupIDs);
+				local line = "DPF_CSV;" + filename;
+				foreach (p in result.Probabilities)
+				{
+					line += format(";%.4f", p);
+				}
+				::logInfo(line);
+			}
+			catch (error)
+			{
+				failed++;
+				::logError("printProbability_AllBackgrounds: " + filename + " failed: " + error);
+			}
+		}
+
+		::logInfo(format("printProbability_AllBackgrounds: %i backgrounds, %i failed, %i s", backgrounds.len(), failed, (::Time.getExactTime() - startTime).tointeger()));
+	}
+
+	// Filenames (relative to scripts/skills/backgrounds/) of all backgrounds whose perk tree blueprint uses a DynamicMap instead of a Template.
+	function __getDynamicBackgrounds()
+	{
+		local prefix = "scripts/skills/backgrounds/";
+		local ret = [];
+		foreach (path in ::IO.enumerateFiles(prefix))
+		{
+			// The base class of all backgrounds, never a bro's actual background
+			if (path == prefix + "character_background")
+				continue;
+
+			try
+			{
+				if (::new(path).createPerkTreeBlueprint().getTemplate() == null)
+					ret.push(path.slice(prefix.len()));
+			}
+			catch (error)
+			{
+				::logError("printProbability_AllBackgrounds: can't create " + path + ": " + error);
+			}
+		}
+		ret.sort();
+		return ret;
+	}
+
+	// Perk group IDs grouped for output: one section per category in order of assignment, then "Special".
+	// A perk group can be listed in several categories (and a special perk group in a category), so each ID is
+	// listed only once: under the first category in order of assignment that contains it. IDs are sorted within a section.
+	function __getPerkGroupSections()
+	{
 		local seen = {};
 		local sections = [];
 		local addSection = function( _name, _ids )
@@ -40,45 +134,35 @@
 		}
 		addSection("Special", ::DynamicPerks.PerkGroups.getByType(::DynamicPerks.Class.SpecialPerkGroup).map(@(_pg) _pg.getID()));
 
-		local perkGroupIDs = [];
-		foreach (section in sections)
-		{
-			perkGroupIDs.extend(section.IDs);
-		}
+		return sections;
+	}
 
-		local successes = array(perkGroupIDs.len(), 0);
+	function __getPerkGroupIDs( _sections )
+	{
+		local ret = [];
+		foreach (section in _sections)
+		{
+			ret.extend(section.IDs);
+		}
+		return ret;
+	}
+
+	// Returns { Probabilities = array of probabilities (0-1) in the order of _perkGroupIDs, Elapsed = seconds }
+	function __simulatePerkGroups( _backgroundFilename, _iterations, _perkGroupIDs )
+	{
+		local successes = array(_perkGroupIDs.len(), 0);
 		local elapsed = this.__simulate(_backgroundFilename, _iterations, function( _perkTree ) {
-			foreach (i, pgID in perkGroupIDs)
+			foreach (i, pgID in _perkGroupIDs)
 			{
 				if (_perkTree.hasPerkGroup(pgID))
 					successes[i]++;
 			}
 		});
 
-		local probabilities = {};
-		foreach (i, pgID in perkGroupIDs)
-		{
-			probabilities[pgID] <- successes[i].tofloat() / _iterations;
-		}
-
-		::logInfo(this.__getHeader(_backgroundFilename, _iterations, elapsed) + " (" + this.__getMarginText(_iterations) + ")");
-		foreach (section in sections)
-		{
-			if (section.IDs.len() == 0)
-				continue;
-
-			local mean = 0.0;
-			foreach (pgID in section.IDs)
-			{
-				mean += probabilities[pgID];
-			}
-			::logInfo(format("== %s (mean number of groups: %.2f)", section.Name, mean));
-
-			foreach (pgID in section.IDs)
-			{
-				::logInfo(format("%s: %.1f%%", pgID, 100.0 * probabilities[pgID]));
-			}
-		}
+		return {
+			Probabilities = successes.map(@(_count) _count.tofloat() / _iterations),
+			Elapsed = elapsed
+		};
 	}
 
 	// Generates _iterations bros of the given background and calls _onPerkTree(perkTree) for each.
@@ -120,11 +204,14 @@
 
 	function __getHeader( _backgroundFilename, _iterations, _elapsed )
 	{
-		local origin = "none";
-		if ("Assets" in ::World && !::MSU.isNull(::World.Assets) && !::MSU.isNull(::World.Assets.getOrigin()))
-			origin = ::World.Assets.getOrigin().getID();
+		return format("Perk group probabilities of %s: %i bros, origin %s, %i ms", _backgroundFilename, _iterations, this.__getOriginID(), (_elapsed * 1000).tointeger());
+	}
 
-		return format("Perk group probabilities of %s: %i bros, origin %s, %i ms", _backgroundFilename, _iterations, origin, (_elapsed * 1000).tointeger());
+	function __getOriginID()
+	{
+		if ("Assets" in ::World && !::MSU.isNull(::World.Assets) && !::MSU.isNull(::World.Assets.getOrigin()))
+			return ::World.Assets.getOrigin().getID();
+		return "none";
 	}
 
 	// Worst-case (p = 50%) margin of error at 95% confidence
