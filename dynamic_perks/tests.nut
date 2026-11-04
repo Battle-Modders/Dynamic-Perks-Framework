@@ -178,6 +178,22 @@
 		local originalNew = ::new;
 		::new = @( _script ) _script == path ? bg : originalNew(_script);
 
+		// Every skill add and item equip during generation runs a full skills.update(). Only the final state matters,
+		// so update does nothing during generation and runs once when DynamicPerks' setStartValuesEx hook asks for
+		// the perk tree blueprint: that hook wraps all other mods' setStartValuesEx hooks, so generation is complete
+		// and the perk tree has not been built yet. Mods that read current properties during generation would see stale ones.
+		local skills = bro.getSkills();
+		// bindenv: a stored method is not reliably bound to its object (e.g. hooked ones), so a plain call would run with this = bg
+		local update = skills.update.bindenv(skills);
+		skills.update = @() null;
+		local createPerkTreeBlueprint = bg.createPerkTreeBlueprint.bindenv(bg);
+		bg.createPerkTreeBlueprint = function()
+		{
+			update();
+			bro.m.Hitpoints = bro.getCurrentProperties().Hitpoints; // as vanilla setStartValuesEx does after its update
+			return createPerkTreeBlueprint();
+		};
+
 		local startTime = ::Time.getExactTime();
 		try
 		{
