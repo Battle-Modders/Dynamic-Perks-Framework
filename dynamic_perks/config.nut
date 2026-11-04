@@ -100,14 +100,7 @@
 	function getByType( _filter )
 	{
 		_filter = split(_filter, "/").top();
-		switch (_filter)
-		{
-			case "perk_group":
-				return ::MSU.Table.filter(this.LookupMap, @(_, value) value.ClassName == _filter);
-
-			default:
-				return ::MSU.Table.filter(this.LookupMap, @(_, value) value.SuperName == _filter);
-		}
+		return ::MSU.Table.values(this.LookupMap).filter(@(_, _pg) ::isKindOf(_pg, _filter));
 	}
 
 	function add( _perkGroup )
